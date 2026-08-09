@@ -1,6 +1,11 @@
 "use client";
 
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export type Language = "RU" | "EN";
 
@@ -100,8 +105,6 @@ const copy = {
     cardsBridgeTitleOne: "Отдельные миры",
     cardsBridgeTitleTwo: ["внутри одной", "системы"],
     cardsBridgeText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
-    cardsBridgeChapter: "Глава",
-    cardsBridgeNext: "Следующая глава",
     cardsKicker: "Карточки товара · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
@@ -142,8 +145,6 @@ const copy = {
     cardsBridgeTitleOne: "Distinct worlds",
     cardsBridgeTitleTwo: ["within one", "system"],
     cardsBridgeText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
-    cardsBridgeChapter: "Chapter",
-    cardsBridgeNext: "Next chapter",
     cardsKicker: "Product cards · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Eight cards reveal the product from formula and ingredients to the application ritual and final image.",
@@ -173,6 +174,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const projectStageRef = useRef<HTMLDivElement>(null);
+  const cardsBridgeRef = useRef<HTMLElement>(null);
   const cardsLightboxCloseRef = useRef<HTMLButtonElement>(null);
   const frameRef = useRef<number | null>(null);
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
@@ -262,6 +264,50 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
   }, []);
+
+  useGSAP(() => {
+    const bridge = cardsBridgeRef.current;
+    const path = bridge?.querySelector<SVGPathElement>(".cards-bridge-membrane-path");
+    if (!bridge || !path) return;
+
+    const pathFrom = path.dataset.pathFrom;
+    const pathTo = path.dataset.pathTo;
+    if (!pathFrom || !pathTo) return;
+
+    const media = gsap.matchMedia();
+    media.add({
+      animated: "(min-width: 821px) and (prefers-reduced-motion: no-preference)",
+      reduced: "(prefers-reduced-motion: reduce)",
+    }, (context) => {
+      if (context.conditions?.reduced) {
+        gsap.set(path, { attr: { d: pathTo } });
+        return;
+      }
+
+      if (!context.conditions?.animated) return;
+
+      const titleLines = bridge.querySelectorAll<HTMLElement>(".cards-bridge-title-line");
+      const finalWord = bridge.querySelector<HTMLElement>(".cards-bridge-title-final");
+      const timeline = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: bridge,
+          start: "top 88%",
+          end: "top 28%",
+          scrub: 0.55,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      timeline
+        .fromTo(path, { attr: { d: pathFrom } }, { attr: { d: pathTo }, duration: 1 }, 0)
+        .fromTo(titleLines[0], { xPercent: -4 }, { xPercent: 0, duration: 0.82, ease: "power2.out" }, 0.04)
+        .fromTo(titleLines[1], { xPercent: 5 }, { xPercent: 0, duration: 0.82, ease: "power2.out" }, 0.08)
+        .fromTo(finalWord, { yPercent: 30, autoAlpha: 0.12 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" }, 0.34);
+    });
+
+    return () => media.revert();
+  }, { scope: cardsBridgeRef, dependencies: [language], revertOnUpdate: true });
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -373,7 +419,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
                 onFocus={() => setActiveProject(index)}
                 onClick={() => {
                   setActiveProject(index);
-                  if (window.matchMedia("(max-width: 760px)").matches) {
+                  if (window.matchMedia("(max-width: 820px)").matches) {
                     window.requestAnimationFrame(() => projectStageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
                   }
                 }}
@@ -426,32 +472,32 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         </div>
       </section>
 
-      <section className="cards-bridge" id="cards" aria-labelledby="cards-bridge-title">
-        <div className="cards-bridge-blobs" aria-hidden="true">
-          <i className="cards-bridge-blob cards-bridge-blob-mint" />
-          <i className="cards-bridge-blob cards-bridge-blob-plum" />
-        </div>
+      <section ref={cardsBridgeRef} className="cards-bridge" id="cards" aria-labelledby="cards-bridge-title">
+        <svg className="cards-bridge-membrane" viewBox="0 0 1440 680" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <linearGradient id="cards-bridge-field" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#7d6989" />
+              <stop offset="0.62" stopColor="#675276" />
+              <stop offset="1" stopColor="#12110d" />
+            </linearGradient>
+          </defs>
+          <path
+            className="cards-bridge-membrane-path"
+            d="M0 346 C248 296 494 390 730 336 C964 282 1182 324 1440 278 L1440 680 L0 680 Z"
+            data-path-from="M0 432 C246 402 486 448 724 424 C960 400 1186 394 1440 428 L1440 680 L0 680 Z"
+            data-path-to="M0 346 C248 296 494 390 730 336 C964 282 1182 324 1440 278 L1440 680 L0 680 Z"
+            fill="url(#cards-bridge-field)"
+          />
+        </svg>
         <p className="cards-bridge-kicker" data-reveal>{t.cardsBridgeKicker}</p>
-        <div className="cards-bridge-chapter-mark" data-reveal aria-hidden="true">
-          <i />
-          <span>
-            <small>{t.cardsBridgeChapter}</small>
-            <b>01</b>
-          </span>
-        </div>
-        <h2 id="cards-bridge-title" aria-label={`${t.cardsBridgeTitleOne} ${t.cardsBridgeTitleTwo.join(" ")}`} data-reveal>
-          <span aria-hidden="true">{t.cardsBridgeTitleOne}</span>
+        <h2 id="cards-bridge-title" aria-label={`${t.cardsBridgeTitleOne} ${t.cardsBridgeTitleTwo.join(" ")}`}>
+          <span className="cards-bridge-title-line" aria-hidden="true">{t.cardsBridgeTitleOne}</span>
           <em aria-hidden="true">
-            <span>{t.cardsBridgeTitleTwo[0]}</span>
-            <span className="cards-bridge-title-cross" data-text={t.cardsBridgeTitleTwo[1]}>{t.cardsBridgeTitleTwo[1]}</span>
+            <span className="cards-bridge-title-line">{t.cardsBridgeTitleTwo[0]}</span>
+            <span className="cards-bridge-title-final">{t.cardsBridgeTitleTwo[1]}</span>
           </em>
         </h2>
         <p className="cards-bridge-copy" data-reveal>{t.cardsBridgeText}</p>
-        <a className="cards-bridge-next" href="#velum-cards" aria-label={language === "RU" ? "Перейти к карточкам VÉLUM" : "Go to VÉLUM cards"}>
-          <span>01</span>
-          <strong>{t.cardsBridgeNext}</strong>
-          <i aria-hidden="true">↓</i>
-        </a>
       </section>
 
       <section className="cards-chapter" id="velum-cards" aria-labelledby="cards-title">
