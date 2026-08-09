@@ -73,7 +73,7 @@ export default function CaseLightbox({
       <figcaption>
         <span>{indexLabel}</span>
         <button className="case-open-button" type="button" onClick={() => setIsOpen(true)}>
-          {openLabel}<span aria-hidden="true">↗</span>
+          {openLabel}<span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
         </button>
       </figcaption>
 
@@ -81,7 +81,7 @@ export default function CaseLightbox({
         <div className="case-lightbox" role="dialog" aria-modal="true" aria-label={alt}>
           <div className="case-lightbox-toolbar">
             <button className="case-lightbox-close" type="button" onClick={close} ref={closeButtonRef}>
-              <span aria-hidden="true">←</span>{closeLabel}
+              <span aria-hidden="true" />{closeLabel}
             </button>
             <span>{indexLabel}</span>
           </div>
