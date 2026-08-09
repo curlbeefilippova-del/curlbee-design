@@ -6,6 +6,7 @@ import CaseLightbox from "../../case-lightbox";
 import CaseMotion from "../../case-motion";
 import LanguageSync from "../../language-sync";
 import ThemeToggle from "../../theme-toggle";
+import { typographicCopy, typographicText } from "../../typography";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -38,7 +39,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   const isStackedTitle = "stackTitle" in project && project.stackTitle;
   const isLongTitle = project.title.length > 6;
   const screenCount = project.slides.length;
-  const labels = language === "RU"
+  const labels = typographicCopy(language === "RU"
     ? {
         back: "Все проекты",
         open: "Открыть крупно",
@@ -54,7 +55,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         replay: "Replay",
         end: "Explore other projects",
         aria: "Case navigation",
-      };
+      }, language);
   const screensLabel = language === "RU" ? `${screenCount} экранов` : `${screenCount} screens`;
 
   return (
@@ -73,7 +74,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={labels.aria}>
-          <a className="case-back" href={`/?lang=${langQuery}#work`}><span aria-hidden="true">←</span>{labels.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#work`}><span aria-hidden="true">←</span>{labels.back}</a>
           <ThemeToggle language={language} />
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
@@ -83,7 +84,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
       </header>
 
       <section className="case-lead" data-number={project.number} aria-labelledby="case-title">
-        <p>{project.number} / {project.kind[language]} / {project.year}</p>
+        <p>{project.number} / {typographicText(project.kind[language], language)} / {project.year}</p>
         <div className="case-lead-title">
           {project.slug === "the-chops" ? (
             <h1 id="case-title" className="case-chops-heading">
@@ -102,7 +103,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           )}
         </div>
         <div className="case-lead-copy">
-          <p>{project.summary[language]}</p>
+          <p>{typographicText(project.summary[language], language)}</p>
           {screenCount > 0 && (
             <a href="#case-gallery"><span aria-hidden="true">↓</span>{screensLabel}</a>
           )}
