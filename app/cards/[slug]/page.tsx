@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import LanguageSync from "../../language-sync";
+import { createPageMetadata, seoLanguage } from "../../seo";
 
 type CardsWorldPageProps = {
   params: Promise<{ slug: string }>;
@@ -19,15 +20,23 @@ function getCardWorld(slug: string) {
   return cardWorlds[slug as keyof typeof cardWorlds];
 }
 
-export async function generateMetadata({ params }: CardsWorldPageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: CardsWorldPageProps): Promise<Metadata> {
   const { slug } = await params;
   const world = getCardWorld(slug);
   if (!world) return {};
+  const query = await searchParams;
+  const language = seoLanguage(query?.lang);
 
-  return {
-    title: `${world.title} — карточки товара · Curlbee Design`,
-    description: `Мир карточек товара ${world.title} в системе Curlbee Design.`,
-  };
+  return createPageMetadata({
+    title: `${world.title} — ${language === "EN" ? "product cards" : "карточки товара"}`,
+    description: language === "EN"
+      ? `${world.title} product-card world within the Curlbee Design portfolio.`
+      : `Мир карточек товара ${world.title} в системе Curlbee Design.`,
+    path: `/cards/${slug}`,
+    language,
+    image: world.image,
+    imageAlt: `${world.title} — Curlbee Design`,
+  });
 }
 
 export default async function CardsWorldPage({ params, searchParams }: CardsWorldPageProps) {
