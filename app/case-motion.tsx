@@ -15,7 +15,6 @@ export default function CaseMotion({ frames, label, replayLabel }: CaseMotionPro
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setState("finished");
       return;
     }
 
