@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-export const SITE_URL = "https://curlbee-design.eyydvxgdp322.chatgpt.site";
+export const SITE_URL = "https://curlbeedesign.com";
 export const SITE_NAME = "Curlbee Design";
 
 export type SeoLanguage = "RU" | "EN";
