@@ -875,20 +875,84 @@ img { display: block; max-width: 100%; }
 .case-end > a span { color: var(--case-accent); font-family: var(--sans); font-size: 0.48em; transition: transform 280ms var(--ease-spring); }
 .case-end > a:hover span { transform: translate(10px, -10px); }
 
-.cards-bridge {
+.cards-intro {
   position: relative;
   isolation: isolate;
-  min-height: clamp(560px, 72svh, 680px);
-  padding: var(--section-start-space) var(--page-pad) var(--section-inner-space);
+  min-height: clamp(680px, 100svh, 920px);
+  padding: var(--section-start-space) var(--page-pad) var(--section-edge-space);
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr auto;
   column-gap: var(--layout-gap);
   overflow: hidden;
   color: var(--ink);
   background: var(--canvas);
 }
-.cards-bridge-membrane {
+.cards-intro-kicker {
+  grid-column: 1 / 4;
+  grid-row: 1;
+  margin: 0;
+  align-self: start;
+  font-size: var(--type-meta);
+  line-height: 18px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.cards-intro h2 {
+  grid-column: 1 / 12;
+  grid-row: 2;
+  align-self: center;
+  margin: 0;
+  width: max-content;
+  max-width: 100%;
+  font-family: var(--serif);
+  font-size: clamp(94px, min(11vw, 18svh), 178px);
+  font-weight: 390;
+  line-height: 0.78;
+  letter-spacing: -0.075em;
+}
+.cards-intro h2 span,
+.cards-intro h2 em { display: block; }
+.cards-intro h2 em {
+  margin-left: clamp(48px, 11vw, 184px);
+  color: var(--plum);
+  font-style: italic;
+  font-weight: 340;
+}
+.cards-intro-manifesto {
+  grid-column: 7 / 13;
+  grid-row: 3;
+  align-self: end;
+  display: grid;
+  grid-template-columns: minmax(170px, 0.72fr) minmax(260px, 1.28fr);
+  gap: var(--layout-gap);
+  align-items: start;
+}
+.cards-intro-manifesto strong {
+  font-family: var(--serif);
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.02;
+  font-weight: 390;
+  letter-spacing: -0.045em;
+}
+.cards-intro-manifesto strong span { display: block; }
+.cards-intro-manifesto strong span:last-child { color: var(--terra); }
+.cards-intro-manifesto p {
+  margin: 0;
+  max-width: 390px;
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+}
+
+.cards-world-bridge {
+  position: relative;
+  isolation: isolate;
+  min-height: clamp(320px, 48svh, 480px);
+  overflow: hidden;
+  color: var(--canvas);
+  background: var(--canvas);
+}
+.cards-world-membrane {
   position: absolute;
   z-index: -1;
   inset: 0;
@@ -896,53 +960,18 @@ img { display: block; max-width: 100%; }
   height: 100%;
   pointer-events: none;
 }
-.cards-bridge-membrane-path { shape-rendering: geometricPrecision; }
-.cards-bridge-kicker {
-  grid-column: 1 / 4;
-  grid-row: 1;
+.cards-world-membrane-path { shape-rendering: geometricPrecision; }
+.cards-world-label {
+  position: absolute;
+  z-index: 1;
+  left: var(--page-pad);
+  bottom: clamp(44px, 7svh, 72px);
   margin: 0;
-  align-self: start;
-  font-size: 12px;
+  font-size: var(--type-meta);
+  line-height: 18px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-}
-.cards-bridge h2 {
-  position: relative;
-  z-index: 2;
-  grid-column: 2 / 11;
-  grid-row: 2;
-  align-self: start;
-  margin: clamp(24px, 3.5svh, 36px) 0 0;
-  font-family: var(--serif);
-  font-size: clamp(74px, min(7.9vw, 13svh), 128px);
-  font-weight: 390;
-  line-height: 0.84;
-  letter-spacing: -0.065em;
-}
-.cards-bridge h2 > span,
-.cards-bridge h2 em,
-.cards-bridge h2 em > span { display: block; font-style: normal; }
-.cards-bridge h2 em { margin-left: 0.58em; color: var(--terra); }
-.cards-bridge-title-line,
-.cards-bridge-title-final { will-change: transform, opacity; }
-.cards-bridge-title-final {
-  width: max-content;
-  max-width: 100%;
-  margin: 0.08em 0 0 0.12em;
-  color: var(--canvas);
-}
-.cards-bridge-copy {
-  position: relative;
-  z-index: 2;
-  grid-column: 10 / 13;
-  grid-row: 2;
-  align-self: end;
-  width: 100%;
-  max-width: 360px;
-  margin: 0 0 clamp(24px, 4svh, 42px);
-  color: rgba(244, 238, 232, 0.86);
-  font-size: var(--type-body);
-  line-height: var(--leading-body);
+  will-change: transform, opacity;
 }
 
 .cards-chapter {
@@ -1429,7 +1458,7 @@ html[lang="ru"] .hero h1 { letter-spacing: -0.048em; }
 html[lang="ru"] .hero h1 em { letter-spacing: -0.036em; }
 html[lang="ru"] .work-heading h2 { letter-spacing: -0.038em; }
 html[lang="ru"] .case-lead h1 { letter-spacing: -0.055em; }
-html[lang="ru"] .cards-bridge h2 { letter-spacing: -0.045em; }
+html[lang="ru"] .cards-intro h2 { letter-spacing: -0.055em; }
 html[lang="ru"] .cards-copy h2 { letter-spacing: -0.05em; }
 html[lang="ru"] .about h2,
 html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
@@ -1487,25 +1516,33 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   html { scroll-padding-top: 74px; }
   body { font-size: 15px; }
-  .cards-bridge {
-    min-height: 610px;
+  .cards-intro {
+    min-height: 100svh;
     padding: var(--section-start-space) var(--page-pad) var(--section-inner-space);
     grid-template-columns: 1fr;
     grid-template-rows: auto auto 1fr;
   }
-  .cards-bridge-membrane { top: -25%; bottom: auto; height: 125%; }
-  .cards-bridge-kicker { grid-column: 1; }
-  .cards-bridge h2 { grid-column: 1; grid-row: 2; margin-top: 32px; font-size: clamp(48px, 14vw, 68px); line-height: 0.86; }
-  .cards-bridge h2 em { margin-left: 0; }
-  .cards-bridge-title-final { margin: 0.22em 0 0 0.46em; }
-  .cards-bridge-copy {
-    position: absolute;
-    right: var(--page-pad);
-    bottom: var(--section-inner-space);
-    width: min(270px, calc(100% - var(--page-pad) * 2));
-    margin: 0;
-    color: rgba(244, 238, 232, 0.84);
-    font-size: 15px;
+  .cards-intro-kicker { grid-column: 1; grid-row: 1; }
+  .cards-intro h2 {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: center;
+    font-size: clamp(66px, 19vw, 92px);
+    line-height: 0.8;
+  }
+  .cards-intro h2 em { margin-left: 10vw; }
+  .cards-intro-manifesto {
+    grid-column: 1;
+    grid-row: 3;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .cards-intro-manifesto strong { font-size: 24px; }
+  .cards-intro-manifesto p { max-width: 420px; font-size: 15px; }
+  .cards-world-bridge { min-height: 340px; }
+  .cards-world-label {
+    left: var(--page-pad);
+    bottom: var(--section-edge-space);
   }
   .site-header { height: 74px; grid-template-columns: 1fr auto; gap: 16px; padding-block: 6px; }
   .brand { width: 38px; height: 54px; }
