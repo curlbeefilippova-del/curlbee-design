@@ -123,7 +123,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={t.navigation}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <a
@@ -180,7 +180,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
               decoding="async"
               fetchPriority={activeCard === 0 ? "high" : "auto"}
             />
-            <span>{t.open} <i aria-hidden="true">↗</i></span>
+            <span>{t.open} <i className="ui-arrow ui-arrow-up-right" aria-hidden="true" /></span>
           </button>
         </div>
 
@@ -228,7 +228,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <button ref={lightboxCloseRef} className="minimalist-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
-          <button className="minimalist-lightbox-step minimalist-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
+          <button className="minimalist-lightbox-step minimalist-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}><span className="ui-arrow ui-arrow-left" aria-hidden="true" /></button>
           <img
             className="card-swap-single"
             key={card.image}
@@ -237,7 +237,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
             width={card.number === "06" ? "1848" : "1800"}
             height={card.number === "06" ? "2448" : "2400"}
           />
-          <button className="minimalist-lightbox-step minimalist-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
+          <button className="minimalist-lightbox-step minimalist-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}><span className="ui-arrow ui-arrow-right" aria-hidden="true" /></button>
           <div className="minimalist-lightbox-caption">
             <span>{card.number} / 09</span>
             <strong>{typographicText(card.title[language], language)}</strong>
