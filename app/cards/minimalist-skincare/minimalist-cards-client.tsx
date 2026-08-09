@@ -1,0 +1,233 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+
+export type MinimalistCardsLanguage = "RU" | "EN";
+
+const minimalistCards = [
+  { number: "01", image: "/cards/minimalist-skincare/01.webp", campaign: "/cards/minimalist-skincare/campaign-01.webp", title: { RU: "Чистая кожа", EN: "Clear skin" } },
+  { number: "02", image: "/cards/minimalist-skincare/02.webp", campaign: "/cards/minimalist-skincare/campaign-02.webp", title: { RU: "Проблема", EN: "The concern" } },
+  { number: "03", image: "/cards/minimalist-skincare/03.webp", campaign: "/cards/minimalist-skincare/campaign-03.webp", title: { RU: "Решение", EN: "The result" } },
+  { number: "04", image: "/cards/minimalist-skincare/04.webp", campaign: "/cards/minimalist-skincare/campaign-04.webp", title: { RU: "Текстура и состав", EN: "Texture and formula" } },
+  { number: "05", image: "/cards/minimalist-skincare/05.webp", campaign: "/cards/minimalist-skincare/campaign-05.webp", title: { RU: "Активные компоненты", EN: "Active ingredients" } },
+  { number: "06", image: "/cards/minimalist-skincare/06.webp", campaign: "/cards/minimalist-skincare/campaign-01.webp", title: { RU: "Главный актив", EN: "Hero active" } },
+  { number: "07", image: "/cards/minimalist-skincare/07.webp", campaign: "/cards/minimalist-skincare/campaign-02.webp", title: { RU: "Почему этот продукт", EN: "Why this product" } },
+  { number: "08", image: "/cards/minimalist-skincare/08.webp", campaign: "/cards/minimalist-skincare/campaign-03.webp", title: { RU: "Этап очищения", EN: "Cleansing step" } },
+  { number: "09", image: "/cards/minimalist-skincare/09.webp", campaign: "/cards/minimalist-skincare/campaign-04.webp", title: { RU: "Финальный образ", EN: "Final image" } },
+] as const;
+
+const copy = {
+  RU: {
+    skip: "Перейти к серии",
+    back: "К главе карточек",
+    navigation: "Навигация по миру MINIMALIST SKINCARE",
+    kicker: "Карточки товара · серия 04",
+    titleTop: "MINIMALIST",
+    titleBottom: "SKINCARE",
+    statement: "Чистота без лишнего",
+    text: "Девять карточек раскрывают пенку для умывания через состояние кожи, активные компоненты, текстуру и ежедневный ритуал очищения.",
+    controls: "Девять состояний · выбери каплю",
+    open: "Открыть крупно",
+    close: "Закрыть",
+    previous: "Предыдущая карточка",
+    next: "Следующая карточка",
+    list: "Карточки MINIMALIST SKINCARE",
+    campaign: "Имиджевый кадр кампании",
+  },
+  EN: {
+    skip: "Skip to the series",
+    back: "Back to product cards",
+    navigation: "MINIMALIST SKINCARE world navigation",
+    kicker: "Product cards · series 04",
+    titleTop: "MINIMALIST",
+    titleBottom: "SKINCARE",
+    statement: "Clarity without excess",
+    text: "Nine cards reveal the cleansing foam through skin states, active ingredients, texture and the everyday cleansing ritual.",
+    controls: "Nine states · choose a drop",
+    open: "Open full size",
+    close: "Close",
+    previous: "Previous card",
+    next: "Next card",
+    list: "MINIMALIST SKINCARE cards",
+    campaign: "Campaign image",
+  },
+} as const;
+
+export default function MinimalistCardsClient({ initialLanguage }: { initialLanguage: MinimalistCardsLanguage }) {
+  const [language, setLanguage] = useState<MinimalistCardsLanguage>(initialLanguage);
+  const [activeCard, setActiveCard] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const lightboxCloseRef = useRef<HTMLButtonElement>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
+  const t = copy[language];
+  const card = minimalistCards[activeCard];
+  const langQuery = language.toLowerCase();
+
+  const selectRelativeCard = (direction: number) => {
+    setActiveCard((current) => (current + direction + minimalistCards.length) % minimalistCards.length);
+  };
+
+  useEffect(() => {
+    document.documentElement.lang = langQuery;
+  }, [langQuery]);
+
+  useEffect(() => {
+    const next = minimalistCards[(activeCard + 1) % minimalistCards.length];
+    const nextCard = new window.Image();
+    const nextCampaign = new window.Image();
+    nextCard.src = next.image;
+    nextCampaign.src = next.campaign;
+  }, [activeCard]);
+
+  useEffect(() => {
+    if (!isLightboxOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement as HTMLElement | null;
+    document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => lightboxCloseRef.current?.focus());
+
+    const handleLightboxKeys = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsLightboxOpen(false);
+      if (event.key === "ArrowLeft") selectRelativeCard(-1);
+      if (event.key === "ArrowRight") selectRelativeCard(1);
+      if (event.key === "Tab") {
+        const controls = Array.from(lightboxRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+        const firstControl = controls[0];
+        const lastControl = controls.at(-1);
+        if (event.shiftKey && document.activeElement === firstControl) {
+          event.preventDefault();
+          lastControl?.focus();
+        } else if (!event.shiftKey && document.activeElement === lastControl) {
+          event.preventDefault();
+          firstControl?.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleLightboxKeys);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleLightboxKeys);
+      previousFocus?.focus();
+    };
+  }, [isLightboxOpen]);
+
+  return (
+    <main className="minimalist-world">
+      <a className="skip-link" href="#minimalist-series">{t.skip}</a>
+      <header className="minimalist-header">
+        <a className="case-brand" href={`/?lang=${langQuery}#cards`} aria-label="Curlbee Design">
+          <img src="/curlbee-logo.svg" alt="Curlbee" />
+        </a>
+        <nav aria-label={t.navigation}>
+          <a className="case-back" href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
+            {(["RU", "EN"] as const).map((item) => (
+              <a
+                key={item}
+                href={`/cards/minimalist-skincare?lang=${item.toLowerCase()}`}
+                aria-current={language === item ? "true" : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setLanguage(item);
+                  const url = new URL(window.location.href);
+                  url.searchParams.set("lang", item.toLowerCase());
+                  window.history.replaceState(null, "", url);
+                }}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        </nav>
+      </header>
+
+      <section className="minimalist-deck" id="minimalist-series" aria-labelledby="minimalist-title">
+        <figure className="minimalist-campaign" aria-hidden="true">
+          <img key={card.campaign} src={card.campaign} alt="" decoding="async" />
+        </figure>
+
+        <div className="minimalist-copy">
+          <p>{t.kicker}</p>
+          <h1 id="minimalist-title"><span>{t.titleTop}</span><em>{t.titleBottom}</em></h1>
+          <strong>{t.statement}</strong>
+          <span>{t.text}</span>
+        </div>
+
+        <div className="minimalist-stage">
+          <div className="minimalist-glass-shelf" aria-hidden="true" />
+          <button
+            className="minimalist-active"
+            type="button"
+            onClick={() => setIsLightboxOpen(true)}
+            aria-label={`${t.open}: ${card.title[language]}`}
+          >
+            <img
+              key={card.image}
+              src={card.image}
+              alt={`MINIMALIST SKINCARE — ${card.title[language]}`}
+              width={card.number === "06" ? "1848" : "1800"}
+              height={card.number === "06" ? "2448" : "2400"}
+              decoding="async"
+              fetchPriority={activeCard === 0 ? "high" : "auto"}
+            />
+            <span>{t.open} <i aria-hidden="true">↗</i></span>
+          </button>
+        </div>
+
+        <div className="minimalist-controls">
+          <p>{t.controls}</p>
+          <div className="minimalist-drop-grid" role="group" aria-label={t.list}>
+            {minimalistCards.map((item, index) => (
+              <button
+                type="button"
+                key={item.number}
+                className={index === activeCard ? "is-active" : ""}
+                aria-pressed={index === activeCard}
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== "touch") setActiveCard(index);
+                }}
+                onFocus={() => setActiveCard(index)}
+                onClick={() => setActiveCard(index)}
+              >
+                <span>{item.number}</span>
+                <strong>{item.title[language]}</strong>
+              </button>
+            ))}
+          </div>
+          <span className="minimalist-campaign-label">{t.campaign} · {card.number}</span>
+        </div>
+      </section>
+
+      {isLightboxOpen && (
+        <div
+          ref={lightboxRef}
+          className="minimalist-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`MINIMALIST SKINCARE — ${card.title[language]}`}
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setIsLightboxOpen(false);
+          }}
+        >
+          <button ref={lightboxCloseRef} className="minimalist-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
+            <span>{t.close}</span><i aria-hidden="true">×</i>
+          </button>
+          <button className="minimalist-lightbox-step minimalist-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
+          <img
+            key={card.image}
+            src={card.image}
+            alt={`MINIMALIST SKINCARE — ${card.title[language]}`}
+            width={card.number === "06" ? "1848" : "1800"}
+            height={card.number === "06" ? "2448" : "2400"}
+          />
+          <button className="minimalist-lightbox-step minimalist-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
+          <div className="minimalist-lightbox-caption">
+            <span>{card.number} / 09</span>
+            <strong>{card.title[language]}</strong>
+          </div>
+        </div>
+      )}
+    </main>
+  );
+}
