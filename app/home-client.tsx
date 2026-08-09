@@ -67,6 +67,14 @@ const projects = [
   },
 ] as const;
 
+const cardsWorlds = [
+  { number: "01", slug: "even", title: "EVEN", color: "#86667a" },
+  { number: "02", slug: "crafted", title: "CRAFTED", color: "#59604d" },
+  { number: "03", slug: "velum", title: "VÉLUM", color: "#b85c49" },
+  { number: "04", slug: "minimalist-skincare", title: "MINIMALIST SKINCARE", color: "#c8e1d1" },
+  { number: "05", slug: "ayu", title: "AYU", color: "#d5a345" },
+] as const;
+
 const copy = {
   RU: {
     navWork: "Проекты",
@@ -91,9 +99,8 @@ const copy = {
     cardsIntroStatementOne: "Отдельные миры",
     cardsIntroStatementTwo: "внутри одной системы",
     cardsIntroText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
-    cardsPortalLabel: "Войти в мир",
-    cardsPortalSeries: "01 · VÉLUM",
-    cardsPortalAria: "Открыть мир карточек VÉLUM",
+    cardsWorldMapAria: "Пять миров карточек товара",
+    cardsWorldOpen: "Открыть мир карточек",
     aboutKicker: "Коротко обо мне",
     aboutTitle: "Люблю, когда система понятная, а результат — с неожиданным поворотом",
     aboutLineOne: "Люблю, когда",
@@ -130,9 +137,8 @@ const copy = {
     cardsIntroStatementOne: "Distinct worlds",
     cardsIntroStatementTwo: "within one system",
     cardsIntroText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
-    cardsPortalLabel: "Enter the world",
-    cardsPortalSeries: "01 · VÉLUM",
-    cardsPortalAria: "Open the VÉLUM product-card world",
+    cardsWorldMapAria: "Five product-card worlds",
+    cardsWorldOpen: "Open the product-card world",
     aboutKicker: "A little about me",
     aboutTitle: "I like a system that makes sense — and a result with an unexpected turn",
     aboutLineOne: "I like a",
@@ -152,6 +158,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [activeProject, setActiveProject] = useState(0);
   const [isCardsPortalActive, setIsCardsPortalActive] = useState(false);
+  const [cardsPortalStyle, setCardsPortalStyle] = useState<CSSProperties>({});
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const projectStageRef = useRef<HTMLDivElement>(null);
@@ -227,9 +234,24 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     };
   }, []);
 
-  useEffect(() => () => {
-    if (cardsPortalTimerRef.current !== null) window.clearTimeout(cardsPortalTimerRef.current);
-    document.body.style.overflow = "";
+  useEffect(() => {
+    const resetCardsPortal = () => {
+      if (cardsPortalTimerRef.current !== null) {
+        window.clearTimeout(cardsPortalTimerRef.current);
+        cardsPortalTimerRef.current = null;
+      }
+      setIsCardsPortalActive(false);
+      setCardsPortalStyle({});
+      document.body.style.overflow = "";
+    };
+    window.addEventListener("pageshow", resetCardsPortal);
+    window.addEventListener("popstate", resetCardsPortal);
+    return () => {
+      window.removeEventListener("pageshow", resetCardsPortal);
+      window.removeEventListener("popstate", resetCardsPortal);
+      if (cardsPortalTimerRef.current !== null) window.clearTimeout(cardsPortalTimerRef.current);
+      document.body.style.overflow = "";
+    };
   }, []);
 
   useEffect(() => {
@@ -257,6 +279,12 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     event.preventDefault();
     if (isCardsPortalActive) return;
     const destination = event.currentTarget.href;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    setCardsPortalStyle({
+      "--cards-portal-x": `${((bounds.left + bounds.width / 2) / window.innerWidth) * 100}%`,
+      "--cards-portal-y": `${((bounds.top + bounds.height / 2) / window.innerHeight) * 100}%`,
+      "--cards-portal-color": event.currentTarget.dataset.color ?? "#675276",
+    } as CSSProperties);
     setIsCardsPortalActive(true);
     document.body.style.overflow = "hidden";
     cardsPortalTimerRef.current = window.setTimeout(() => {
@@ -408,11 +436,6 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       </section>
 
       <section className="cards-intro" id="cards" aria-labelledby="cards-intro-title">
-        <div className="cards-intro-blobs" aria-hidden="true">
-          <span className="cards-intro-blob cards-intro-blob-mint" />
-          <span className="cards-intro-blob cards-intro-blob-plum" />
-          <span className="cards-intro-blob cards-intro-blob-honey" />
-        </div>
         <p className="cards-intro-kicker" data-reveal>{t.cardsIntroKicker}</p>
         <h2 id="cards-intro-title" aria-label={`${t.cardsIntroTitleOne} ${t.cardsIntroTitleTwo}`} data-reveal>
           <span>{t.cardsIntroTitleOne}</span>
@@ -422,18 +445,28 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <strong><span>{t.cardsIntroStatementOne}</span><span>{t.cardsIntroStatementTwo}</span></strong>
           <p>{t.cardsIntroText}</p>
         </div>
-        <a
-          className="cards-portal"
-          href={`/cards/velum?lang=${language.toLowerCase()}`}
-          aria-label={t.cardsPortalAria}
-          onClick={enterCardsWorld}
-        >
-          <span className="cards-portal-ring" aria-hidden="true" />
-          <span className="cards-portal-series">{t.cardsPortalSeries}</span>
-          <strong>{t.cardsPortalLabel}</strong>
-          <i aria-hidden="true">↗</i>
-        </a>
-        <div className="cards-portal-transition" data-active={isCardsPortalActive ? "true" : "false"} aria-hidden="true" />
+        <nav className="cards-world-map" aria-label={t.cardsWorldMapAria}>
+          {cardsWorlds.map((world) => (
+            <a
+              key={world.number}
+              className={`cards-world-link cards-world-link-${world.number}`}
+              href={`/cards/${world.slug}?lang=${language.toLowerCase()}`}
+              data-color={world.color}
+              aria-label={`${t.cardsWorldOpen}: ${world.title}`}
+              onClick={enterCardsWorld}
+            >
+              <span>{world.number}</span>
+              <strong>{world.title}</strong>
+              <i aria-hidden="true">↗</i>
+            </a>
+          ))}
+        </nav>
+        <div
+          className="cards-portal-transition"
+          data-active={isCardsPortalActive ? "true" : "false"}
+          style={cardsPortalStyle}
+          aria-hidden="true"
+        />
       </section>
 
       <section className="about" aria-labelledby="about-title">
