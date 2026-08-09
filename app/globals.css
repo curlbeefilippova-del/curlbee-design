@@ -93,6 +93,23 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
+
+h1, h2, h3, h4, h5, h6,
+.case-back,
+.project-list strong,
+.cards-world-link strong {
+  text-wrap: balance;
+}
+
+p, li, figcaption,
+.case-lead-copy,
+.cards-copy,
+.crafted-copy,
+.minimalist-copy,
+.ayu-copy,
+.even-copy {
+  text-wrap: pretty;
+}
 #top,
 .case-page {
   color: var(--ink);
@@ -3904,13 +3921,21 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   html[data-theme="dark"] .theme-toggle:active .theme-toggle-orbit { transform: translateX(32px) rotate(7deg) scale(.94); }
   .theme-toggle-label { font-size: 0; }
   .theme-toggle-label::after { content: attr(data-short); font-size: 9px; }
-  .case-site-header { padding-inline: 14px; }
-  .case-site-header nav { gap: 7px; }
-  .case-site-header .case-back { padding-inline: 10px; gap: 8px; }
-  .case-site-header .case-back > span { width: 22px; flex-basis: 22px; }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) { padding-inline: 14px; }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) nav { gap: 7px; }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .case-back {
+    padding-inline: 10px;
+    gap: 8px;
+    font-size: 0;
+  }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .case-back::after {
+    content: attr(data-short);
+    font-size: 10px;
+  }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .case-back > span { width: 22px; flex-basis: 22px; }
   .case-language { gap: 2px; }
-  .case-language a { min-width: 29px; }
-  .case-language a + a::before { margin-left: -34px; }
+  .case-language a { min-width: 44px; }
+  .case-language a + a::before { margin-left: -49px; }
 }
 
 @media (max-width: 390px) {
