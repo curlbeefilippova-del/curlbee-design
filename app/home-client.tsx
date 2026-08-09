@@ -87,7 +87,7 @@ const copy = {
     heroOne: "Дизайн,",
     heroTwo: "которому хочется",
     heroThree: "ответить",
-    intro: "Собираю бренды, продукты и презентации — с ясной логикой, живой типографикой и характером.",
+    intro: "Собираю бренды, продукты и\u00a0презентации — с\u00a0ясной логикой, живой типографикой и\u00a0характером.",
     status: "Открыта к избранным проектам",
     play: "Проведи курсором — пчела полетит",
     workLabel: "Портфолио · 2026",
@@ -102,7 +102,7 @@ const copy = {
     cardsBridgeText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
     cardsKicker: "Карточки товара · 01",
     cardsTitle: "VÉLUM",
-    cardsText: "Восемь карточек раскрывают продукт от формулы и состава до ритуала нанесения и финального образа.",
+    cardsText: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
     cardsHint: "Наведи или нажми — карточка выйдет на первый план",
     cardsOpen: "Открыть крупно",
     cardsClose: "Закрыть",
@@ -112,7 +112,7 @@ const copy = {
     aboutLineOneEm: "система",
     aboutLineTwo: "понятная, а результат —",
     aboutLineThree: "с неожиданным поворотом",
-    aboutText: "Работаю с айдентикой, digital-дизайном, презентациями и карточками товара. Figma и AI помогают быстрее проверять идеи, но характер и логика каждого проекта остаются авторскими.",
+    aboutText: "Работаю с\u00a0айдентикой, digital-дизайном, презентациями и\u00a0карточками товара. Figma и\u00a0AI помогают быстрее проверять идеи, но характер и\u00a0логика каждого проекта остаются авторскими.",
     footerKicker: "Связаться · Россия / онлайн",
     footerTitleOne: "Сделаем что-то,",
     footerTitleTwo: "что не пролистают?",
@@ -169,6 +169,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const projectStageRef = useRef<HTMLDivElement>(null);
+  const cardsLightboxCloseRef = useRef<HTMLButtonElement>(null);
   const frameRef = useRef<number | null>(null);
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
   const t = copy[language];
@@ -182,7 +183,9 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   useEffect(() => {
     if (!isVelumLightboxOpen) return;
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
+    window.requestAnimationFrame(() => cardsLightboxCloseRef.current?.focus());
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsVelumLightboxOpen(false);
     };
@@ -190,6 +193,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
+      previousFocus?.focus();
     };
   }, [isVelumLightboxOpen]);
 
@@ -390,10 +394,17 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
                     href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}
                     aria-label={language === "RU" ? `Открыть кейс ${item.title}` : `Open ${item.title} case`}
                   >
-                    <img src={item.image} alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""} width="1600" height="1000" />
+                    <img
+                      src={item.image}
+                      alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""}
+                      width="1600"
+                      height="1000"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      decoding="async"
+                    />
                   </a>
                 ) : (
-                  <img src={item.image} alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""} width="1600" height="1000" />
+                  <img src={item.image} alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""} width="1600" height="1000" loading="lazy" decoding="async" />
                 )}
                 <figcaption>
                   <span>{item.number}</span>
@@ -432,7 +443,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
       <section className="cards-chapter" id="velum-cards" aria-labelledby="cards-title">
         <div className="cards-atmosphere" aria-hidden="true">
-          <img className="cards-model" src="/cards/velum/model-back.jpeg" alt="" />
+          <img className="cards-model" src="/cards/velum/model-back.jpeg" alt="" loading="lazy" decoding="async" />
         </div>
         <div className="cards-glass-drops" aria-hidden="true"><i /><i /><i /><i /></div>
         <div className="cards-copy" data-reveal>
@@ -455,6 +466,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
               alt={`VÉLUM — ${velumCard.title[language]}`}
               width="1800"
               height="2400"
+              loading="lazy"
+              decoding="async"
             />
             <span>{t.cardsOpen} ↗</span>
           </button>
@@ -507,7 +520,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
             if (event.target === event.currentTarget) setIsVelumLightboxOpen(false);
           }}
         >
-          <button className="cards-lightbox-close" type="button" onClick={() => setIsVelumLightboxOpen(false)}>
+          <button ref={cardsLightboxCloseRef} className="cards-lightbox-close" type="button" onClick={() => setIsVelumLightboxOpen(false)}>
             <span>{t.cardsClose}</span><i aria-hidden="true">×</i>
           </button>
           <img src={velumCard.image} alt={`VÉLUM — ${velumCard.title[language]}`} width="1800" height="2400" />
