@@ -25,6 +25,8 @@ const copy = {
     hint: "Наведи или нажми — карточка выйдет на первый план",
     open: "Открыть крупно",
     close: "Закрыть",
+    previous: "Предыдущая карточка",
+    next: "Следующая карточка",
     list: "Карточки VÉLUM",
   },
   EN: {
@@ -36,6 +38,8 @@ const copy = {
     hint: "Hover or tap — the card will move to the foreground",
     open: "Open full size",
     close: "Close",
+    previous: "Previous card",
+    next: "Next card",
     list: "VÉLUM cards",
   },
 } as const;
@@ -45,9 +49,14 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
   const [activeCard, setActiveCard] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
+  const lightboxRef = useRef<HTMLDivElement>(null);
   const t = copy[language];
   const card = velumCards[activeCard];
   const langQuery = language.toLowerCase();
+
+  const selectRelativeCard = (direction: number) => {
+    setActiveCard((current) => (current + direction + velumCards.length) % velumCards.length);
+  };
 
   useEffect(() => {
     document.documentElement.lang = langQuery;
@@ -59,13 +68,27 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
     const previousFocus = document.activeElement as HTMLElement | null;
     document.body.style.overflow = "hidden";
     window.requestAnimationFrame(() => lightboxCloseRef.current?.focus());
-    const closeOnEscape = (event: KeyboardEvent) => {
+    const handleLightboxKeys = (event: KeyboardEvent) => {
       if (event.key === "Escape") setIsLightboxOpen(false);
+      if (event.key === "ArrowLeft") selectRelativeCard(-1);
+      if (event.key === "ArrowRight") selectRelativeCard(1);
+      if (event.key === "Tab") {
+        const controls = Array.from(lightboxRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
+        const firstControl = controls[0];
+        const lastControl = controls.at(-1);
+        if (event.shiftKey && document.activeElement === firstControl) {
+          event.preventDefault();
+          lastControl?.focus();
+        } else if (!event.shiftKey && document.activeElement === lastControl) {
+          event.preventDefault();
+          firstControl?.focus();
+        }
+      }
     };
-    window.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("keydown", handleLightboxKeys);
     return () => {
       document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("keydown", handleLightboxKeys);
       previousFocus?.focus();
     };
   }, [isLightboxOpen]);
@@ -168,6 +191,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
 
       {isLightboxOpen && (
         <div
+          ref={lightboxRef}
           className="cards-lightbox"
           role="dialog"
           aria-modal="true"
@@ -179,7 +203,9 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <button ref={lightboxCloseRef} className="cards-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
-          <img src={card.image} alt={`VÉLUM — ${card.title[language]}`} width="1800" height="2400" />
+          <button className="cards-lightbox-step cards-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
+          <img key={card.image} src={card.image} alt={`VÉLUM — ${card.title[language]}`} width="1800" height="2400" />
+          <button className="cards-lightbox-step cards-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="cards-lightbox-caption">
             <span>{card.number} / 08</span>
             <strong>{card.title[language]}</strong>
