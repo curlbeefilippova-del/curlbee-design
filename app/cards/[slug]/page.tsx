@@ -71,7 +71,7 @@ export default async function CardsWorldPage({ params, searchParams }: CardsWorl
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={labels.aria}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{labels.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{labels.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/cards/${slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
             <a href={`/cards/${slug}?lang=en`} aria-current={language === "EN" ? "true" : undefined}>EN</a>
