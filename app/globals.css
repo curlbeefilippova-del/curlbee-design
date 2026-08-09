@@ -1842,8 +1842,8 @@ img { display: block; max-width: 100%; }
   gap: clamp(28px, 3.6vw, 64px);
   overflow: hidden;
   background:
-    radial-gradient(circle at 53% 40%, rgba(255,255,255,.78), transparent 25%),
-    linear-gradient(116deg, rgba(255,255,255,.34), transparent 38%),
+    radial-gradient(circle at 53% 40%, rgba(255,255,255,.74), transparent 24%),
+    linear-gradient(116deg, rgba(255,255,255,.28), transparent 38%),
     var(--minimalist-canvas);
   animation: cards-world-content-in 720ms 150ms var(--ease-out) both;
 }
@@ -1861,31 +1861,38 @@ img { display: block; max-width: 100%; }
   transform: skewY(-1.5deg);
 }
 .minimalist-campaign {
-  position: absolute;
-  z-index: 0;
-  right: -3%;
-  top: 9%;
-  width: min(43vw, 680px);
-  height: 84%;
-  margin: 0;
-  opacity: .29;
-  pointer-events: none;
-  -webkit-mask-image: radial-gradient(ellipse 66% 76% at 62% 52%, #000 0 42%, rgba(0,0,0,.78) 58%, transparent 83%);
-  mask-image: radial-gradient(ellipse 66% 76% at 62% 52%, #000 0 42%, rgba(0,0,0,.78) 58%, transparent 83%);
+  position: relative;
+  width: min(100%, 330px);
+  aspect-ratio: 2.35 / 1;
+  margin: 28px 0 0;
+  overflow: hidden;
+  clip-path: polygon(0 6%, 97% 0, 100% 91%, 3% 100%);
+  box-shadow: 0 18px 40px rgba(41, 78, 64, .14);
 }
 .minimalist-campaign img {
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center;
-  filter: saturate(.82) contrast(.96);
-  animation: minimalist-campaign-in 520ms var(--ease-out) both;
+  object-position: 48% 48%;
+  filter: saturate(.86) contrast(.98);
+}
+.minimalist-campaign figcaption {
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+  padding: 4px 7px;
+  color: #eaf4ef;
+  background: rgba(30, 63, 51, .7);
+  font-size: 8px;
+  line-height: 1.2;
+  letter-spacing: .09em;
+  text-transform: uppercase;
 }
 .minimalist-copy,
 .minimalist-stage,
 .minimalist-controls { position: relative; z-index: 2; }
-.minimalist-copy { align-self: center; max-width: 440px; }
+.minimalist-copy { align-self: center; max-width: 410px; }
 .minimalist-copy > p {
   margin: 0 0 20px;
   color: var(--minimalist-muted);
@@ -1896,8 +1903,8 @@ img { display: block; max-width: 100%; }
 .minimalist-copy h1 {
   margin: 0;
   font-family: var(--serif);
-  font-size: clamp(48px, 4.5vw, 76px);
-  line-height: .86;
+  font-size: clamp(46px, 4.15vw, 70px);
+  line-height: .9;
   font-weight: 420;
   letter-spacing: -.075em;
 }
@@ -1985,67 +1992,89 @@ img { display: block; max-width: 100%; }
 
 .minimalist-controls { align-self: center; }
 .minimalist-controls > p {
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   color: var(--minimalist-muted);
   font-size: 10px;
   line-height: 1.4;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-.minimalist-drop-grid { display: grid; grid-template-columns: repeat(3, minmax(76px, 1fr)); gap: 13px; }
-.minimalist-drop-grid button {
+.minimalist-index {
   position: relative;
-  min-height: 94px;
-  padding: 13px 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  overflow: hidden;
-  border: 1px solid rgba(64, 103, 88, .22);
-  color: #436258;
-  text-align: left;
+  border-top: 1px solid rgba(51, 91, 76, .22);
+}
+.minimalist-water-lens {
+  position: absolute;
+  z-index: 0;
+  left: 3px;
+  top: 5px;
+  width: 38px;
+  height: 38px;
+  display: block;
+  border: 1px solid rgba(38, 83, 65, .48);
+  border-radius: 52% 48% 58% 42% / 44% 56% 44% 56%;
   background:
-    radial-gradient(circle at 24% 17%, rgba(255,255,255,.92) 0 3%, rgba(255,255,255,.28) 7%, transparent 21%),
-    linear-gradient(145deg, rgba(244,251,248,.76), rgba(172,205,192,.45));
-  box-shadow: inset -8px -10px 18px rgba(73, 117, 99, .08), inset 6px 7px 13px rgba(255,255,255,.38), 0 8px 18px rgba(44, 85, 69, .08);
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.92) 0 5%, rgba(255,255,255,.24) 9%, transparent 24%),
+    radial-gradient(circle at 68% 72%, rgba(87, 139, 118, .68), rgba(42, 92, 72, .54) 55%, rgba(255,255,255,.12));
+  box-shadow:
+    inset -5px -7px 12px rgba(22, 70, 51, .16),
+    inset 4px 5px 10px rgba(255,255,255,.28),
+    0 7px 15px rgba(37, 78, 62, .14);
+  pointer-events: none;
+  transform: translateY(calc(var(--minimalist-active-row, 0) * 48px));
+  transition: transform 360ms var(--ease-spring);
+}
+.minimalist-index button {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 4px;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(51, 91, 76, .17);
+  color: #4c6a60;
+  text-align: left;
+  background: transparent;
   cursor: pointer;
   touch-action: manipulation;
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, box-shadow 180ms ease, transform 230ms var(--ease-spring);
+  transition: color 180ms ease;
 }
-.minimalist-drop-grid button:nth-child(3n + 1) { border-radius: 55% 45% 62% 38% / 44% 57% 43% 56%; transform: rotate(-1.2deg); }
-.minimalist-drop-grid button:nth-child(3n + 2) { border-radius: 43% 57% 47% 53% / 58% 42% 58% 42%; transform: rotate(1deg); }
-.minimalist-drop-grid button:nth-child(3n) { border-radius: 61% 39% 53% 47% / 41% 54% 46% 59%; transform: rotate(-.5deg); }
-.minimalist-drop-grid button > span { font-size: 10px; line-height: 1; letter-spacing: .09em; }
-.minimalist-drop-grid button > strong {
-  width: 100%;
-  font-size: 9px;
-  line-height: 1.22;
-  font-weight: 600;
-  letter-spacing: .045em;
+.minimalist-index button::after {
+  content: "";
+  width: 0;
+  height: 1px;
+  justify-self: end;
+  background: var(--minimalist-green);
+  transition: width 240ms var(--ease-out);
+}
+.minimalist-index button > span {
+  position: relative;
+  z-index: 1;
+  justify-self: center;
+  font-size: 10px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .08em;
+  transition: color 180ms ease;
+}
+.minimalist-index button > strong {
+  font-size: 10px;
+  line-height: 1.15;
+  font-weight: 540;
+  letter-spacing: .055em;
   text-transform: uppercase;
-  overflow-wrap: anywhere;
+  transition: transform 240ms var(--ease-out);
 }
-.minimalist-drop-grid button:hover { border-color: rgba(54, 99, 82, .5); transform: translateY(-3px) rotate(0); }
-.minimalist-drop-grid button.is-active {
-  color: #f1f7f4;
-  border-color: #345a4d;
-  background:
-    radial-gradient(circle at 27% 18%, rgba(255,255,255,.5) 0 3%, transparent 18%),
-    linear-gradient(145deg, #6d9484, var(--minimalist-green));
-  box-shadow: inset -8px -10px 18px rgba(21,58,44,.18), inset 6px 7px 13px rgba(255,255,255,.15), 0 12px 22px rgba(40, 79, 64, .18);
-  transform: translateY(-4px) rotate(0) scale(1.025);
-}
-.minimalist-drop-grid button:focus-visible { outline-color: var(--minimalist-green); outline-offset: 4px; }
-.minimalist-campaign-label {
-  margin-top: 17px;
-  display: block;
-  color: var(--minimalist-muted);
-  font-size: 9px;
-  line-height: 1.4;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-}
+.minimalist-index button:hover,
+.minimalist-index button.is-active { color: var(--minimalist-ink); }
+.minimalist-index button:hover > strong,
+.minimalist-index button.is-active > strong { transform: translateX(5px); }
+.minimalist-index button.is-active > span { color: #f2f8f5; }
+.minimalist-index button.is-active::after { width: 28px; }
+.minimalist-index button:focus-visible { outline-color: var(--minimalist-green); outline-offset: -2px; }
 
 .minimalist-lightbox {
   position: fixed;
@@ -2685,12 +2714,10 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     align-items: center;
   }
   .minimalist-deck::before { left: 45%; width: 49%; }
-  .minimalist-campaign { right: -12%; width: min(56vw, 680px); opacity: .23; }
   .minimalist-copy { grid-column: 1; grid-row: 1; align-self: end; }
+  .minimalist-campaign { width: min(100%, 300px); }
   .minimalist-stage { grid-column: 2; grid-row: 1 / 3; }
   .minimalist-controls { grid-column: 1; grid-row: 2; align-self: start; }
-  .minimalist-drop-grid { grid-template-columns: repeat(3, minmax(72px, 1fr)); gap: 11px; }
-  .minimalist-drop-grid button { min-height: 84px; }
 }
 
 @media (max-width: 820px) {
@@ -2708,25 +2735,14 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     overflow: hidden;
   }
   .minimalist-deck::before { left: 20%; top: 33%; width: 86%; height: 42%; transform: skewY(-1.5deg); }
-  .minimalist-campaign {
-    right: -26vw;
-    top: 4%;
-    width: 92vw;
-    height: 44%;
-    opacity: .12;
-    -webkit-mask-image: radial-gradient(ellipse 68% 68% at 65% 43%, #000 0 42%, transparent 82%);
-    mask-image: radial-gradient(ellipse 68% 68% at 65% 43%, #000 0 42%, transparent 82%);
-  }
   .minimalist-copy { grid-column: 1; grid-row: 1; max-width: 560px; align-self: start; }
   .minimalist-copy h1 { font-size: clamp(58px, 15vw, 88px); }
   .minimalist-copy > strong { max-width: 410px; margin-top: 25px; font-size: 27px; }
   .minimalist-copy > span { max-width: 520px; font-size: 16px; }
+  .minimalist-campaign { width: min(100%, 360px); margin-top: 26px; }
   .minimalist-stage { grid-column: 1; grid-row: 2; width: min(82vw, 500px); }
   .minimalist-active img { max-height: none; }
   .minimalist-controls { grid-column: 1; grid-row: 3; width: 100%; }
-  .minimalist-drop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
-  .minimalist-drop-grid button { min-height: 100px; padding: 14px 13px; }
-  .minimalist-drop-grid button > strong { font-size: 10px; }
 }
 
 @media (max-width: 560px) {
@@ -2737,12 +2753,11 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .minimalist-copy > p { margin-bottom: 18px; }
   .minimalist-copy > strong { max-width: 320px; font-size: 25px; }
   .minimalist-copy > span { font-size: 15px; }
+  .minimalist-campaign { width: 100%; aspect-ratio: 2.1 / 1; margin-top: 24px; }
   .minimalist-stage { width: min(86vw, 440px); }
   .minimalist-glass-shelf { inset: -2.8% -4.5% 3.2% 4.5%; }
   .minimalist-active > span { bottom: -30px; }
-  .minimalist-drop-grid { gap: 10px; }
-  .minimalist-drop-grid button { min-height: 92px; padding: 12px 9px; }
-  .minimalist-drop-grid button > strong { font-size: 8px; }
+  .minimalist-index button > strong { font-size: 9.5px; }
   .minimalist-lightbox {
     padding: 66px 10px 18px;
     grid-template-columns: repeat(2, minmax(0, 1fr));

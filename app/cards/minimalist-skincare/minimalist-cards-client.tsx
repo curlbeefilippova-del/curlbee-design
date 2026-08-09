@@ -1,19 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
 export type MinimalistCardsLanguage = "RU" | "EN";
 
 const minimalistCards = [
-  { number: "01", image: "/cards/minimalist-skincare/01.webp", campaign: "/cards/minimalist-skincare/campaign-01.webp", title: { RU: "Чистая кожа", EN: "Clear skin" } },
-  { number: "02", image: "/cards/minimalist-skincare/02.webp", campaign: "/cards/minimalist-skincare/campaign-02.webp", title: { RU: "Проблема", EN: "The concern" } },
-  { number: "03", image: "/cards/minimalist-skincare/03.webp", campaign: "/cards/minimalist-skincare/campaign-03.webp", title: { RU: "Решение", EN: "The result" } },
-  { number: "04", image: "/cards/minimalist-skincare/04.webp", campaign: "/cards/minimalist-skincare/campaign-04.webp", title: { RU: "Текстура и состав", EN: "Texture and formula" } },
-  { number: "05", image: "/cards/minimalist-skincare/05.webp", campaign: "/cards/minimalist-skincare/campaign-05.webp", title: { RU: "Активные компоненты", EN: "Active ingredients" } },
-  { number: "06", image: "/cards/minimalist-skincare/06.webp", campaign: "/cards/minimalist-skincare/campaign-01.webp", title: { RU: "Главный актив", EN: "Hero active" } },
-  { number: "07", image: "/cards/minimalist-skincare/07.webp", campaign: "/cards/minimalist-skincare/campaign-02.webp", title: { RU: "Почему этот продукт", EN: "Why this product" } },
-  { number: "08", image: "/cards/minimalist-skincare/08.webp", campaign: "/cards/minimalist-skincare/campaign-03.webp", title: { RU: "Этап очищения", EN: "Cleansing step" } },
-  { number: "09", image: "/cards/minimalist-skincare/09.webp", campaign: "/cards/minimalist-skincare/campaign-04.webp", title: { RU: "Финальный образ", EN: "Final image" } },
+  { number: "01", image: "/cards/minimalist-skincare/01.webp", title: { RU: "Чистая кожа", EN: "Clear skin" } },
+  { number: "02", image: "/cards/minimalist-skincare/02.webp", title: { RU: "Проблема", EN: "The concern" } },
+  { number: "03", image: "/cards/minimalist-skincare/03.webp", title: { RU: "Решение", EN: "The result" } },
+  { number: "04", image: "/cards/minimalist-skincare/04.webp", title: { RU: "Текстура и состав", EN: "Texture and formula" } },
+  { number: "05", image: "/cards/minimalist-skincare/05.webp", title: { RU: "Активные компоненты", EN: "Active ingredients" } },
+  { number: "06", image: "/cards/minimalist-skincare/06.webp", title: { RU: "Главный актив", EN: "Hero active" } },
+  { number: "07", image: "/cards/minimalist-skincare/07.webp", title: { RU: "Почему этот продукт", EN: "Why this product" } },
+  { number: "08", image: "/cards/minimalist-skincare/08.webp", title: { RU: "Этап очищения", EN: "Cleansing step" } },
+  { number: "09", image: "/cards/minimalist-skincare/09.webp", title: { RU: "Финальный образ", EN: "Final image" } },
 ] as const;
 
 const copy = {
@@ -26,7 +27,7 @@ const copy = {
     titleBottom: "SKINCARE",
     statement: "Чистота без лишнего",
     text: "Девять карточек раскрывают пенку для умывания через состояние кожи, активные компоненты, текстуру и ежедневный ритуал очищения.",
-    controls: "Девять состояний · выбери каплю",
+    controls: "Серия · девять экранов",
     open: "Открыть крупно",
     close: "Закрыть",
     previous: "Предыдущая карточка",
@@ -43,7 +44,7 @@ const copy = {
     titleBottom: "SKINCARE",
     statement: "Clarity without excess",
     text: "Nine cards reveal the cleansing foam through skin states, active ingredients, texture and the everyday cleansing ritual.",
-    controls: "Nine states · choose a drop",
+    controls: "Series · nine screens",
     open: "Open full size",
     close: "Close",
     previous: "Previous card",
@@ -74,9 +75,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
   useEffect(() => {
     const next = minimalistCards[(activeCard + 1) % minimalistCards.length];
     const nextCard = new window.Image();
-    const nextCampaign = new window.Image();
     nextCard.src = next.image;
-    nextCampaign.src = next.campaign;
   }, [activeCard]);
 
   useEffect(() => {
@@ -143,15 +142,15 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
       </header>
 
       <section className="minimalist-deck" id="minimalist-series" aria-labelledby="minimalist-title">
-        <figure className="minimalist-campaign" aria-hidden="true">
-          <img key={card.campaign} src={card.campaign} alt="" decoding="async" />
-        </figure>
-
         <div className="minimalist-copy">
           <p>{t.kicker}</p>
           <h1 id="minimalist-title"><span>{t.titleTop}</span><em>{t.titleBottom}</em></h1>
           <strong>{t.statement}</strong>
           <span>{t.text}</span>
+          <figure className="minimalist-campaign">
+            <img src="/cards/minimalist-skincare/campaign-04.webp" alt={t.campaign} width="1400" height="1875" decoding="async" />
+            <figcaption>{t.campaign}</figcaption>
+          </figure>
         </div>
 
         <div className="minimalist-stage">
@@ -177,7 +176,13 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
 
         <div className="minimalist-controls">
           <p>{t.controls}</p>
-          <div className="minimalist-drop-grid" role="group" aria-label={t.list}>
+          <div
+            className="minimalist-index"
+            role="group"
+            aria-label={t.list}
+            style={{ "--minimalist-active-row": activeCard } as CSSProperties}
+          >
+            <i className="minimalist-water-lens" aria-hidden="true" />
             {minimalistCards.map((item, index) => (
               <button
                 type="button"
@@ -195,7 +200,6 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
               </button>
             ))}
           </div>
-          <span className="minimalist-campaign-label">{t.campaign} · {card.number}</span>
         </div>
       </section>
 
