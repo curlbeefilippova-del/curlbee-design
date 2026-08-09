@@ -98,8 +98,10 @@ const copy = {
     caseLabel: "Кейс в портфолио",
     cardsBridgeKicker: "Новая глава · карточки товара",
     cardsBridgeTitleOne: "Отдельные миры",
-    cardsBridgeTitleTwo: "внутри одной системы",
+    cardsBridgeTitleTwo: ["внутри одной", "системы"],
     cardsBridgeText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
+    cardsBridgeChapter: "Глава",
+    cardsBridgeNext: "Следующая глава",
     cardsKicker: "Карточки товара · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
@@ -138,8 +140,10 @@ const copy = {
     caseLabel: "Portfolio case",
     cardsBridgeKicker: "New chapter · product cards",
     cardsBridgeTitleOne: "Distinct worlds",
-    cardsBridgeTitleTwo: "within one system",
+    cardsBridgeTitleTwo: ["within one", "system"],
     cardsBridgeText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
+    cardsBridgeChapter: "Chapter",
+    cardsBridgeNext: "Next chapter",
     cardsKicker: "Product cards · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Eight cards reveal the product from formula and ingredients to the application ritual and final image.",
@@ -426,17 +430,26 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <div className="cards-bridge-blobs" aria-hidden="true">
           <i className="cards-bridge-blob cards-bridge-blob-mint" />
           <i className="cards-bridge-blob cards-bridge-blob-plum" />
-          <i className="cards-bridge-blob cards-bridge-blob-honey" />
         </div>
         <p className="cards-bridge-kicker" data-reveal>{t.cardsBridgeKicker}</p>
-        <h2 id="cards-bridge-title" data-reveal>
-          <span>{t.cardsBridgeTitleOne}</span>
-          <em>{t.cardsBridgeTitleTwo}</em>
+        <div className="cards-bridge-chapter-mark" data-reveal aria-hidden="true">
+          <i />
+          <span>
+            <small>{t.cardsBridgeChapter}</small>
+            <b>01</b>
+          </span>
+        </div>
+        <h2 id="cards-bridge-title" aria-label={`${t.cardsBridgeTitleOne} ${t.cardsBridgeTitleTwo.join(" ")}`} data-reveal>
+          <span aria-hidden="true">{t.cardsBridgeTitleOne}</span>
+          <em aria-hidden="true">
+            <span>{t.cardsBridgeTitleTwo[0]}</span>
+            <span className="cards-bridge-title-cross" data-text={t.cardsBridgeTitleTwo[1]}>{t.cardsBridgeTitleTwo[1]}</span>
+          </em>
         </h2>
         <p className="cards-bridge-copy" data-reveal>{t.cardsBridgeText}</p>
         <a className="cards-bridge-next" href="#velum-cards" aria-label={language === "RU" ? "Перейти к карточкам VÉLUM" : "Go to VÉLUM cards"}>
           <span>01</span>
-          <strong>VÉLUM</strong>
+          <strong>{t.cardsBridgeNext}</strong>
           <i aria-hidden="true">↓</i>
         </a>
       </section>
