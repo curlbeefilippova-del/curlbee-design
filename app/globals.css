@@ -1029,6 +1029,7 @@ img { display: block; max-width: 100%; }
 .cards-world-link-02 { width: clamp(176px, 15vw, 244px); aspect-ratio: 1.15; left: 34%; top: 1%; background: linear-gradient(145deg, #717865, #4d5343); transform: rotate(3deg); }
 .cards-world-link-03 { width: clamp(156px, 13vw, 212px); aspect-ratio: 0.98; right: 0; top: 25%; background: linear-gradient(145deg, #cc705b, #a84e3c); transform: rotate(7deg); }
 .cards-world-link-04 { --world-ink: var(--ink); width: clamp(228px, 19vw, 308px); aspect-ratio: 1.38; left: 8%; bottom: 0; background: linear-gradient(145deg, #deeee4, #b9d7c4); transform: rotate(3deg); }
+.cards-world-link-04 > span { transform: translate(18px, 10px); }
 .cards-world-link-04 strong { font-size: clamp(16px, 1.55vw, 25px); max-width: 88%; }
 .cards-world-link-05 { --world-ink: var(--ink); width: clamp(168px, 14vw, 228px); aspect-ratio: 1.06; right: 11%; bottom: 2%; background: linear-gradient(145deg, #edc166, #d09a36); transform: rotate(-6deg); }
 .cards-world-link:hover,
@@ -1800,6 +1801,15 @@ img { display: block; max-width: 100%; }
   color: var(--minimalist-ink);
   background: var(--minimalist-canvas);
   isolation: isolate;
+  transition: color 520ms ease, background-color 640ms ease;
+}
+.minimalist-world.is-lifestyle {
+  --minimalist-canvas: #e7d7c0;
+  --minimalist-paper: #f4eadc;
+  --minimalist-ink: #403426;
+  --minimalist-muted: #75634f;
+  --minimalist-green: #69765a;
+  --minimalist-glass: rgba(250, 239, 220, .48);
 }
 .minimalist-world::before {
   content: "";
@@ -1824,7 +1834,13 @@ img { display: block; max-width: 100%; }
   background: rgba(222, 237, 230, 0.8);
   backdrop-filter: blur(18px) saturate(0.92);
   -webkit-backdrop-filter: blur(18px) saturate(0.92);
+  transition: color 520ms ease, border-color 520ms ease, background-color 640ms ease;
 }
+.minimalist-world.is-lifestyle .minimalist-header {
+  border-bottom-color: rgba(75, 58, 39, .14);
+  background: rgba(237, 222, 201, .82);
+}
+.minimalist-world.is-lifestyle .minimalist-header .case-back { border-color: rgba(75, 58, 39, .22); }
 .minimalist-header nav { display: flex; align-items: center; gap: clamp(24px, 4vw, 64px); }
 .minimalist-header .case-back { color: var(--minimalist-ink); border-color: rgba(29, 56, 47, 0.2); background: rgba(255,255,255,.22); }
 .minimalist-header .case-back:hover { border-color: var(--minimalist-green); background: rgba(255,255,255,.42); }
@@ -1859,35 +1875,26 @@ img { display: block; max-width: 100%; }
   background: linear-gradient(130deg, rgba(255,255,255,.3), rgba(102,145,129,.08));
   box-shadow: 0 36px 90px rgba(45, 84, 70, .11), inset 0 1px 0 rgba(255,255,255,.7);
   transform: skewY(-1.5deg);
+  transition: border-color 520ms ease, background 640ms ease, box-shadow 640ms ease;
 }
-.minimalist-campaign {
-  position: relative;
-  width: min(100%, 330px);
-  aspect-ratio: 2.35 / 1;
-  margin: 28px 0 0;
-  overflow: hidden;
-  clip-path: polygon(0 6%, 97% 0, 100% 91%, 3% 100%);
-  box-shadow: 0 18px 40px rgba(41, 78, 64, .14);
-}
-.minimalist-campaign img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: 48% 48%;
-  filter: saturate(.86) contrast(.98);
-}
-.minimalist-campaign figcaption {
+.minimalist-deck::after {
+  content: "";
   position: absolute;
-  left: 14px;
-  bottom: 10px;
-  padding: 4px 7px;
-  color: #eaf4ef;
-  background: rgba(30, 63, 51, .7);
-  font-size: 8px;
-  line-height: 1.2;
-  letter-spacing: .09em;
-  text-transform: uppercase;
+  z-index: 0;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 24% 36%, rgba(255, 246, 229, .82), transparent 31%),
+    radial-gradient(circle at 78% 22%, rgba(246, 230, 204, .54), transparent 34%),
+    linear-gradient(118deg, rgba(239, 223, 199, .96), rgba(213, 187, 151, .92) 60%, rgba(171, 135, 94, .76));
+  transition: opacity 680ms var(--ease-out);
+}
+.minimalist-world.is-lifestyle .minimalist-deck::after { opacity: 1; }
+.minimalist-world.is-lifestyle .minimalist-deck::before {
+  border-color: rgba(255, 247, 233, .46);
+  background: linear-gradient(130deg, rgba(255, 248, 235, .4), rgba(147, 111, 72, .08));
+  box-shadow: 0 36px 90px rgba(105, 77, 45, .13), inset 0 1px 0 rgba(255, 250, 240, .72);
 }
 .minimalist-copy,
 .minimalist-stage,
@@ -1933,6 +1940,7 @@ img { display: block; max-width: 100%; }
   font-size: var(--type-body);
   line-height: var(--leading-body);
 }
+.minimalist-world.is-lifestyle .minimalist-copy > span { color: #685844; }
 .minimalist-stage { justify-self: center; width: min(100%, 455px); }
 .minimalist-glass-shelf {
   position: absolute;
@@ -1945,6 +1953,7 @@ img { display: block; max-width: 100%; }
     0 2px 1px rgba(255,255,255,.84) inset,
     0 28px 54px rgba(43, 85, 69, .18);
   transform: perspective(700px) rotateY(-2deg) rotateZ(1.2deg);
+  transition: border-color 560ms ease, background 640ms ease, box-shadow 640ms ease;
 }
 .minimalist-glass-shelf::after {
   content: "";
@@ -1956,6 +1965,16 @@ img { display: block; max-width: 100%; }
   border: 1px solid rgba(255,255,255,.5);
   background: linear-gradient(180deg, rgba(151,193,176,.45), rgba(243,250,247,.26));
   transform: skewX(-16deg);
+  transition: border-color 560ms ease, background 640ms ease;
+}
+.minimalist-world.is-lifestyle .minimalist-glass-shelf {
+  border-color: rgba(255, 247, 232, .64);
+  background: linear-gradient(136deg, rgba(255, 248, 235, .68), rgba(201, 166, 122, .24) 48%, rgba(247, 232, 209, .52));
+  box-shadow: 0 2px 1px rgba(255, 250, 241, .86) inset, 0 30px 58px rgba(99, 72, 43, .2);
+}
+.minimalist-world.is-lifestyle .minimalist-glass-shelf::after {
+  border-color: rgba(255, 246, 229, .56);
+  background: linear-gradient(180deg, rgba(203, 172, 134, .44), rgba(247, 234, 215, .28));
 }
 .minimalist-active {
   position: relative;
@@ -2022,7 +2041,14 @@ img { display: block; max-width: 100%; }
     0 7px 15px rgba(37, 78, 62, .14);
   pointer-events: none;
   transform: translateY(calc(var(--minimalist-active-row, 0) * 48px));
-  transition: transform 360ms var(--ease-spring);
+  transition: transform 360ms var(--ease-spring), border-color 520ms ease, background 640ms ease, box-shadow 640ms ease;
+}
+.minimalist-world.is-lifestyle .minimalist-water-lens {
+  border-color: rgba(91, 83, 57, .5);
+  background:
+    radial-gradient(circle at 28% 22%, rgba(255,255,255,.9) 0 5%, rgba(255,255,255,.22) 9%, transparent 24%),
+    radial-gradient(circle at 68% 72%, rgba(151, 145, 103, .7), rgba(91, 103, 74, .6) 55%, rgba(255,255,255,.12));
+  box-shadow: inset -5px -7px 12px rgba(70, 64, 39, .15), inset 4px 5px 10px rgba(255,255,255,.28), 0 7px 15px rgba(86, 66, 40, .15);
 }
 .minimalist-index button {
   position: relative;
@@ -2075,6 +2101,13 @@ img { display: block; max-width: 100%; }
 .minimalist-index button.is-active > span { color: #f2f8f5; }
 .minimalist-index button.is-active::after { width: 28px; }
 .minimalist-index button:focus-visible { outline-color: var(--minimalist-green); outline-offset: -2px; }
+.minimalist-world.is-lifestyle .minimalist-index { border-top-color: rgba(91, 73, 49, .24); }
+.minimalist-world.is-lifestyle .minimalist-index button {
+  color: #75634f;
+  border-bottom-color: rgba(91, 73, 49, .18);
+}
+.minimalist-world.is-lifestyle .minimalist-index button:hover,
+.minimalist-world.is-lifestyle .minimalist-index button.is-active { color: var(--minimalist-ink); }
 
 .minimalist-lightbox {
   position: fixed;
@@ -2357,7 +2390,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 @keyframes crafted-lightbox-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes minimalist-portal-release { from { clip-path: circle(160vmax at 24% 72%); } to { clip-path: circle(0 at 24% 72%); visibility: hidden; } }
 @keyframes minimalist-card-in { from { opacity: .62; transform: translateY(13px) scale(.987); } to { opacity: 1; transform: none; } }
-@keyframes minimalist-campaign-in { from { opacity: 0; transform: scale(1.035); } to { opacity: 1; transform: none; } }
 @keyframes minimalist-lightbox-in { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 1080px) {
@@ -2715,7 +2747,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   .minimalist-deck::before { left: 45%; width: 49%; }
   .minimalist-copy { grid-column: 1; grid-row: 1; align-self: end; }
-  .minimalist-campaign { width: min(100%, 300px); }
   .minimalist-stage { grid-column: 2; grid-row: 1 / 3; }
   .minimalist-controls { grid-column: 1; grid-row: 2; align-self: start; }
 }
@@ -2739,7 +2770,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .minimalist-copy h1 { font-size: clamp(58px, 15vw, 88px); }
   .minimalist-copy > strong { max-width: 410px; margin-top: 25px; font-size: 27px; }
   .minimalist-copy > span { max-width: 520px; font-size: 16px; }
-  .minimalist-campaign { width: min(100%, 360px); margin-top: 26px; }
   .minimalist-stage { grid-column: 1; grid-row: 2; width: min(82vw, 500px); }
   .minimalist-active img { max-height: none; }
   .minimalist-controls { grid-column: 1; grid-row: 3; width: 100%; }
@@ -2753,7 +2783,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .minimalist-copy > p { margin-bottom: 18px; }
   .minimalist-copy > strong { max-width: 320px; font-size: 25px; }
   .minimalist-copy > span { font-size: 15px; }
-  .minimalist-campaign { width: 100%; aspect-ratio: 2.1 / 1; margin-top: 24px; }
   .minimalist-stage { width: min(86vw, 440px); }
   .minimalist-glass-shelf { inset: -2.8% -4.5% 3.2% 4.5%; }
   .minimalist-active > span { bottom: -30px; }

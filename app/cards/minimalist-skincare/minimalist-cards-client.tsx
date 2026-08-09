@@ -14,7 +14,7 @@ const minimalistCards = [
   { number: "06", image: "/cards/minimalist-skincare/06.webp", title: { RU: "Главный актив", EN: "Hero active" } },
   { number: "07", image: "/cards/minimalist-skincare/07.webp", title: { RU: "Почему этот продукт", EN: "Why this product" } },
   { number: "08", image: "/cards/minimalist-skincare/08.webp", title: { RU: "Этап очищения", EN: "Cleansing step" } },
-  { number: "09", image: "/cards/minimalist-skincare/09.webp", title: { RU: "Финальный образ", EN: "Final image" } },
+  { number: "09", image: "/cards/minimalist-skincare/09.webp", title: { RU: "Лайфстайл", EN: "Lifestyle" } },
 ] as const;
 
 const copy = {
@@ -33,7 +33,6 @@ const copy = {
     previous: "Предыдущая карточка",
     next: "Следующая карточка",
     list: "Карточки MINIMALIST SKINCARE",
-    campaign: "Имиджевый кадр кампании",
   },
   EN: {
     skip: "Skip to the series",
@@ -50,7 +49,6 @@ const copy = {
     previous: "Previous card",
     next: "Next card",
     list: "MINIMALIST SKINCARE cards",
-    campaign: "Campaign image",
   },
 } as const;
 
@@ -112,7 +110,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
   }, [isLightboxOpen]);
 
   return (
-    <main className="minimalist-world">
+    <main className={`minimalist-world${activeCard === 8 ? " is-lifestyle" : ""}`}>
       <a className="skip-link" href="#minimalist-series">{t.skip}</a>
       <header className="minimalist-header">
         <a className="case-brand" href={`/?lang=${langQuery}#cards`} aria-label="Curlbee Design">
@@ -147,10 +145,6 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <h1 id="minimalist-title"><span>{t.titleTop}</span><em>{t.titleBottom}</em></h1>
           <strong>{t.statement}</strong>
           <span>{t.text}</span>
-          <figure className="minimalist-campaign">
-            <img src="/cards/minimalist-skincare/campaign-04.webp" alt={t.campaign} width="1400" height="1875" decoding="async" />
-            <figcaption>{t.campaign}</figcaption>
-          </figure>
         </div>
 
         <div className="minimalist-stage">
