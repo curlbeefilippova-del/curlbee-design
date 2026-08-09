@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 
 export type Language = "RU" | "EN";
 
@@ -67,17 +67,6 @@ const projects = [
   },
 ] as const;
 
-const velumCards = [
-  { number: "01", image: "/cards/velum/01.png", title: { RU: "Главный экран", EN: "Hero card" } },
-  { number: "02", image: "/cards/velum/02.png", title: { RU: "Почему VÉLUM", EN: "Why VÉLUM" } },
-  { number: "03", image: "/cards/velum/03.png", title: { RU: "Формула", EN: "Formula" } },
-  { number: "04", image: "/cards/velum/04.png", title: { RU: "Состав", EN: "Ingredients" } },
-  { number: "05", image: "/cards/velum/05.png", title: { RU: "Способ применения", EN: "How to use" } },
-  { number: "06", image: "/cards/velum/06.png", title: { RU: "Результат", EN: "Result" } },
-  { number: "07", image: "/cards/velum/07.png", title: { RU: "Ценности", EN: "Values" } },
-  { number: "08", image: "/cards/velum/08.png", title: { RU: "Финальный образ", EN: "Final image" } },
-] as const;
-
 const copy = {
   RU: {
     navWork: "Проекты",
@@ -102,13 +91,9 @@ const copy = {
     cardsIntroStatementOne: "Отдельные миры",
     cardsIntroStatementTwo: "внутри одной системы",
     cardsIntroText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
-    cardsWorldKicker: "Серия 01 · VÉLUM",
-    cardsKicker: "Карточки товара · 01",
-    cardsTitle: "VÉLUM",
-    cardsText: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
-    cardsHint: "Наведи или нажми — карточка выйдет на первый план",
-    cardsOpen: "Открыть крупно",
-    cardsClose: "Закрыть",
+    cardsPortalLabel: "Войти в мир",
+    cardsPortalSeries: "01 · VÉLUM",
+    cardsPortalAria: "Открыть мир карточек VÉLUM",
     aboutKicker: "Коротко обо мне",
     aboutTitle: "Люблю, когда система понятная, а результат — с неожиданным поворотом",
     aboutLineOne: "Люблю, когда",
@@ -145,13 +130,9 @@ const copy = {
     cardsIntroStatementOne: "Distinct worlds",
     cardsIntroStatementTwo: "within one system",
     cardsIntroText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
-    cardsWorldKicker: "Series 01 · VÉLUM",
-    cardsKicker: "Product cards · 01",
-    cardsTitle: "VÉLUM",
-    cardsText: "Eight cards reveal the product from formula and ingredients to the application ritual and final image.",
-    cardsHint: "Hover or tap — the card will move to the foreground",
-    cardsOpen: "Open full size",
-    cardsClose: "Close",
+    cardsPortalLabel: "Enter the world",
+    cardsPortalSeries: "01 · VÉLUM",
+    cardsPortalAria: "Open the VÉLUM product-card world",
     aboutKicker: "A little about me",
     aboutTitle: "I like a system that makes sense — and a result with an unexpected turn",
     aboutLineOne: "I like a",
@@ -170,39 +151,19 @@ const copy = {
 export default function HomeClient({ initialLanguage }: { initialLanguage: Language }) {
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [activeProject, setActiveProject] = useState(0);
-  const [activeVelumCard, setActiveVelumCard] = useState(0);
-  const [isVelumLightboxOpen, setIsVelumLightboxOpen] = useState(false);
+  const [isCardsPortalActive, setIsCardsPortalActive] = useState(false);
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const projectStageRef = useRef<HTMLDivElement>(null);
-  const cardsBridgeRef = useRef<HTMLElement>(null);
-  const cardsLightboxCloseRef = useRef<HTMLButtonElement>(null);
+  const cardsPortalTimerRef = useRef<number | null>(null);
   const frameRef = useRef<number | null>(null);
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
   const t = copy[language];
   const project = projects[activeProject];
-  const velumCard = velumCards[activeVelumCard];
 
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
   }, [language]);
-
-  useEffect(() => {
-    if (!isVelumLightboxOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    const previousFocus = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => cardsLightboxCloseRef.current?.focus());
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsVelumLightboxOpen(false);
-    };
-    window.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
-      previousFocus?.focus();
-    };
-  }, [isVelumLightboxOpen]);
 
   useEffect(() => {
     const companion = companionRef.current;
@@ -266,70 +227,10 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     };
   }, []);
 
-  useEffect(() => {
-    const bridge = cardsBridgeRef.current;
-    const path = bridge?.querySelector<SVGPathElement>(".cards-world-membrane-path");
-    if (!bridge || !path) return;
-
-    const pathFrom = path.dataset.pathFrom;
-    const pathTo = path.dataset.pathTo;
-    if (!pathFrom || !pathTo) return;
-
-    const animated = window.matchMedia("(min-width: 821px) and (prefers-reduced-motion: no-preference)");
-    if (!animated.matches) {
-      path.setAttribute("d", pathTo);
-      return;
-    }
-
-    const worldLabel = bridge.querySelector<HTMLElement>(".cards-world-label");
-    const numberPattern = /-?\d*\.?\d+/g;
-    const fromValues = pathFrom.match(numberPattern)?.map(Number) ?? [];
-    const toValues = pathTo.match(numberPattern)?.map(Number) ?? [];
-    let currentProgress = 0;
-    let targetProgress = 0;
-    let frame: number | null = null;
-
-    const clamp = (value: number) => Math.min(1, Math.max(0, value));
-    const easeOut = (value: number) => 1 - Math.pow(1 - value, 3);
-
-    const paint = () => {
-      currentProgress += (targetProgress - currentProgress) * 0.16;
-      if (Math.abs(targetProgress - currentProgress) < 0.001) currentProgress = targetProgress;
-
-      let valueIndex = 0;
-      const interpolatedPath = pathTo.replace(numberPattern, () => {
-        const from = fromValues[valueIndex] ?? toValues[valueIndex] ?? 0;
-        const to = toValues[valueIndex] ?? from;
-        valueIndex += 1;
-        return (from + (to - from) * currentProgress).toFixed(2);
-      });
-      path.setAttribute("d", interpolatedPath);
-
-      const labelProgress = easeOut(clamp((currentProgress - 0.18) / 0.7));
-      worldLabel?.style.setProperty("transform", `translateY(${(22 * (1 - labelProgress)).toFixed(3)}px)`);
-      worldLabel?.style.setProperty("opacity", (0.18 + labelProgress * 0.82).toFixed(3));
-
-      if (currentProgress !== targetProgress) frame = window.requestAnimationFrame(paint);
-      else frame = null;
-    };
-
-    const measure = () => {
-      const start = window.innerHeight * 0.88;
-      const end = window.innerHeight * 0.28;
-      targetProgress = clamp((start - bridge.getBoundingClientRect().top) / (start - end));
-      if (frame === null) frame = window.requestAnimationFrame(paint);
-    };
-
-    measure();
-    window.addEventListener("scroll", measure, { passive: true });
-    window.addEventListener("resize", measure, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", measure);
-      window.removeEventListener("resize", measure);
-      if (frame !== null) window.cancelAnimationFrame(frame);
-    };
-  }, [language]);
+  useEffect(() => () => {
+    if (cardsPortalTimerRef.current !== null) window.clearTimeout(cardsPortalTimerRef.current);
+    document.body.style.overflow = "";
+  }, []);
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
@@ -350,6 +251,18 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
   }, []);
+
+  const enterCardsWorld = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    event.preventDefault();
+    if (isCardsPortalActive) return;
+    const destination = event.currentTarget.href;
+    setIsCardsPortalActive(true);
+    document.body.style.overflow = "hidden";
+    cardsPortalTimerRef.current = window.setTimeout(() => {
+      window.location.assign(destination);
+    }, 620);
+  };
 
   return (
     <main id="top">
@@ -495,6 +408,11 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       </section>
 
       <section className="cards-intro" id="cards" aria-labelledby="cards-intro-title">
+        <div className="cards-intro-blobs" aria-hidden="true">
+          <span className="cards-intro-blob cards-intro-blob-mint" />
+          <span className="cards-intro-blob cards-intro-blob-plum" />
+          <span className="cards-intro-blob cards-intro-blob-honey" />
+        </div>
         <p className="cards-intro-kicker" data-reveal>{t.cardsIntroKicker}</p>
         <h2 id="cards-intro-title" aria-label={`${t.cardsIntroTitleOne} ${t.cardsIntroTitleTwo}`} data-reveal>
           <span>{t.cardsIntroTitleOne}</span>
@@ -504,117 +422,19 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <strong><span>{t.cardsIntroStatementOne}</span><span>{t.cardsIntroStatementTwo}</span></strong>
           <p>{t.cardsIntroText}</p>
         </div>
-      </section>
-
-      <section ref={cardsBridgeRef} className="cards-world-bridge" aria-label={t.cardsWorldKicker}>
-        <svg className="cards-world-membrane" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="cards-world-field" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#7d6989" />
-              <stop offset="0.48" stopColor="#675276" />
-              <stop offset="1" stopColor="#12110d" />
-            </linearGradient>
-          </defs>
-          <path
-            className="cards-world-membrane-path"
-            d="M0 126 C248 82 494 178 730 118 C964 62 1182 112 1440 72 L1440 480 L0 480 Z"
-            data-path-from="M0 364 C246 336 486 388 724 358 C960 330 1186 338 1440 366 L1440 480 L0 480 Z"
-            data-path-to="M0 126 C248 82 494 178 730 118 C964 62 1182 112 1440 72 L1440 480 L0 480 Z"
-            fill="url(#cards-world-field)"
-          />
-        </svg>
-        <p className="cards-world-label">{t.cardsWorldKicker}</p>
-      </section>
-
-      <section className="cards-chapter" id="velum-cards" aria-labelledby="cards-title">
-        <div className="cards-atmosphere" aria-hidden="true">
-          <img className="cards-model" src="/cards/velum/model-back.jpeg" alt="" loading="lazy" decoding="async" />
-        </div>
-        <div className="cards-glass-drops" aria-hidden="true"><i /><i /><i /><i /></div>
-        <div className="cards-copy" data-reveal>
-          <p>{t.cardsKicker}</p>
-          <h2 id="cards-title">{t.cardsTitle}</h2>
-          <span>{t.cardsText}</span>
-          <em>{t.cardsHint}</em>
-        </div>
-
-        <div className="cards-stage" data-reveal>
-          <button
-            className="cards-active"
-            type="button"
-            onClick={() => setIsVelumLightboxOpen(true)}
-            aria-label={`${t.cardsOpen}: ${velumCard.title[language]}`}
-          >
-            <img
-              key={velumCard.image}
-              src={velumCard.image}
-              alt={`VÉLUM — ${velumCard.title[language]}`}
-              width="1800"
-              height="2400"
-              loading="lazy"
-              decoding="async"
-            />
-            <span>{t.cardsOpen} ↗</span>
-          </button>
-        </div>
-
-        <div
-          className="cards-index"
-          aria-label={language === "RU" ? "Карточки VÉLUM" : "VÉLUM cards"}
-          data-reveal
-          onPointerMove={(event) => {
-            if (event.pointerType === "touch") return;
-            const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>("button"));
-            let nextIndex = activeVelumCard;
-            let nearestDistance = Number.POSITIVE_INFINITY;
-            buttons.forEach((button, index) => {
-              const bounds = button.getBoundingClientRect();
-              const distance = Math.abs(event.clientY - (bounds.top + bounds.height / 2));
-              if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nextIndex = index;
-              }
-            });
-            if (nextIndex !== activeVelumCard) setActiveVelumCard(nextIndex);
-          }}
+        <a
+          className="cards-portal"
+          href={`/cards/velum?lang=${language.toLowerCase()}`}
+          aria-label={t.cardsPortalAria}
+          onClick={enterCardsWorld}
         >
-          {velumCards.map((card, index) => (
-            <button
-              type="button"
-              key={card.number}
-              className={index === activeVelumCard ? "is-active" : ""}
-              aria-pressed={index === activeVelumCard}
-              onPointerEnter={() => setActiveVelumCard(index)}
-              onFocus={() => setActiveVelumCard(index)}
-              onClick={() => setActiveVelumCard(index)}
-            >
-              <span>{card.number}</span>
-              <strong>{card.title[language]}</strong>
-            </button>
-          ))}
-        </div>
+          <span className="cards-portal-ring" aria-hidden="true" />
+          <span className="cards-portal-series">{t.cardsPortalSeries}</span>
+          <strong>{t.cardsPortalLabel}</strong>
+          <i aria-hidden="true">↗</i>
+        </a>
+        <div className="cards-portal-transition" data-active={isCardsPortalActive ? "true" : "false"} aria-hidden="true" />
       </section>
-
-      {isVelumLightboxOpen && (
-        <div
-          className="cards-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`VÉLUM — ${velumCard.title[language]}`}
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) setIsVelumLightboxOpen(false);
-          }}
-        >
-          <button ref={cardsLightboxCloseRef} className="cards-lightbox-close" type="button" onClick={() => setIsVelumLightboxOpen(false)}>
-            <span>{t.cardsClose}</span><i aria-hidden="true">×</i>
-          </button>
-          <img src={velumCard.image} alt={`VÉLUM — ${velumCard.title[language]}`} width="1800" height="2400" />
-          <div className="cards-lightbox-caption">
-            <span>{velumCard.number} / 08</span>
-            <strong>{velumCard.title[language]}</strong>
-          </div>
-        </div>
-      )}
 
       <section className="about" aria-labelledby="about-title">
         <p data-reveal>{t.aboutKicker}</p>
