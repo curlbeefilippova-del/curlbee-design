@@ -3481,18 +3481,32 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   max-height: none !important;
   object-fit: contain;
   pointer-events: none;
-  animation: card-swap-out 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+  animation:
+    card-swap-fade-out 320ms ease both,
+    card-swap-settle-out 560ms var(--ease-out) both !important;
 }
 .card-swap-current {
   position: relative;
   z-index: 2;
-  animation: card-swap-in 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+  animation:
+    card-swap-fade-in 320ms ease both,
+    card-swap-settle-in 560ms var(--ease-out) both !important;
 }
 .card-swap-single {
-  animation: card-swap-in 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+  animation:
+    card-swap-fade-in 320ms ease both,
+    card-swap-settle-in 560ms var(--ease-out) both !important;
 }
-@keyframes card-swap-in { from { opacity: .12; } to { opacity: 1; } }
-@keyframes card-swap-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes card-swap-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes card-swap-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes card-swap-settle-in {
+  from { transform: translateY(22px) scale(.978) rotate(.25deg); }
+  to { transform: none; }
+}
+@keyframes card-swap-settle-out {
+  from { transform: none; }
+  to { transform: translateY(22px) scale(.978) rotate(.25deg); }
+}
 @keyframes crafted-portal-release { from { clip-path: circle(160vmax at 48% 18%); } to { clip-path: circle(0 at 48% 18%); visibility: hidden; } }
 @keyframes crafted-card-settle { from { opacity: 0.62; transform: translateY(14px) scale(0.986); } to { opacity: 1; transform: none; } }
 @keyframes crafted-lightbox-in { from { opacity: 0; } to { opacity: 1; } }

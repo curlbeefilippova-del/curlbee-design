@@ -2,8 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const CARD_FADE_MS = 300;
-const HOVER_INTENT_MS = 70;
+const CARD_SETTLE_MS = 560;
+const HOVER_INTENT_MS = 0;
 
 export function useCardSwap(cardCount: number) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -35,7 +35,7 @@ export function useCardSwap(cardCount: number) {
     fadeTimerRef.current = setTimeout(() => {
       setPreviousIndex(null);
       fadeTimerRef.current = null;
-    }, CARD_FADE_MS);
+    }, CARD_SETTLE_MS);
   }, [cancelQueuedIndex, cardCount]);
 
   const selectRelative = useCallback((direction: number) => {
