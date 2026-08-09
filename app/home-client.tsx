@@ -163,7 +163,6 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const [cardsPortalStyle, setCardsPortalStyle] = useState<CSSProperties>({});
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
-  const projectStageRef = useRef<HTMLDivElement>(null);
   const cardsPortalTimerRef = useRef<number | null>(null);
   const frameRef = useRef<number | null>(null);
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
@@ -349,7 +348,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <div className="hero-foot">
           <p>{t.intro}</p>
           <div className="hero-actions">
-            <div className="hero-play"><span aria-hidden="true">↗</span>{t.play}</div>
+            <div className="hero-play"><span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />{t.play}</div>
             <div className="availability"><i aria-hidden="true" />{t.status}</div>
           </div>
         </div>
@@ -387,9 +386,6 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
                 onFocus={() => setActiveProject(index)}
                 onClick={() => {
                   setActiveProject(index);
-                  if (window.matchMedia("(max-width: 820px)").matches) {
-                    window.requestAnimationFrame(() => projectStageRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }));
-                  }
                 }}
               >
                 <span>{item.number}</span>
@@ -399,7 +395,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
             ))}
           </div>
 
-          <div className="project-stage" ref={projectStageRef} aria-live="polite" data-reveal>
+          <div className="project-stage" aria-live="polite" data-reveal>
             {projects.map((item, index) => (
               <figure
                 key={item.number}
@@ -428,7 +424,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
                   <span>{item.number}</span>
                   {item.ready ? (
                     <a href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}>
-                      {language === "RU" ? "Открыть кейс ↗" : "View case ↗"}
+                      {language === "RU" ? "Открыть кейс" : "View case"}
+                      <span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
                     </a>
                   ) : (
                     <span>{t.caseLabel}</span>
@@ -462,7 +459,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
             >
               <span>{world.number}</span>
               <strong>{world.title}</strong>
-              <i aria-hidden="true">↗</i>
+              <i aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></i>
             </a>
           ))}
         </nav>
@@ -517,7 +514,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <a className="contact-link telegram-cta" href="https://t.me/CURLBEEFILIPPOVA" target="_blank" rel="noreferrer">
             <span>{t.telegramLabel}</span>
             <strong>@CURLBEEFILIPPOVA</strong>
-            <i className="telegram-cta-arrow" aria-hidden="true">↗</i>
+            <i className="telegram-cta-arrow" aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></i>
           </a>
         </div>
         <div className="footer-bottom">
