@@ -2423,49 +2423,6 @@ img { display: block; max-width: 100%; }
   place-items: center;
   perspective: 1100px;
 }
-.ayu-response-field {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  bottom: 5%;
-  width: min(68%, 650px);
-  height: 54%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.ayu-response-field::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 16%;
-  width: 1px;
-  height: 76%;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ayu-accent) 16%, transparent) 58%, color-mix(in srgb, var(--ayu-accent) 64%, transparent));
-  box-shadow: 0 0 18px color-mix(in srgb, var(--ayu-accent) 20%, transparent);
-  transform: translateX(-50%);
-}
-.ayu-response-field > i:first-child {
-  position: absolute;
-  left: 9%;
-  right: 9%;
-  bottom: 16%;
-  height: 1px;
-  border-radius: 999px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ayu-accent) 24%, transparent) 24%, #fff1c8 50%, color-mix(in srgb, var(--ayu-accent) 24%, transparent) 76%, transparent);
-  box-shadow: 0 0 7px color-mix(in srgb, var(--ayu-accent) 52%, transparent), 0 0 28px color-mix(in srgb, var(--ayu-accent) 20%, transparent);
-}
-.ayu-response-field > i:last-child {
-  position: absolute;
-  left: clamp(12%, var(--ayu-pointer-x), 88%);
-  bottom: calc(16% - 3px);
-  width: 18px;
-  height: 7px;
-  border-radius: 50%;
-  background: #fff4d2;
-  box-shadow: 0 0 9px #f3ca72, 0 0 27px color-mix(in srgb, var(--ayu-accent) 48%, transparent);
-  transform: translateX(-50%);
-  transition: left 180ms ease;
-}
 .ayu-active {
   position: relative;
   z-index: 2;
@@ -2598,46 +2555,6 @@ img { display: block; max-width: 100%; }
   background: linear-gradient(180deg, color-mix(in srgb, var(--ayu-canvas) 28%, transparent), transparent 24% 72%, color-mix(in srgb, var(--ayu-canvas) 52%, transparent));
 }
 .ayu-lightbox-atmosphere img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 54%; animation: ayu-atmosphere-in 560ms var(--ease-out) both; }
-.ayu-lightbox-response {
-  position: absolute;
-  z-index: 1;
-  left: 50%;
-  bottom: clamp(78px, 9vh, 112px);
-  width: min(54vw, 720px);
-  height: 34%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.ayu-lightbox-response::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ayu-accent) 22%, transparent) 60%, color-mix(in srgb, var(--ayu-accent) 70%, transparent));
-  box-shadow: 0 0 20px color-mix(in srgb, var(--ayu-accent) 22%, transparent);
-}
-.ayu-lightbox-response > i:first-child {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ayu-accent) 20%, transparent) 24%, #fff1c8 50%, color-mix(in srgb, var(--ayu-accent) 20%, transparent) 76%, transparent);
-  box-shadow: 0 0 8px color-mix(in srgb, var(--ayu-accent) 48%, transparent), 0 0 30px color-mix(in srgb, var(--ayu-accent) 18%, transparent);
-}
-.ayu-lightbox-response > i:last-child {
-  position: absolute;
-  left: 50%;
-  bottom: -3px;
-  width: 22px;
-  height: 7px;
-  border-radius: 50%;
-  background: #fff4d2;
-  box-shadow: 0 0 10px #f3ca72, 0 0 32px color-mix(in srgb, var(--ayu-accent) 48%, transparent);
-  transform: translateX(-50%);
-}
 .ayu-lightbox > img {
   position: relative;
   z-index: 1;
@@ -2750,7 +2667,6 @@ img { display: block; max-width: 100%; }
   .ayu-stage { grid-column: 1; grid-row: 2; min-height: 0; }
   .ayu-active { width: min(76vw, 390px); }
   .ayu-active img { max-height: none; }
-  .ayu-response-field { bottom: 1%; width: 90%; height: 48%; }
   .ayu-navigation { grid-column: 1; grid-row: 3; }
   .ayu-signal-rail { grid-template-columns: 1fr; border-top: 0; border-left: 1px solid var(--ayu-line); }
   .ayu-signal-rail button { min-height: 48px; padding: 10px 8px 8px 18px; grid-template-columns: 28px minmax(0, 1fr); align-items: baseline; gap: 8px; }
@@ -2771,7 +2687,6 @@ img { display: block; max-width: 100%; }
     gap: 10px 8px;
   }
   .ayu-lightbox-atmosphere { inset-inline-start: 22%; opacity: .16; }
-  .ayu-lightbox-response { bottom: 106px; width: 82vw; height: 26%; }
   .ayu-lightbox > img {
     grid-column: 1 / 4;
     max-height: calc(100svh - 160px);
@@ -2791,7 +2706,6 @@ img { display: block; max-width: 100%; }
   .ayu-lightbox,
   .ayu-lightbox-atmosphere img,
   .ayu-lightbox > img { animation: none !important; }
-  .ayu-response-field > i:last-child,
   .ayu-navigation-pulse { transition: none !important; }
   .ayu-active img { transform: none !important; }
 }

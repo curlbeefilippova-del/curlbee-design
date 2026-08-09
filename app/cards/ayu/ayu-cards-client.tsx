@@ -211,7 +211,6 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           onPointerMove={respondToPointer}
           onPointerLeave={resetPointerResponse}
         >
-          <div className="ayu-response-field" aria-hidden="true"><i /><i /></div>
           <button
             className="ayu-active"
             type="button"
@@ -285,7 +284,6 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           <div className="ayu-lightbox-atmosphere" aria-hidden="true">
             <img key={mood.image} src={mood.image} alt="" width="1086" height="1448" />
           </div>
-          <div className="ayu-lightbox-response" aria-hidden="true"><i /><i /></div>
           <button ref={lightboxCloseRef} className="ayu-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
