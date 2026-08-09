@@ -348,7 +348,10 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <div className="hero-foot">
           <p>{t.intro}</p>
           <div className="hero-actions">
-            <div className="hero-play"><span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />{t.play}</div>
+            <div className="hero-play">
+              <span className="hero-play-symbol" aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></span>
+              {t.play}
+            </div>
             <div className="availability"><i aria-hidden="true" />{t.status}</div>
           </div>
         </div>
