@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import ThemeToggle from "./theme-toggle";
+import { typographicCopy, typographicText } from "./typography";
 
 export type Language = "RU" | "EN";
 
@@ -166,7 +167,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const cardsPortalTimerRef = useRef<number | null>(null);
   const frameRef = useRef<number | null>(null);
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
-  const t = copy[language];
+  const t = typographicCopy(copy[language], language);
   const project = projects[activeProject];
 
   useEffect(() => {
@@ -393,7 +394,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
               >
                 <span>{item.number}</span>
                 <strong>{item.title}</strong>
-                <em>{item.kind[language]}</em>
+                <em>{typographicText(item.kind[language], language)}</em>
               </button>
             ))}
           </div>
