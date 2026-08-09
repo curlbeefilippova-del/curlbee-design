@@ -106,7 +106,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={t.navigation}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <a
@@ -159,7 +159,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
               height="2400"
               decoding="async"
             />
-            <span>{t.open} ↗</span>
+            <span>{t.open} <i className="ui-arrow ui-arrow-up-right" aria-hidden="true" /></span>
           </button>
         </div>
 
@@ -217,9 +217,9 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <button ref={lightboxCloseRef} className="cards-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
-          <button className="cards-lightbox-step cards-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
+          <button className="cards-lightbox-step cards-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}><span className="ui-arrow ui-arrow-left" aria-hidden="true" /></button>
           <img className="card-swap-single" key={card.image} src={card.image} alt={`VÉLUM — ${card.title[language]}`} width="1800" height="2400" />
-          <button className="cards-lightbox-step cards-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
+          <button className="cards-lightbox-step cards-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}><span className="ui-arrow ui-arrow-right" aria-hidden="true" /></button>
           <div className="cards-lightbox-caption">
             <span>{card.number} / 08</span>
             <strong>{typographicText(card.title[language], language)}</strong>
