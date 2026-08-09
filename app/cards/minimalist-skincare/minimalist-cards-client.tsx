@@ -15,7 +15,7 @@ const minimalistCards = [
   { number: "06", image: "/cards/minimalist-skincare/06.webp", title: { RU: "Главный актив", EN: "Hero active" } },
   { number: "07", image: "/cards/minimalist-skincare/07.webp", title: { RU: "Почему этот продукт", EN: "Why this product" } },
   { number: "08", image: "/cards/minimalist-skincare/08.webp", title: { RU: "Этап очищения", EN: "Cleansing step" } },
-  { number: "09", image: "/cards/minimalist-skincare/09.webp", title: { RU: "Лайфстайл", EN: "Lifestyle" } },
+  { number: "09", image: "/cards/minimalist-skincare/09.webp", title: { RU: "LIFESTYLE", EN: "LIFESTYLE" } },
 ] as const;
 
 const copy = {
