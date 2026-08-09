@@ -96,10 +96,13 @@ const copy = {
     workTitleNote: ["У каждого", "свой характер"],
     workHint: ["Наведи или нажми,", "чтобы сменить сцену"],
     caseLabel: "Кейс в портфолио",
-    cardsBridgeKicker: "Новая глава · карточки товара",
-    cardsBridgeTitleOne: "Отдельные миры",
-    cardsBridgeTitleTwo: ["внутри одной", "системы"],
-    cardsBridgeText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
+    cardsIntroKicker: "Новая глава · карточки товара",
+    cardsIntroTitleOne: "Карточки",
+    cardsIntroTitleTwo: "товара",
+    cardsIntroStatementOne: "Отдельные миры",
+    cardsIntroStatementTwo: "внутри одной системы",
+    cardsIntroText: "Каждый продукт получает собственную атмосферу, но остаётся частью Curlbee Design.",
+    cardsWorldKicker: "Серия 01 · VÉLUM",
     cardsKicker: "Карточки товара · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
@@ -136,10 +139,13 @@ const copy = {
     workTitleNote: ["Each has", "its own personality"],
     workHint: ["Hover or tap", "to change the scene"],
     caseLabel: "Portfolio case",
-    cardsBridgeKicker: "New chapter · product cards",
-    cardsBridgeTitleOne: "Distinct worlds",
-    cardsBridgeTitleTwo: ["within one", "system"],
-    cardsBridgeText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
+    cardsIntroKicker: "New chapter · product cards",
+    cardsIntroTitleOne: "Product",
+    cardsIntroTitleTwo: "cards",
+    cardsIntroStatementOne: "Distinct worlds",
+    cardsIntroStatementTwo: "within one system",
+    cardsIntroText: "Each product has its own atmosphere while remaining part of Curlbee Design.",
+    cardsWorldKicker: "Series 01 · VÉLUM",
     cardsKicker: "Product cards · 01",
     cardsTitle: "VÉLUM",
     cardsText: "Eight cards reveal the product from formula and ingredients to the application ritual and final image.",
@@ -262,7 +268,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
   useEffect(() => {
     const bridge = cardsBridgeRef.current;
-    const path = bridge?.querySelector<SVGPathElement>(".cards-bridge-membrane-path");
+    const path = bridge?.querySelector<SVGPathElement>(".cards-world-membrane-path");
     if (!bridge || !path) return;
 
     const pathFrom = path.dataset.pathFrom;
@@ -275,8 +281,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       return;
     }
 
-    const titleLines = bridge.querySelectorAll<HTMLElement>(".cards-bridge-title-line");
-    const finalWord = bridge.querySelector<HTMLElement>(".cards-bridge-title-final");
+    const worldLabel = bridge.querySelector<HTMLElement>(".cards-world-label");
     const numberPattern = /-?\d*\.?\d+/g;
     const fromValues = pathFrom.match(numberPattern)?.map(Number) ?? [];
     const toValues = pathTo.match(numberPattern)?.map(Number) ?? [];
@@ -300,13 +305,9 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       });
       path.setAttribute("d", interpolatedPath);
 
-      const lineProgress = easeOut(clamp(currentProgress / 0.82));
-      titleLines[0]?.style.setProperty("transform", `translateX(${(-4 * (1 - lineProgress)).toFixed(3)}%)`);
-      titleLines[1]?.style.setProperty("transform", `translateX(${(5 * (1 - lineProgress)).toFixed(3)}%)`);
-
-      const wordProgress = easeOut(clamp((currentProgress - 0.34) / 0.6));
-      finalWord?.style.setProperty("transform", `translateY(${(30 * (1 - wordProgress)).toFixed(3)}%)`);
-      finalWord?.style.setProperty("opacity", (0.12 + wordProgress * 0.88).toFixed(3));
+      const labelProgress = easeOut(clamp((currentProgress - 0.18) / 0.7));
+      worldLabel?.style.setProperty("transform", `translateY(${(22 * (1 - labelProgress)).toFixed(3)}px)`);
+      worldLabel?.style.setProperty("opacity", (0.18 + labelProgress * 0.82).toFixed(3));
 
       if (currentProgress !== targetProgress) frame = window.requestAnimationFrame(paint);
       else frame = null;
@@ -493,32 +494,36 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         </div>
       </section>
 
-      <section ref={cardsBridgeRef} className="cards-bridge" id="cards" aria-labelledby="cards-bridge-title">
-        <svg className="cards-bridge-membrane" viewBox="0 0 1440 680" preserveAspectRatio="none" aria-hidden="true">
+      <section className="cards-intro" id="cards" aria-labelledby="cards-intro-title">
+        <p className="cards-intro-kicker" data-reveal>{t.cardsIntroKicker}</p>
+        <h2 id="cards-intro-title" aria-label={`${t.cardsIntroTitleOne} ${t.cardsIntroTitleTwo}`} data-reveal>
+          <span>{t.cardsIntroTitleOne}</span>
+          <em>{t.cardsIntroTitleTwo}</em>
+        </h2>
+        <div className="cards-intro-manifesto" data-reveal>
+          <strong><span>{t.cardsIntroStatementOne}</span><span>{t.cardsIntroStatementTwo}</span></strong>
+          <p>{t.cardsIntroText}</p>
+        </div>
+      </section>
+
+      <section ref={cardsBridgeRef} className="cards-world-bridge" aria-label={t.cardsWorldKicker}>
+        <svg className="cards-world-membrane" viewBox="0 0 1440 480" preserveAspectRatio="none" aria-hidden="true">
           <defs>
-            <linearGradient id="cards-bridge-field" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="cards-world-field" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stopColor="#7d6989" />
-              <stop offset="0.62" stopColor="#675276" />
+              <stop offset="0.48" stopColor="#675276" />
               <stop offset="1" stopColor="#12110d" />
             </linearGradient>
           </defs>
           <path
-            className="cards-bridge-membrane-path"
-            d="M0 346 C248 296 494 390 730 336 C964 282 1182 324 1440 278 L1440 680 L0 680 Z"
-            data-path-from="M0 432 C246 402 486 448 724 424 C960 400 1186 394 1440 428 L1440 680 L0 680 Z"
-            data-path-to="M0 346 C248 296 494 390 730 336 C964 282 1182 324 1440 278 L1440 680 L0 680 Z"
-            fill="url(#cards-bridge-field)"
+            className="cards-world-membrane-path"
+            d="M0 126 C248 82 494 178 730 118 C964 62 1182 112 1440 72 L1440 480 L0 480 Z"
+            data-path-from="M0 364 C246 336 486 388 724 358 C960 330 1186 338 1440 366 L1440 480 L0 480 Z"
+            data-path-to="M0 126 C248 82 494 178 730 118 C964 62 1182 112 1440 72 L1440 480 L0 480 Z"
+            fill="url(#cards-world-field)"
           />
         </svg>
-        <p className="cards-bridge-kicker" data-reveal>{t.cardsBridgeKicker}</p>
-        <h2 id="cards-bridge-title" aria-label={`${t.cardsBridgeTitleOne} ${t.cardsBridgeTitleTwo.join(" ")}`}>
-          <span className="cards-bridge-title-line" aria-hidden="true">{t.cardsBridgeTitleOne}</span>
-          <em aria-hidden="true">
-            <span className="cards-bridge-title-line">{t.cardsBridgeTitleTwo[0]}</span>
-            <span className="cards-bridge-title-final">{t.cardsBridgeTitleTwo[1]}</span>
-          </em>
-        </h2>
-        <p className="cards-bridge-copy" data-reveal>{t.cardsBridgeText}</p>
+        <p className="cards-world-label">{t.cardsWorldKicker}</p>
       </section>
 
       <section className="cards-chapter" id="velum-cards" aria-labelledby="cards-title">
