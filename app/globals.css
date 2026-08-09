@@ -403,7 +403,7 @@ img { display: block; max-width: 100%; }
 
 .project-explorer {
   margin-inline: calc(var(--page-pad) * -1);
-  padding: var(--section-inner-space) var(--page-pad);
+  padding: var(--section-inner-space) var(--page-pad) var(--section-edge-space);
   display: grid;
   grid-template-columns: minmax(320px, 0.72fr) minmax(560px, 1.45fr);
   align-items: start;
@@ -574,22 +574,27 @@ img { display: block; max-width: 100%; }
   letter-spacing: -0.075em;
 }
 .case-lead-title { position: relative; align-self: end; min-width: 0; }
+.case-chops-heading {
+  width: max-content;
+  max-width: 100%;
+}
 .case-chops-heading > span:last-child { display: block; }
 .case-chops-line {
-  display: flex;
-  width: fit-content;
-  align-items: flex-end;
-  gap: clamp(18px, 1.8vw, 28px);
+  width: 100%;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
 }
 .case-chops-line > span { display: block; }
 .case-chops-logo {
   width: clamp(78px, 7vw, 112px);
   height: auto;
   flex: 0 0 auto;
+  justify-self: center;
   opacity: 0.94;
   filter: drop-shadow(0 8px 12px rgba(80, 43, 34, 0.08));
-  margin-bottom: 0.08em;
-  transform: rotate(-2deg);
+  margin: 0 0 0.03em;
+  transform: translateX(0.06em) rotate(-2deg);
   pointer-events: none;
 }
 .case-lead h1.is-stacked { line-height: 0.84; }
@@ -1432,7 +1437,7 @@ img { display: block; max-width: 100%; }
 }
 .cards-lightbox-caption strong { font-weight: 500; }
 
-.about { padding: var(--section-start-space) var(--page-pad) var(--section-inner-space); }
+.about { padding: var(--section-start-space) var(--page-pad) var(--section-edge-space); }
 .about > p { margin-bottom: var(--space-4); }
 .about h2 {
   margin: 0;
@@ -1807,7 +1812,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .work-title-note {
     margin: var(--space-2) 0 0;
   }
-  .project-explorer { padding-block: var(--section-inner-space); grid-template-columns: 1fr; gap: 32px; }
+  .project-explorer { padding-top: var(--section-inner-space); padding-bottom: var(--section-edge-space); grid-template-columns: 1fr; gap: 32px; }
   .project-stage { position: relative; top: auto; order: 1; }
   .project-list { order: 2; }
   .project-stage figure > img,
@@ -1826,7 +1831,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .case-lead h1 { font-size: clamp(78px, 25vw, 112px); }
   .case-lead h1.is-stacked { font-size: clamp(52px, 15vw, 76px); }
   .case-chops-heading { font-size: clamp(66px, 20vw, 88px) !important; }
-  .case-chops-line { gap: 10px; }
   .case-chops-logo { width: clamp(46px, 14vw, 58px); }
   .case-lead-copy { padding: 0; }
   .case-gallery { padding-inline: 10px; }
@@ -1878,7 +1882,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .cards-lightbox-close { top: 12px; right: 14px; }
   .cards-lightbox-caption { padding-inline: 4px; }
 
-  .about { padding-top: var(--section-start-space); padding-bottom: var(--section-inner-space); }
+  .about { padding-top: var(--section-start-space); padding-bottom: var(--section-edge-space); }
   .about > p { margin-bottom: 32px; }
   .about h2 { font-size: 48px; }
   .about-line { width: auto; }
