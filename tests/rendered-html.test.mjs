@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-const siteTitle = /<title>Curlbee Design — портфолио<\/title>/i;
-const siteDescription = /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Портфолио независимого дизайнера:[^"']+["'])[^>]*>/i;
+const siteTitle = /<title>Curlbee Design — портфолио Юлии Филипповой<\/title>/i;
+const siteDescription = /<meta(?=[^>]*\bname=["']description["'])(?=[^>]*\bcontent=["']Портфолио Юлии Филипповой:[^"']+["'])[^>]*>/i;
 
 test("renders Curlbee production metadata", async () => {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
@@ -32,6 +32,10 @@ test("renders Curlbee production metadata", async () => {
   const html = await response.text();
   assert.match(html, siteTitle);
   assert.match(html, siteDescription);
+  assert.match(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']https:\/\/curlbee-design\.eyydvxgdp322\.chatgpt\.site\/?["']/i);
+  assert.match(html, /hreflang=["']en-US["']/i);
+  assert.match(html, /application\/ld\+json/i);
+  assert.match(html, /Юлия Филиппова/i);
   assert.match(html, /class="cards-intro"/i);
   assert.match(html, /Карточки/i);
   assert.match(html, /Отдельные\s+миры/i);
@@ -134,10 +138,53 @@ test("renders every public route in Russian and English", async () => {
       assert.equal(response.status, 200, `${route}?lang=${language}`);
       assert.match(html, /<meta name="viewport" content="width=device-width, initial-scale=1"\/>/i);
       assert.match(html, /<main[\s>]/i);
+      assert.match(html, /<link[^>]+rel=["']canonical["']/i);
+      assert.match(html, /hreflang=["']ru-RU["']/i);
+      assert.match(html, /hreflang=["']en-US["']/i);
       assert.match(
         html,
         language === "ru" ? /(?:Проекты|Все\s+проекты|К\s+главе\s+карточек)/iu : /(?:Projects|All\s+projects|Back\s+to\s+product\s+cards)/iu,
       );
     }
   }
+});
+
+test("serves crawler rules and a complete public sitemap", async () => {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("seo", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  const env = {
+    ASSETS: {
+      fetch: async () => new Response("Not found", { status: 404 }),
+    },
+  };
+  const context = {
+    waitUntil() {},
+    passThroughOnException() {},
+  };
+
+  const robotsResponse = await worker.fetch(
+    new Request("http://localhost/robots.txt", { headers: { accept: "text/plain" } }),
+    env,
+    context,
+  );
+  const robots = await robotsResponse.text();
+  assert.equal(robotsResponse.status, 200);
+  assert.match(robots, /User-Agent:\s*\*/i);
+  assert.match(robots, /User-Agent:\s*OAI-SearchBot/i);
+  assert.match(robots, /User-Agent:\s*GPTBot[\s\S]*Disallow:\s*\//i);
+  assert.match(robots, /Sitemap:\s*https:\/\/curlbee-design\.eyydvxgdp322\.chatgpt\.site\/sitemap\.xml/i);
+
+  const sitemapResponse = await worker.fetch(
+    new Request("http://localhost/sitemap.xml", { headers: { accept: "application/xml" } }),
+    env,
+    context,
+  );
+  const sitemap = await sitemapResponse.text();
+  assert.equal(sitemapResponse.status, 200);
+  assert.match(sitemapResponse.headers.get("content-type") ?? "", /xml/i);
+  assert.equal((sitemap.match(/<url>/g) ?? []).length, 12);
+  assert.match(sitemap, /\/projects\/the-chops/i);
+  assert.match(sitemap, /\/cards\/minimalist-skincare/i);
+  assert.match(sitemap, /hreflang=["']en-US["']/i);
 });
