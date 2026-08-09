@@ -32,8 +32,11 @@ test("renders Curlbee production metadata", async () => {
   const html = await response.text();
   assert.match(html, siteTitle);
   assert.match(html, siteDescription);
-  assert.match(html, /class="cards-bridge-membrane"/i);
+  assert.match(html, /class="cards-intro"/i);
+  assert.match(html, /Карточки/i);
   assert.match(html, /Отдельные миры/i);
+  assert.match(html, /class="cards-world-membrane"/i);
+  assert.match(html, /Серия 01 · VÉLUM/i);
   assert.doesNotMatch(html, /cards-bridge-chapter-mark/i);
   assert.doesNotMatch(html, /Следующая глава/i);
 });
