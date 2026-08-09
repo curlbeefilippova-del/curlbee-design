@@ -513,6 +513,7 @@ html[data-theme="dark"] #top .hero-shape-mint {
   background: var(--plum);
   transform: rotate(-7deg);
 }
+.hero-play-symbol .ui-arrow { font-size: 17px; }
 .availability { display: flex; align-items: center; gap: 16px; max-width: none; white-space: nowrap; font-size: var(--type-meta); line-height: 18px; letter-spacing: 0.06em; text-transform: uppercase; }
 .availability > i {
   position: relative;
