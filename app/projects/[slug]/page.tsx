@@ -7,6 +7,7 @@ import CaseMotion from "../../case-motion";
 import LanguageSync from "../../language-sync";
 import ThemeToggle from "../../theme-toggle";
 import { typographicCopy, typographicText } from "../../typography";
+import { createPageMetadata, seoLanguage, SITE_URL } from "../../seo";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -17,15 +18,30 @@ function getCase(slug: string) {
   return portfolioCases[slug as keyof typeof portfolioCases];
 }
 
-export async function generateMetadata({ params }: ProjectPageProps): Promise<Metadata> {
+const projectCoverImages: Record<string, string> = {
+  even: "/projects/even-cover.webp",
+  crafted: "/projects/crafted.webp",
+  velum: "/projects/velum.webp",
+  "minimalist-skincare": "/projects/minimalist-care.webp",
+  ayu: "/projects/ayu.webp",
+  "the-chops": "/projects/the-chops.webp",
+};
+
+export async function generateMetadata({ params, searchParams }: ProjectPageProps): Promise<Metadata> {
   const { slug } = await params;
   const project = getCase(slug);
   if (!project) return {};
+  const query = await searchParams;
+  const language = seoLanguage(query?.lang);
 
-  return {
-    title: `${project.title} — Curlbee Design`,
-    description: project.summary.RU,
-  };
+  return createPageMetadata({
+    title: `${project.title} — ${language === "EN" ? "design case" : "дизайн-кейс"}`,
+    description: project.summary[language],
+    path: `/projects/${project.slug}`,
+    language,
+    image: projectCoverImages[project.slug],
+    imageAlt: `${project.title} — Curlbee Design`,
+  });
 }
 
 export default async function ProjectPage({ params, searchParams }: ProjectPageProps) {
@@ -39,6 +55,20 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   const isStackedTitle = "stackTitle" in project && project.stackTitle;
   const isLongTitle = project.title.length > 6;
   const screenCount = project.slides.length;
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "CreativeWork",
+    name: project.title,
+    description: project.summary[language],
+    url: `${SITE_URL}/projects/${project.slug}${language === "EN" ? "?lang=en" : ""}`,
+    image: `${SITE_URL}${projectCoverImages[project.slug]}`,
+    inLanguage: language === "EN" ? "en" : "ru",
+    creator: {
+      "@type": "Person",
+      "@id": `${SITE_URL}/#yulia-filippova`,
+      name: "Юлия Филиппова",
+    },
+  };
   const labels = typographicCopy(language === "RU"
     ? {
         back: "Все проекты",
@@ -59,7 +89,12 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
   const screensLabel = language === "RU" ? `${screenCount} экранов` : `${screenCount} screens`;
 
   return (
-    <main
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
+      <main
       className="case-page"
       data-case={project.slug}
       style={{
@@ -146,6 +181,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         <p>{project.title} / {project.year}</p>
         <a href={`/?lang=${langQuery}#work`}>{labels.end}<span aria-hidden="true">↗</span></a>
       </section>
-    </main>
+      </main>
+    </>
   );
 }
