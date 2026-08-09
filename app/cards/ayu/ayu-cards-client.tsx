@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 
 export type AyuCardsLanguage = "RU" | "EN";
 
@@ -211,7 +211,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           onPointerMove={respondToPointer}
           onPointerLeave={resetPointerResponse}
         >
-          <div className="ayu-presence-field" aria-hidden="true"><i /><i /></div>
+          <div className="ayu-response-field" aria-hidden="true"><i /><i /></div>
           <button
             className="ayu-active"
             type="button"
@@ -231,34 +231,41 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           </button>
         </div>
 
-        <nav className="ayu-navigation" aria-label={t.list}>
-          <p>{t.chapters}</p>
-          <div className="ayu-phases">
+        <nav
+          className="ayu-navigation"
+          aria-label={t.list}
+          style={{
+            "--ayu-active-card": activeCard,
+            "--ayu-active-column": activeCard % 3,
+            "--ayu-active-row": Math.floor(activeCard / 3),
+          } as CSSProperties}
+        >
+          <div className="ayu-navigation-top">
+            <p>{t.chapters}</p>
+            <span>{card.number} / 09</span>
+          </div>
+          <div className="ayu-signal-rail">
+            <i className="ayu-navigation-pulse" aria-hidden="true" />
+            {ayuCards.map((item, cardIndex) => (
+              <button
+                type="button"
+                key={item.number}
+                className={cardIndex === activeCard ? "is-active" : ""}
+                aria-pressed={cardIndex === activeCard}
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== "touch") setActiveCard(cardIndex);
+                }}
+                onFocus={() => setActiveCard(cardIndex)}
+                onClick={() => setActiveCard(cardIndex)}
+              >
+                <small>{item.number}</small>
+                <strong>{item.title[language]}</strong>
+              </button>
+            ))}
+          </div>
+          <div className="ayu-navigation-phases" aria-hidden="true">
             {phases.map((phase, phaseIndex) => (
-              <div className="ayu-phase" key={phase.label.EN}>
-                <span>0{phaseIndex + 1} · {phase.label[language]}</span>
-                <div>
-                  {phase.cards.map((cardIndex) => {
-                    const item = ayuCards[cardIndex];
-                    return (
-                      <button
-                        type="button"
-                        key={item.number}
-                        className={cardIndex === activeCard ? "is-active" : ""}
-                        aria-pressed={cardIndex === activeCard}
-                        onPointerEnter={(event) => {
-                          if (event.pointerType !== "touch") setActiveCard(cardIndex);
-                        }}
-                        onFocus={() => setActiveCard(cardIndex)}
-                        onClick={() => setActiveCard(cardIndex)}
-                      >
-                        <small>{item.number}</small>
-                        <strong>{item.title[language]}</strong>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+              <span key={phase.label.EN}>0{phaseIndex + 1} · {phase.label[language]}</span>
             ))}
           </div>
         </nav>
@@ -278,6 +285,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           <div className="ayu-lightbox-atmosphere" aria-hidden="true">
             <img key={mood.image} src={mood.image} alt="" width="1086" height="1448" />
           </div>
+          <div className="ayu-lightbox-response" aria-hidden="true"><i /><i /></div>
           <button ref={lightboxCloseRef} className="ayu-lightbox-close" type="button" onClick={() => setIsLightboxOpen(false)}>
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
