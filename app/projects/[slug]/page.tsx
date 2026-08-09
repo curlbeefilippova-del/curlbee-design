@@ -109,7 +109,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={labels.aria}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#work`}><span aria-hidden="true">←</span>{labels.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#work`}><span aria-hidden="true" />{labels.back}</a>
           <ThemeToggle language={language} />
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
@@ -140,7 +140,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         <div className="case-lead-copy">
           <p>{typographicText(project.summary[language], language)}</p>
           {screenCount > 0 && (
-            <a href="#case-gallery"><span aria-hidden="true">↓</span>{screensLabel}</a>
+            <a href="#case-gallery"><span className="ui-arrow ui-arrow-down" aria-hidden="true" />{screensLabel}</a>
           )}
         </div>
       </section>
@@ -179,7 +179,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <span className="case-end-blob case-end-blob-honey" />
         </div>
         <p>{project.title} / {project.year}</p>
-        <a href={`/?lang=${langQuery}#work`}>{labels.end}<span aria-hidden="true">↗</span></a>
+        <a href={`/?lang=${langQuery}#work`}>{labels.end}<span className="ui-arrow ui-arrow-up-right" aria-hidden="true" /></a>
       </section>
       </main>
     </>
