@@ -591,9 +591,10 @@ img { display: block; max-width: 100%; }
   height: auto;
   flex: 0 0 auto;
   justify-self: center;
+  align-self: end;
   opacity: 0.94;
   filter: drop-shadow(0 8px 12px rgba(80, 43, 34, 0.08));
-  margin: 0 0 0.03em;
+  margin: 0 0 clamp(5px, 0.55vw, 9px);
   transform: translateX(0.06em) rotate(-2deg);
   pointer-events: none;
 }
