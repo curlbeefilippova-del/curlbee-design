@@ -2119,11 +2119,17 @@ img { display: block; max-width: 100%; }
   grid-template-rows: minmax(0, 1fr) auto;
   place-items: center;
   gap: 0 clamp(18px, 3vw, 44px);
-  color: #eff7f3;
+  color: #29473d;
   background:
-    radial-gradient(circle at 50% 44%, rgba(112,159,141,.24), transparent 38%),
-    rgba(21, 47, 38, .985);
+    radial-gradient(circle at 50% 42%, rgba(244, 250, 247, .9), transparent 40%),
+    linear-gradient(135deg, #d4e2dc 0%, #b9cec4 52%, #9fb8ad 100%);
   animation: minimalist-lightbox-in 220ms ease both;
+}
+.minimalist-world.is-lifestyle .minimalist-lightbox {
+  color: #f7eddf;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(229, 190, 137, .3), transparent 42%),
+    linear-gradient(135deg, #806342 0%, #57412d 55%, #2e251d 100%);
 }
 .minimalist-lightbox > img {
   grid-column: 2;
@@ -2133,9 +2139,10 @@ img { display: block; max-width: 100%; }
   max-width: 100%;
   max-height: calc(100svh - 132px);
   object-fit: contain;
-  box-shadow: 0 32px 80px rgba(5, 26, 18, .46);
+  box-shadow: 0 32px 80px rgba(42, 72, 60, .27);
   animation: minimalist-card-in 340ms var(--ease-out) both;
 }
+.minimalist-world.is-lifestyle .minimalist-lightbox > img { box-shadow: 0 32px 82px rgba(37, 25, 15, .5); }
 .minimalist-lightbox-close {
   position: fixed;
   z-index: 2;
@@ -2146,7 +2153,7 @@ img { display: block; max-width: 100%; }
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #eff7f3;
+  color: #29473d;
   background: transparent;
   cursor: pointer;
 }
@@ -2155,10 +2162,10 @@ img { display: block; max-width: 100%; }
 .minimalist-lightbox-step {
   display: grid;
   place-items: center;
-  border: 1px solid rgba(231,246,239,.42);
+  border: 1px solid rgba(41, 71, 61, .34);
   border-radius: 56% 44% 61% 39% / 43% 58% 42% 57%;
-  color: #eff7f3;
-  background: rgba(255,255,255,.05);
+  color: #29473d;
+  background: rgba(255,255,255,.24);
   font-style: normal;
   cursor: pointer;
   touch-action: manipulation;
@@ -2167,7 +2174,20 @@ img { display: block; max-width: 100%; }
 .minimalist-lightbox-close > i { width: 38px; height: 38px; font-size: 24px; line-height: 1; }
 .minimalist-lightbox-step { width: 48px; height: 48px; grid-row: 1; font-size: 21px; line-height: 1; }
 .minimalist-lightbox-close:hover > i,
-.minimalist-lightbox-step:hover { color: var(--minimalist-ink); border-color: #dcece5; background: #dcece5; transform: rotate(5deg) scale(1.05); }
+.minimalist-lightbox-step:hover { color: #eef6f2; border-color: #34594d; background: #34594d; transform: rotate(5deg) scale(1.05); }
+.minimalist-world.is-lifestyle .minimalist-lightbox-close { color: #f7eddf; }
+.minimalist-world.is-lifestyle .minimalist-lightbox-close > i,
+.minimalist-world.is-lifestyle .minimalist-lightbox-step {
+  color: #f7eddf;
+  border-color: rgba(247, 237, 223, .42);
+  background: rgba(255,255,255,.05);
+}
+.minimalist-world.is-lifestyle .minimalist-lightbox-close:hover > i,
+.minimalist-world.is-lifestyle .minimalist-lightbox-step:hover {
+  color: #3a2b1e;
+  border-color: #f0dcc0;
+  background: #f0dcc0;
+}
 .minimalist-lightbox-previous { grid-column: 1; }
 .minimalist-lightbox-next { grid-column: 3; transform: rotate(3deg); }
 .minimalist-lightbox-next:hover { transform: rotate(-4deg) scale(1.05); }
