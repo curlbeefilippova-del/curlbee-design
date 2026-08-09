@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import ThemeToggle from "./theme-toggle";
 
 export type Language = "RU" | "EN";
 
@@ -309,23 +310,26 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <a href="#cards">{t.navCards}</a>
           <a href="#contact">{t.navContact}</a>
         </nav>
-        <div className="language-switch" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
-          {(["RU", "EN"] as const).map((item) => (
-            <a
-              key={item}
-              href={`?lang=${item.toLowerCase()}`}
-              aria-current={language === item ? "true" : undefined}
-              onClick={(event) => {
-                event.preventDefault();
-                setLanguage(item);
-                const url = new URL(window.location.href);
-                url.searchParams.set("lang", item.toLowerCase());
-                window.history.replaceState(null, "", url);
-              }}
-            >
-              {item}
-            </a>
-          ))}
+        <div className="header-actions">
+          <ThemeToggle language={language} />
+          <div className="language-switch" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
+            {(["RU", "EN"] as const).map((item) => (
+              <a
+                key={item}
+                href={`?lang=${item.toLowerCase()}`}
+                aria-current={language === item ? "true" : undefined}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setLanguage(item);
+                  const url = new URL(window.location.href);
+                  url.searchParams.set("lang", item.toLowerCase());
+                  window.history.replaceState(null, "", url);
+                }}
+              >
+                {item}
+              </a>
+            ))}
+          </div>
         </div>
       </header>
 

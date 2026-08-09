@@ -5,6 +5,7 @@ import { portfolioCases, type CaseLanguage } from "../../case-data";
 import CaseLightbox from "../../case-lightbox";
 import CaseMotion from "../../case-motion";
 import LanguageSync from "../../language-sync";
+import ThemeToggle from "../../theme-toggle";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -73,6 +74,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         </a>
         <nav aria-label={labels.aria}>
           <a className="case-back" href={`/?lang=${langQuery}#work`}><span aria-hidden="true">←</span>{labels.back}</a>
+          <ThemeToggle language={language} />
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
             <a href={`/projects/${project.slug}?lang=en`} aria-current={language === "EN" ? "true" : undefined}>EN</a>

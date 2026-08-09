@@ -36,6 +36,8 @@ test("renders Curlbee production metadata", async () => {
   assert.match(html, /Карточки/i);
   assert.match(html, /Отдельные миры/i);
   assert.match(html, /class="cards-world-map"/i);
+  assert.match(html, /class="theme-toggle"/i);
+  assert.match(html, /curlbee-theme/i);
   assert.equal((html.match(/cards-world-link cards-world-link-/gi) ?? []).length, 5);
   assert.match(html, /EVEN/i);
   assert.match(html, /CRAFTED/i);
@@ -69,7 +71,7 @@ test("renders Curlbee production metadata", async () => {
   assert.match(cardsHtml, /Карточки товара · серия 01/i);
   assert.match(cardsHtml, /VÉLUM/i);
 
-  const reservedWorldResponse = await worker.fetch(
+  const evenWorldResponse = await worker.fetch(
     new Request("http://localhost/cards/even?lang=ru", {
       headers: { accept: "text/html" },
     }),
@@ -83,9 +85,9 @@ test("renders Curlbee production metadata", async () => {
       passThroughOnException() {},
     },
   );
-  assert.equal(reservedWorldResponse.status, 200);
-  const reservedWorldHtml = await reservedWorldResponse.text();
-  assert.match(reservedWorldHtml, /class="cards-world-placeholder"/i);
-  assert.match(reservedWorldHtml, /Мир карточек собирается/i);
-  assert.match(reservedWorldHtml, /EVEN/i);
+  assert.equal(evenWorldResponse.status, 200);
+  const evenWorldHtml = await evenWorldResponse.text();
+  assert.match(evenWorldHtml, /class="even-world/i);
+  assert.match(evenWorldHtml, /Одежда для каждого/i);
+  assert.doesNotMatch(evenWorldHtml, /class="theme-toggle"/i);
 });
