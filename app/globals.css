@@ -763,7 +763,38 @@ img { display: block; max-width: 100%; }
   text-transform: inherit;
   cursor: pointer;
 }
-.case-lightbox-close span { color: var(--case-accent); font-size: 20px; line-height: 1; }
+.case-lightbox-close span {
+  position: relative;
+  width: 30px;
+  height: 12px;
+  flex: 0 0 30px;
+  align-self: center;
+  color: var(--case-accent);
+  font-size: 0;
+  line-height: 0;
+}
+.case-lightbox-close span::before {
+  content: "";
+  position: absolute;
+  left: 1px;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-50%);
+}
+.case-lightbox-close span::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-left: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
+  transform-origin: center;
+}
 .case-lightbox-close:hover { border-color: var(--case-accent); background: rgba(244, 238, 232, 0.12); }
 .case-lightbox-stage {
   width: 100%;
