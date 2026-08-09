@@ -140,7 +140,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         <div className="case-lead-copy">
           <p>{typographicText(project.summary[language], language)}</p>
           {screenCount > 0 && (
-            <a href="#case-gallery"><span className="ui-arrow ui-arrow-down" aria-hidden="true" />{screensLabel}</a>
+            <a href="#case-gallery"><span className="case-screen-arrow" aria-hidden="true"><span className="ui-arrow ui-arrow-down" /></span>{screensLabel}</a>
           )}
         </div>
       </section>
