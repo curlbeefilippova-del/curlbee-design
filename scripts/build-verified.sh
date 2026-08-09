@@ -26,3 +26,6 @@ timeout \
   "${vinext}" build
 
 "${script_dir}/validate-artifact.sh"
+
+echo "Running rendered route and metadata tests..."
+node --test "${SITES_PROJECT_ROOT}/tests/rendered-html.test.mjs"
