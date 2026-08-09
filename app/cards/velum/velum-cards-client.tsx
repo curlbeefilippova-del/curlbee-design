@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useCardSwap } from "../use-card-swap";
 
 export type CardsLanguage = "RU" | "EN";
 
@@ -46,17 +47,21 @@ const copy = {
 
 export default function VelumCardsClient({ initialLanguage }: { initialLanguage: CardsLanguage }) {
   const [language, setLanguage] = useState<CardsLanguage>(initialLanguage);
-  const [activeCard, setActiveCard] = useState(0);
+  const {
+    activeIndex: activeCard,
+    previousIndex: previousCardIndex,
+    selectIndex: selectCard,
+    selectRelative: selectRelativeCard,
+    queueIndex: queueCard,
+    cancelQueuedIndex: cancelQueuedCard,
+  } = useCardSwap(velumCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const t = copy[language];
   const card = velumCards[activeCard];
+  const previousCard = previousCardIndex === null ? null : velumCards[previousCardIndex];
   const langQuery = language.toLowerCase();
-
-  const selectRelativeCard = (direction: number) => {
-    setActiveCard((current) => (current + direction + velumCards.length) % velumCards.length);
-  };
 
   useEffect(() => {
     document.documentElement.lang = langQuery;
@@ -91,7 +96,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
       window.removeEventListener("keydown", handleLightboxKeys);
       previousFocus?.focus();
     };
-  }, [isLightboxOpen]);
+  }, [isLightboxOpen, selectRelativeCard]);
 
   return (
     <main className="cards-world-page">
@@ -141,7 +146,11 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
+            {previousCard && (
+              <img className="card-swap-old" src={previousCard.image} alt="" aria-hidden="true" width="1800" height="2400" />
+            )}
             <img
+              className="card-swap-current"
               key={card.image}
               src={card.image}
               alt={`VÉLUM — ${card.title[language]}`}
@@ -169,8 +178,9 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
                 nextIndex = index;
               }
             });
-            if (nextIndex !== activeCard) setActiveCard(nextIndex);
+            if (nextIndex !== activeCard) queueCard(nextIndex);
           }}
+          onPointerLeave={cancelQueuedCard}
         >
           {velumCards.map((item, index) => (
             <button
@@ -178,9 +188,12 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
               key={item.number}
               className={index === activeCard ? "is-active" : ""}
               aria-pressed={index === activeCard}
-              onPointerEnter={() => setActiveCard(index)}
-              onFocus={() => setActiveCard(index)}
-              onClick={() => setActiveCard(index)}
+              onPointerEnter={(event) => {
+                if (event.pointerType !== "touch") queueCard(index);
+              }}
+              onPointerLeave={cancelQueuedCard}
+              onFocus={() => selectCard(index)}
+              onClick={() => selectCard(index)}
             >
               <span>{item.number}</span>
               <strong>{item.title[language]}</strong>
@@ -204,7 +217,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="cards-lightbox-step cards-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
-          <img key={card.image} src={card.image} alt={`VÉLUM — ${card.title[language]}`} width="1800" height="2400" />
+          <img className="card-swap-single" key={card.image} src={card.image} alt={`VÉLUM — ${card.title[language]}`} width="1800" height="2400" />
           <button className="cards-lightbox-step cards-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="cards-lightbox-caption">
             <span>{card.number} / 08</span>

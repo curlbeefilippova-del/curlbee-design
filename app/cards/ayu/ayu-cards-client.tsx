@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import { useCardSwap } from "../use-card-swap";
 
 export type AyuCardsLanguage = "RU" | "EN";
 
@@ -78,20 +79,24 @@ const copy = {
 
 export default function AyuCardsClient({ initialLanguage }: { initialLanguage: AyuCardsLanguage }) {
   const [language, setLanguage] = useState<AyuCardsLanguage>(initialLanguage);
-  const [activeCard, setActiveCard] = useState(0);
+  const {
+    activeIndex: activeCard,
+    previousIndex: previousCardIndex,
+    selectIndex: selectCard,
+    selectRelative: selectRelativeCard,
+    queueIndex: queueCard,
+    cancelQueuedIndex: cancelQueuedCard,
+  } = useCardSwap(ayuCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const t = copy[language];
   const card = ayuCards[activeCard];
+  const previousCard = previousCardIndex === null ? null : ayuCards[previousCardIndex];
   const moodIndex = Math.min(moods.length - 1, Math.floor(activeCard / 3));
   const mood = moods[moodIndex];
   const langQuery = language.toLowerCase();
-
-  const selectRelativeCard = (direction: number) => {
-    setActiveCard((current) => (current + direction + ayuCards.length) % ayuCards.length);
-  };
 
   const respondToPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") return;
@@ -157,7 +162,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
       window.removeEventListener("keydown", handleLightboxKeys);
       previousFocus?.focus();
     };
-  }, [isLightboxOpen]);
+  }, [isLightboxOpen, selectRelativeCard]);
 
   return (
     <main className={`ayu-world ayu-world--${mood.key}`}>
@@ -217,7 +222,11 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
+            {previousCard && (
+              <img className="card-swap-old" src={previousCard.image} alt="" aria-hidden="true" width="1800" height="2400" />
+            )}
             <img
+              className="card-swap-current"
               key={card.image}
               src={card.image}
               alt={`AYU — ${card.title[language]}`}
@@ -252,10 +261,11 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
                 className={cardIndex === activeCard ? "is-active" : ""}
                 aria-pressed={cardIndex === activeCard}
                 onPointerEnter={(event) => {
-                  if (event.pointerType !== "touch") setActiveCard(cardIndex);
+                  if (event.pointerType !== "touch") queueCard(cardIndex);
                 }}
-                onFocus={() => setActiveCard(cardIndex)}
-                onClick={() => setActiveCard(cardIndex)}
+                onPointerLeave={cancelQueuedCard}
+                onFocus={() => selectCard(cardIndex)}
+                onClick={() => selectCard(cardIndex)}
               >
                 <small>{item.number}</small>
                 <strong>{item.title[language]}</strong>
@@ -288,7 +298,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="ayu-lightbox-step ayu-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
-          <img key={card.image} src={card.image} alt={`AYU — ${card.title[language]}`} width="1800" height="2400" />
+          <img className="card-swap-single" key={card.image} src={card.image} alt={`AYU — ${card.title[language]}`} width="1800" height="2400" />
           <button className="ayu-lightbox-step ayu-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="ayu-lightbox-caption">
             <span>{card.number} / 09</span>

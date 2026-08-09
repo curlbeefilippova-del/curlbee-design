@@ -1973,40 +1973,6 @@ img { display: block; max-width: 100%; }
 }
 .minimalist-world.is-lifestyle .minimalist-copy > span { color: #685844; }
 .minimalist-stage { justify-self: center; width: min(100%, 455px); }
-.minimalist-glass-shelf {
-  position: absolute;
-  z-index: -1;
-  inset: -4% -10% 4% 8%;
-  border: 1px solid rgba(255,255,255,.58);
-  background:
-    linear-gradient(136deg, rgba(255,255,255,.62), rgba(168,203,189,.27) 48%, rgba(245,252,249,.52));
-  box-shadow:
-    0 2px 1px rgba(255,255,255,.84) inset,
-    0 28px 54px rgba(43, 85, 69, .18);
-  transform: perspective(700px) rotateY(-2deg) rotateZ(1.2deg);
-  transition: border-color 560ms ease, background 640ms ease, box-shadow 640ms ease;
-}
-.minimalist-glass-shelf::after {
-  content: "";
-  position: absolute;
-  left: -4%;
-  right: -4%;
-  bottom: -18px;
-  height: 20px;
-  border: 1px solid rgba(255,255,255,.5);
-  background: linear-gradient(180deg, rgba(151,193,176,.45), rgba(243,250,247,.26));
-  transform: skewX(-16deg);
-  transition: border-color 560ms ease, background 640ms ease;
-}
-.minimalist-world.is-lifestyle .minimalist-glass-shelf {
-  border-color: rgba(255, 247, 232, .64);
-  background: linear-gradient(136deg, rgba(255, 248, 235, .68), rgba(201, 166, 122, .24) 48%, rgba(247, 232, 209, .52));
-  box-shadow: 0 2px 1px rgba(255, 250, 241, .86) inset, 0 30px 58px rgba(99, 72, 43, .2);
-}
-.minimalist-world.is-lifestyle .minimalist-glass-shelf::after {
-  border-color: rgba(255, 246, 229, .56);
-  background: linear-gradient(180deg, rgba(203, 172, 134, .44), rgba(247, 234, 215, .28));
-}
 .minimalist-active {
   position: relative;
   width: 100%;
@@ -3506,6 +3472,27 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 @keyframes cards-portal-enter { to { clip-path: circle(160vmax at var(--cards-portal-x, 50%) var(--cards-portal-y, 50%)); } }
 @keyframes cards-portal-release { from { clip-path: circle(160vmax at 84% 72%); } to { clip-path: circle(0 at 84% 72%); visibility: hidden; } }
 @keyframes cards-world-content-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
+.card-swap-old {
+  position: absolute !important;
+  z-index: 1 !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain;
+  pointer-events: none;
+  animation: card-swap-out 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+}
+.card-swap-current {
+  position: relative;
+  z-index: 2;
+  animation: card-swap-in 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+}
+.card-swap-single {
+  animation: card-swap-in 300ms cubic-bezier(.22, 1, .36, 1) both !important;
+}
+@keyframes card-swap-in { from { opacity: .12; } to { opacity: 1; } }
+@keyframes card-swap-out { from { opacity: 1; } to { opacity: 0; } }
 @keyframes crafted-portal-release { from { clip-path: circle(160vmax at 48% 18%); } to { clip-path: circle(0 at 48% 18%); visibility: hidden; } }
 @keyframes crafted-card-settle { from { opacity: 0.62; transform: translateY(14px) scale(0.986); } to { opacity: 1; transform: none; } }
 @keyframes crafted-lightbox-in { from { opacity: 0; } to { opacity: 1; } }
@@ -3905,7 +3892,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .minimalist-copy > strong { max-width: 320px; font-size: 25px; }
   .minimalist-copy > span { font-size: 15px; }
   .minimalist-stage { width: min(86vw, 440px); }
-  .minimalist-glass-shelf { inset: -2.8% -4.5% 3.2% 4.5%; }
   .minimalist-active > span { bottom: -30px; }
   .minimalist-index button > strong { font-size: 9.5px; }
   .minimalist-lightbox {
@@ -3933,6 +3919,8 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .card-swap-old { display: none !important; }
+  .card-swap-current, .card-swap-single { animation: none !important; }
   [data-reveal] { opacity: 1; transform: none; }
   .cards-world-page::before { display: none; }
 }

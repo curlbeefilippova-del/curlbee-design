@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
+import { useCardSwap } from "../use-card-swap";
 
 export type MinimalistCardsLanguage = "RU" | "EN";
 
@@ -54,17 +55,21 @@ const copy = {
 
 export default function MinimalistCardsClient({ initialLanguage }: { initialLanguage: MinimalistCardsLanguage }) {
   const [language, setLanguage] = useState<MinimalistCardsLanguage>(initialLanguage);
-  const [activeCard, setActiveCard] = useState(0);
+  const {
+    activeIndex: activeCard,
+    previousIndex: previousCardIndex,
+    selectIndex: selectCard,
+    selectRelative: selectRelativeCard,
+    queueIndex: queueCard,
+    cancelQueuedIndex: cancelQueuedCard,
+  } = useCardSwap(minimalistCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const t = copy[language];
   const card = minimalistCards[activeCard];
+  const previousCard = previousCardIndex === null ? null : minimalistCards[previousCardIndex];
   const langQuery = language.toLowerCase();
-
-  const selectRelativeCard = (direction: number) => {
-    setActiveCard((current) => (current + direction + minimalistCards.length) % minimalistCards.length);
-  };
 
   useEffect(() => {
     document.documentElement.lang = langQuery;
@@ -107,7 +112,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
       window.removeEventListener("keydown", handleLightboxKeys);
       previousFocus?.focus();
     };
-  }, [isLightboxOpen]);
+  }, [isLightboxOpen, selectRelativeCard]);
 
   return (
     <main className={`minimalist-world${activeCard === 8 ? " is-lifestyle" : ""}`}>
@@ -148,14 +153,24 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
         </div>
 
         <div className="minimalist-stage">
-          <div className="minimalist-glass-shelf" aria-hidden="true" />
           <button
             className="minimalist-active"
             type="button"
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
+            {previousCard && (
+              <img
+                className="card-swap-old"
+                src={previousCard.image}
+                alt=""
+                aria-hidden="true"
+                width={previousCard.number === "06" ? "1848" : "1800"}
+                height={previousCard.number === "06" ? "2448" : "2400"}
+              />
+            )}
             <img
+              className="card-swap-current"
               key={card.image}
               src={card.image}
               alt={`MINIMALIST SKINCARE — ${card.title[language]}`}
@@ -184,10 +199,11 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
                 className={index === activeCard ? "is-active" : ""}
                 aria-pressed={index === activeCard}
                 onPointerEnter={(event) => {
-                  if (event.pointerType !== "touch") setActiveCard(index);
+                  if (event.pointerType !== "touch") queueCard(index);
                 }}
-                onFocus={() => setActiveCard(index)}
-                onClick={() => setActiveCard(index)}
+                onPointerLeave={cancelQueuedCard}
+                onFocus={() => selectCard(index)}
+                onClick={() => selectCard(index)}
               >
                 <span>{item.number}</span>
                 <strong>{item.title[language]}</strong>
@@ -213,6 +229,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           </button>
           <button className="minimalist-lightbox-step minimalist-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
           <img
+            className="card-swap-single"
             key={card.image}
             src={card.image}
             alt={`MINIMALIST SKINCARE — ${card.title[language]}`}

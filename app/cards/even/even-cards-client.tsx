@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
+import { useCardSwap } from "../use-card-swap";
 
 export type EvenCardsLanguage = "RU" | "EN";
 
@@ -66,20 +67,24 @@ function getChapterIndex(cardIndex: number) {
 
 export default function EvenCardsClient({ initialLanguage }: { initialLanguage: EvenCardsLanguage }) {
   const [language, setLanguage] = useState<EvenCardsLanguage>(initialLanguage);
-  const [activeCard, setActiveCard] = useState(0);
+  const {
+    activeIndex: activeCard,
+    previousIndex: previousCardIndex,
+    selectIndex: selectCard,
+    selectRelative: selectRelativeCard,
+    queueIndex: queueCard,
+    cancelQueuedIndex: cancelQueuedCard,
+  } = useCardSwap(evenCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const t = copy[language];
   const card = evenCards[activeCard];
+  const previousCard = previousCardIndex === null ? null : evenCards[previousCardIndex];
   const chapterIndex = getChapterIndex(activeCard);
   const chapter = chapters[chapterIndex];
   const langQuery = language.toLowerCase();
-
-  const selectRelativeCard = useCallback((direction: number) => {
-    setActiveCard((current) => (current + direction + evenCards.length) % evenCards.length);
-  }, []);
 
   const respondToPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") return;
@@ -201,7 +206,11 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
+            {previousCard && (
+              <img className="card-swap-old" src={previousCard.image} alt="" aria-hidden="true" width="1800" height="2400" />
+            )}
             <img
+              className="card-swap-current"
               key={card.image}
               src={card.image}
               alt={`EVEN — ${card.title[language]}`}
@@ -233,10 +242,11 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
                         className={index === activeCard ? "is-active" : ""}
                         aria-pressed={index === activeCard}
                         onPointerEnter={(event) => {
-                          if (event.pointerType !== "touch") setActiveCard(index);
+                          if (event.pointerType !== "touch") queueCard(index);
                         }}
-                        onFocus={() => setActiveCard(index)}
-                        onClick={() => setActiveCard(index)}
+                        onPointerLeave={cancelQueuedCard}
+                        onFocus={() => selectCard(index)}
+                        onClick={() => selectCard(index)}
                       >
                         <small>{item.number}</small>
                         <strong>{item.title[language]}</strong>
@@ -266,7 +276,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="even-lightbox-step even-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
-          <img key={card.image} src={card.image} alt={`EVEN — ${card.title[language]}`} width="1800" height="2400" />
+          <img className="card-swap-single" key={card.image} src={card.image} alt={`EVEN — ${card.title[language]}`} width="1800" height="2400" />
           <button className="even-lightbox-step even-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="even-lightbox-caption">
             <span>{card.number} / 11</span>

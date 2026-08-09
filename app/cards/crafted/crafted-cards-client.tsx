@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useCardSwap } from "../use-card-swap";
 
 export type CraftedCardsLanguage = "RU" | "EN";
 
@@ -56,17 +57,21 @@ const copy = {
 
 export default function CraftedCardsClient({ initialLanguage }: { initialLanguage: CraftedCardsLanguage }) {
   const [language, setLanguage] = useState<CraftedCardsLanguage>(initialLanguage);
-  const [activeCard, setActiveCard] = useState(0);
+  const {
+    activeIndex: activeCard,
+    previousIndex: previousCardIndex,
+    selectIndex: selectCard,
+    selectRelative: selectRelativeCard,
+    queueIndex: queueCard,
+    cancelQueuedIndex: cancelQueuedCard,
+  } = useCardSwap(craftedCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const t = copy[language];
   const card = craftedCards[activeCard];
+  const previousCard = previousCardIndex === null ? null : craftedCards[previousCardIndex];
   const langQuery = language.toLowerCase();
-
-  const selectRelativeCard = (direction: number) => {
-    setActiveCard((current) => (current + direction + craftedCards.length) % craftedCards.length);
-  };
 
   useEffect(() => {
     document.documentElement.lang = langQuery;
@@ -108,7 +113,7 @@ export default function CraftedCardsClient({ initialLanguage }: { initialLanguag
       window.removeEventListener("keydown", handleLightboxKeys);
       previousFocus?.focus();
     };
-  }, [isLightboxOpen]);
+  }, [isLightboxOpen, selectRelativeCard]);
 
   return (
     <main className="crafted-world">
@@ -161,7 +166,11 @@ export default function CraftedCardsClient({ initialLanguage }: { initialLanguag
             onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
+            {previousCard && (
+              <img className="card-swap-old" src={previousCard.image} alt="" aria-hidden="true" width="1800" height="2400" />
+            )}
             <img
+              className="card-swap-current"
               key={card.image}
               src={card.image}
               alt={`CRAFTED — ${card.title[language]}`}
@@ -184,10 +193,11 @@ export default function CraftedCardsClient({ initialLanguage }: { initialLanguag
                 className={index === activeCard ? "is-active" : ""}
                 aria-pressed={index === activeCard}
                 onPointerEnter={(event) => {
-                  if (event.pointerType !== "touch") setActiveCard(index);
+                  if (event.pointerType !== "touch") queueCard(index);
                 }}
-                onFocus={() => setActiveCard(index)}
-                onClick={() => setActiveCard(index)}
+                onPointerLeave={cancelQueuedCard}
+                onFocus={() => selectCard(index)}
+                onClick={() => selectCard(index)}
               >
                 <span>{item.number}</span>
                 <strong>{item.title[language]}</strong>
@@ -212,7 +222,7 @@ export default function CraftedCardsClient({ initialLanguage }: { initialLanguag
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="crafted-lightbox-step crafted-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}>←</button>
-          <img key={card.image} src={card.image} alt={`CRAFTED — ${card.title[language]}`} width="1800" height="2400" />
+          <img className="card-swap-single" key={card.image} src={card.image} alt={`CRAFTED — ${card.title[language]}`} width="1800" height="2400" />
           <button className="crafted-lightbox-step crafted-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="crafted-lightbox-caption">
             <span>{card.number} / 08</span>
