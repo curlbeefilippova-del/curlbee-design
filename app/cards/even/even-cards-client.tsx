@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { useCardSwap } from "../use-card-swap";
+import { typographicCopy, typographicText } from "../../typography";
 
 export type EvenCardsLanguage = "RU" | "EN";
 
@@ -79,7 +80,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
   const stageRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
-  const t = copy[language];
+  const t = typographicCopy(copy[language], language);
   const card = evenCards[activeCard];
   const previousCard = previousCardIndex === null ? null : evenCards[previousCardIndex];
   const chapterIndex = getChapterIndex(activeCard);
@@ -158,7 +159,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={t.navigation}>
-          <a className="case-back" href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <a
@@ -249,7 +250,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
                         onClick={() => selectCard(index)}
                       >
                         <small>{item.number}</small>
-                        <strong>{item.title[language]}</strong>
+                        <strong>{typographicText(item.title[language], language)}</strong>
                       </button>
                     );
                   })}
@@ -280,7 +281,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
           <button className="even-lightbox-step even-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="even-lightbox-caption">
             <span>{card.number} / 11</span>
-            <strong>{card.title[language]}</strong>
+            <strong>{typographicText(card.title[language], language)}</strong>
           </div>
         </div>
       )}
