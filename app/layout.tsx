@@ -1,17 +1,52 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { SITE_NAME, SITE_URL } from "./seo";
 
 export const metadata: Metadata = {
-  title: "Curlbee Design — портфолио",
-  description: "Портфолио независимого дизайнера: бренды, продукты, презентации и визуальные системы с характером.",
+  metadataBase: new URL(SITE_URL),
+  applicationName: SITE_NAME,
+  title: {
+    default: "Curlbee Design — портфолио Юлии Филипповой",
+    template: "%s · Curlbee Design",
+  },
+  description: "Портфолио Юлии Филипповой: брендинг, веб-дизайн, продуктовые карточки и визуальные системы с характером.",
+  keywords: [
+    "Curlbee Design",
+    "Юлия Филиппова",
+    "Курлби Дизайн",
+    "портфолио дизайнера",
+    "visual designer",
+    "web design",
+    "branding",
+    "product cards",
+  ],
+  authors: [{ name: "Юлия Филиппова", url: SITE_URL }],
+  creator: "Юлия Филиппова",
+  publisher: SITE_NAME,
+  category: "design portfolio",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   icons: {
     icon: "/curlbee-logo.svg",
     shortcut: "/curlbee-logo.svg",
     apple: "/curlbee-mark.png",
   },
   openGraph: {
-    title: "Curlbee Design",
-    description: "Design with a pulse — бренды, продукты и презентации.",
+    title: "Curlbee Design — портфолио Юлии Филипповой",
+    description: "Design with a pulse — брендинг, веб-дизайн и продуктовые истории.",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: "ru_RU",
+    alternateLocale: ["en_US"],
     type: "website",
   },
 };
