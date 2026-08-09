@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
 import { useCardSwap } from "../use-card-swap";
+import { typographicCopy, typographicText } from "../../typography";
 
 export type AyuCardsLanguage = "RU" | "EN";
 
@@ -91,7 +92,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
   const stageRef = useRef<HTMLDivElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
-  const t = copy[language];
+  const t = typographicCopy(copy[language], language);
   const card = ayuCards[activeCard];
   const previousCard = previousCardIndex === null ? null : ayuCards[previousCardIndex];
   const moodIndex = Math.min(moods.length - 1, Math.floor(activeCard / 3));
@@ -172,7 +173,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={t.navigation}>
-          <a className="case-back" href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <a
@@ -268,7 +269,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
                 onClick={() => selectCard(cardIndex)}
               >
                 <small>{item.number}</small>
-                <strong>{item.title[language]}</strong>
+                <strong>{typographicText(item.title[language], language)}</strong>
               </button>
             ))}
           </div>
@@ -302,7 +303,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
           <button className="ayu-lightbox-step ayu-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="ayu-lightbox-caption">
             <span>{card.number} / 09</span>
-            <strong>{card.title[language]}</strong>
+            <strong>{typographicText(card.title[language], language)}</strong>
           </div>
         </div>
       )}
