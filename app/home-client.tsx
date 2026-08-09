@@ -1,11 +1,6 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 export type Language = "RU" | "EN";
 
@@ -265,7 +260,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     };
   }, []);
 
-  useGSAP(() => {
+  useEffect(() => {
     const bridge = cardsBridgeRef.current;
     const path = bridge?.querySelector<SVGPathElement>(".cards-bridge-membrane-path");
     if (!bridge || !path) return;
@@ -274,40 +269,66 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     const pathTo = path.dataset.pathTo;
     if (!pathFrom || !pathTo) return;
 
-    const media = gsap.matchMedia();
-    media.add({
-      animated: "(min-width: 821px) and (prefers-reduced-motion: no-preference)",
-      reduced: "(prefers-reduced-motion: reduce)",
-    }, (context) => {
-      if (context.conditions?.reduced) {
-        gsap.set(path, { attr: { d: pathTo } });
-        return;
-      }
+    const animated = window.matchMedia("(min-width: 821px) and (prefers-reduced-motion: no-preference)");
+    if (!animated.matches) {
+      path.setAttribute("d", pathTo);
+      return;
+    }
 
-      if (!context.conditions?.animated) return;
+    const titleLines = bridge.querySelectorAll<HTMLElement>(".cards-bridge-title-line");
+    const finalWord = bridge.querySelector<HTMLElement>(".cards-bridge-title-final");
+    const numberPattern = /-?\d*\.?\d+/g;
+    const fromValues = pathFrom.match(numberPattern)?.map(Number) ?? [];
+    const toValues = pathTo.match(numberPattern)?.map(Number) ?? [];
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let frame: number | null = null;
 
-      const titleLines = bridge.querySelectorAll<HTMLElement>(".cards-bridge-title-line");
-      const finalWord = bridge.querySelector<HTMLElement>(".cards-bridge-title-final");
-      const timeline = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: bridge,
-          start: "top 88%",
-          end: "top 28%",
-          scrub: 0.55,
-          invalidateOnRefresh: true,
-        },
+    const clamp = (value: number) => Math.min(1, Math.max(0, value));
+    const easeOut = (value: number) => 1 - Math.pow(1 - value, 3);
+
+    const paint = () => {
+      currentProgress += (targetProgress - currentProgress) * 0.16;
+      if (Math.abs(targetProgress - currentProgress) < 0.001) currentProgress = targetProgress;
+
+      let valueIndex = 0;
+      const interpolatedPath = pathTo.replace(numberPattern, () => {
+        const from = fromValues[valueIndex] ?? toValues[valueIndex] ?? 0;
+        const to = toValues[valueIndex] ?? from;
+        valueIndex += 1;
+        return (from + (to - from) * currentProgress).toFixed(2);
       });
+      path.setAttribute("d", interpolatedPath);
 
-      timeline
-        .fromTo(path, { attr: { d: pathFrom } }, { attr: { d: pathTo }, duration: 1 }, 0)
-        .fromTo(titleLines[0], { xPercent: -4 }, { xPercent: 0, duration: 0.82, ease: "power2.out" }, 0.04)
-        .fromTo(titleLines[1], { xPercent: 5 }, { xPercent: 0, duration: 0.82, ease: "power2.out" }, 0.08)
-        .fromTo(finalWord, { yPercent: 30, autoAlpha: 0.12 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" }, 0.34);
-    });
+      const lineProgress = easeOut(clamp(currentProgress / 0.82));
+      titleLines[0]?.style.setProperty("transform", `translateX(${(-4 * (1 - lineProgress)).toFixed(3)}%)`);
+      titleLines[1]?.style.setProperty("transform", `translateX(${(5 * (1 - lineProgress)).toFixed(3)}%)`);
 
-    return () => media.revert();
-  }, { scope: cardsBridgeRef, dependencies: [language], revertOnUpdate: true });
+      const wordProgress = easeOut(clamp((currentProgress - 0.34) / 0.6));
+      finalWord?.style.setProperty("transform", `translateY(${(30 * (1 - wordProgress)).toFixed(3)}%)`);
+      finalWord?.style.setProperty("opacity", (0.12 + wordProgress * 0.88).toFixed(3));
+
+      if (currentProgress !== targetProgress) frame = window.requestAnimationFrame(paint);
+      else frame = null;
+    };
+
+    const measure = () => {
+      const start = window.innerHeight * 0.88;
+      const end = window.innerHeight * 0.28;
+      targetProgress = clamp((start - bridge.getBoundingClientRect().top) / (start - end));
+      if (frame === null) frame = window.requestAnimationFrame(paint);
+    };
+
+    measure();
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+      if (frame !== null) window.cancelAnimationFrame(frame);
+    };
+  }, [language]);
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
