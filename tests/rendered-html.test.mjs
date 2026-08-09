@@ -35,7 +35,13 @@ test("renders Curlbee production metadata", async () => {
   assert.match(html, /class="cards-intro"/i);
   assert.match(html, /Карточки/i);
   assert.match(html, /Отдельные миры/i);
-  assert.match(html, /class="cards-portal"/i);
+  assert.match(html, /class="cards-world-map"/i);
+  assert.equal((html.match(/cards-world-link cards-world-link-/gi) ?? []).length, 5);
+  assert.match(html, /EVEN/i);
+  assert.match(html, /CRAFTED/i);
+  assert.match(html, /VÉLUM/i);
+  assert.match(html, /MINIMALIST SKINCARE/i);
+  assert.match(html, /AYU/i);
   assert.match(html, /href="\/cards\/velum\?lang=ru"/i);
   assert.doesNotMatch(html, /class="cards-chapter"/i);
   assert.doesNotMatch(html, /cards-world-membrane/i);
@@ -62,4 +68,24 @@ test("renders Curlbee production metadata", async () => {
   assert.match(cardsHtml, /class="cards-chapter cards-project-chapter"/i);
   assert.match(cardsHtml, /Карточки товара · серия 01/i);
   assert.match(cardsHtml, /VÉLUM/i);
+
+  const reservedWorldResponse = await worker.fetch(
+    new Request("http://localhost/cards/even?lang=ru", {
+      headers: { accept: "text/html" },
+    }),
+    {
+      ASSETS: {
+        fetch: async () => new Response("Not found", { status: 404 }),
+      },
+    },
+    {
+      waitUntil() {},
+      passThroughOnException() {},
+    },
+  );
+  assert.equal(reservedWorldResponse.status, 200);
+  const reservedWorldHtml = await reservedWorldResponse.text();
+  assert.match(reservedWorldHtml, /class="cards-world-placeholder"/i);
+  assert.match(reservedWorldHtml, /Мир карточек собирается/i);
+  assert.match(reservedWorldHtml, /EVEN/i);
 });
