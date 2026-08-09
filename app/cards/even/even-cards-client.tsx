@@ -34,15 +34,12 @@ const copy = {
     statementTop: "Одежда для каждого.",
     statementBottom: "Характер — твой.",
     text: "Один гардероб раскрывается через силуэт, материал и детали. Два оттенка, свободная посадка и вещи, которым не нужно делить людей на категории.",
-    chapter: "Глава",
     frames: "Одиннадцать кадров коллекции",
     open: "Открыть крупно",
     close: "Закрыть",
     previous: "Предыдущая карточка",
     next: "Следующая карточка",
     list: "Карточки EVEN",
-    index: "Индекс коллекции",
-    selected: "Выбранный кадр",
   },
   EN: {
     skip: "Skip to the series",
@@ -52,15 +49,12 @@ const copy = {
     statementTop: "Clothing for everyone.",
     statementBottom: "Character is yours.",
     text: "One wardrobe unfolds through silhouette, material and detail. Two tones, an easy fit and pieces that do not need to divide people into categories.",
-    chapter: "Chapter",
     frames: "Eleven collection frames",
     open: "Open full size",
     close: "Close",
     previous: "Previous card",
     next: "Next card",
     list: "EVEN cards",
-    index: "Collection index",
-    selected: "Selected frame",
   },
 } as const;
 
@@ -81,7 +75,6 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
   const card = evenCards[activeCard];
   const chapterIndex = getChapterIndex(activeCard);
   const chapter = chapters[chapterIndex];
-  const chapterCards = evenCards.slice(chapter.start, chapter.end + 1);
   const langQuery = language.toLowerCase();
 
   const selectRelativeCard = useCallback((direction: number) => {
@@ -221,61 +214,38 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
           </button>
         </div>
 
-        <div className="even-chapter-readout" aria-live="polite">
-          <small>{t.chapter} · 0{chapterIndex + 1}</small>
-          <strong>{chapter.label[language]}</strong>
-          <span>{card.number} / 11</span>
-        </div>
-
         <nav className="even-navigation" aria-label={t.list}>
-          <div className="even-index-mark" aria-live="polite">
-            <small>{t.selected}</small>
-            <span><strong>{card.number}</strong><i>/ 11</i></span>
-            <em>{card.title[language]}</em>
-          </div>
-
-          <div className="even-chapter-index">
-            <p>{t.index}</p>
-            <div>
-              {chapters.map((item, index) => (
-                <button
-                  key={item.key}
-                  type="button"
-                  className={index === chapterIndex ? "is-active" : ""}
-                  aria-pressed={index === chapterIndex}
-                  onClick={() => setActiveCard(item.start)}
-                >
-                  <small>0{index + 1}</small>
-                  <strong>{item.label[language]}</strong>
-                  <span>{evenCards[item.start].number}—{evenCards[item.end].number}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="even-frame-index">
-            <p>{chapter.label[language]}</p>
-            <div>
-              {chapterCards.map((item, localIndex) => {
-                const index = chapter.start + localIndex;
-                return (
-                  <button
-                    key={item.number}
-                    type="button"
-                    className={index === activeCard ? "is-active" : ""}
-                    aria-pressed={index === activeCard}
-                    onPointerEnter={(event) => {
-                      if (event.pointerType !== "touch") setActiveCard(index);
-                    }}
-                    onFocus={() => setActiveCard(index)}
-                    onClick={() => setActiveCard(index)}
-                  >
-                    <small>{item.number}</small>
-                    <strong>{item.title[language]}</strong>
-                  </button>
-                );
-              })}
-            </div>
+          <p>{t.frames}</p>
+          <div className="even-runway-groups">
+            {chapters.map((chapterItem, groupIndex) => (
+              <div className={`even-runway-group ${groupIndex === chapterIndex ? "is-current" : ""}`} key={chapterItem.key}>
+                <div className="even-runway-heading">
+                  <small>0{groupIndex + 1}</small>
+                  <strong>{chapterItem.label[language]}</strong>
+                </div>
+                <div className="even-runway-list">
+                  {evenCards.slice(chapterItem.start, chapterItem.end + 1).map((item, localIndex) => {
+                    const index = chapterItem.start + localIndex;
+                    return (
+                      <button
+                        key={item.number}
+                        type="button"
+                        className={index === activeCard ? "is-active" : ""}
+                        aria-pressed={index === activeCard}
+                        onPointerEnter={(event) => {
+                          if (event.pointerType !== "touch") setActiveCard(index);
+                        }}
+                        onFocus={() => setActiveCard(index)}
+                        onClick={() => setActiveCard(index)}
+                      >
+                        <small>{item.number}</small>
+                        <strong>{item.title[language]}</strong>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </nav>
       </section>
