@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useCardSwap } from "../use-card-swap";
+import { typographicCopy, typographicText } from "../../typography";
 
 export type CardsLanguage = "RU" | "EN";
 
@@ -58,7 +59,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const lightboxCloseRef = useRef<HTMLButtonElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
-  const t = copy[language];
+  const t = typographicCopy(copy[language], language);
   const card = velumCards[activeCard];
   const previousCard = previousCardIndex === null ? null : velumCards[previousCardIndex];
   const langQuery = language.toLowerCase();
@@ -105,7 +106,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={t.navigation}>
-          <a className="case-back" href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
+          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true">←</span>{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <a
@@ -196,7 +197,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
               onClick={() => selectCard(index)}
             >
               <span>{item.number}</span>
-              <strong>{item.title[language]}</strong>
+              <strong>{typographicText(item.title[language], language)}</strong>
             </button>
           ))}
         </div>
@@ -221,7 +222,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <button className="cards-lightbox-step cards-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}>→</button>
           <div className="cards-lightbox-caption">
             <span>{card.number} / 08</span>
-            <strong>{card.title[language]}</strong>
+            <strong>{typographicText(card.title[language], language)}</strong>
           </div>
         </div>
       )}
