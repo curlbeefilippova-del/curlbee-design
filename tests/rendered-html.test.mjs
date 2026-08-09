@@ -32,7 +32,8 @@ test("renders Curlbee production metadata", async () => {
   const html = await response.text();
   assert.match(html, siteTitle);
   assert.match(html, siteDescription);
-  assert.match(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']https:\/\/curlbee-design\.eyydvxgdp322\.chatgpt\.site\/?["']/i);
+  assert.match(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']https:\/\/curlbeedesign\.com\/?["']/i);
+  assert.doesNotMatch(html, /chatgpt\.site/i);
   assert.match(html, /hreflang=["']en-US["']/i);
   assert.match(html, /application\/ld\+json/i);
   assert.match(html, /Юлия Филиппова/i);
@@ -173,7 +174,7 @@ test("serves crawler rules and a complete public sitemap", async () => {
   assert.match(robots, /User-Agent:\s*\*/i);
   assert.match(robots, /User-Agent:\s*OAI-SearchBot/i);
   assert.match(robots, /User-Agent:\s*GPTBot[\s\S]*Disallow:\s*\//i);
-  assert.match(robots, /Sitemap:\s*https:\/\/curlbee-design\.eyydvxgdp322\.chatgpt\.site\/sitemap\.xml/i);
+  assert.match(robots, /Sitemap:\s*https:\/\/curlbeedesign\.com\/sitemap\.xml/i);
 
   const sitemapResponse = await worker.fetch(
     new Request("http://localhost/sitemap.xml", { headers: { accept: "application/xml" } }),
