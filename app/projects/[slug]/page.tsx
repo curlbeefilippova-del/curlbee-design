@@ -113,6 +113,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <ThemeToggle language={language} />
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
+            <span className="language-divider" aria-hidden="true">/</span>
             <a href={`/projects/${project.slug}?lang=en`} aria-current={language === "EN" ? "true" : undefined}>EN</a>
           </div>
         </nav>
