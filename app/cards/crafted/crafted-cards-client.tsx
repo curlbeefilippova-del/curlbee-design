@@ -58,6 +58,10 @@ const copy = {
 
 export default function CraftedCardsClient({ initialLanguage }: { initialLanguage: CraftedCardsLanguage }) {
   const [language, setLanguage] = useState<CraftedCardsLanguage>(initialLanguage);
+
+  useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
