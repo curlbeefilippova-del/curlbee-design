@@ -48,6 +48,10 @@ const copy = {
 
 export default function VelumCardsClient({ initialLanguage }: { initialLanguage: CardsLanguage }) {
   const [language, setLanguage] = useState<CardsLanguage>(initialLanguage);
+
+  useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
