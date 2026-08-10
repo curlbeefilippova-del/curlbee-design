@@ -4472,6 +4472,10 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 .case-language {
   gap: 0;
 }
+.language-switch a + a,
+.case-language a + a {
+  margin-left: 0;
+}
 .language-switch a + a::before,
 .case-language a + a::before {
   content: none;
@@ -4488,11 +4492,19 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   line-height: 1;
   pointer-events: none;
 }
+.language-switch a:first-of-type,
+.case-language a:first-of-type {
+  justify-items: end;
+}
+.language-switch a:last-of-type,
+.case-language a:last-of-type {
+  justify-items: start;
+}
 
 @media (max-width: 820px), (pointer: coarse) {
   .case-gallery {
     --case-outer-space: 40px;
-    padding-block: var(--case-outer-space);
+    padding-block: 56px 40px;
   }
   .case-image-link {
     pointer-events: none;
@@ -4540,6 +4552,15 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     flex: 0 1 84px;
     padding-inline: 8px;
     gap: 7px;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0;
+  }
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) .case-back::after {
+    content: attr(data-short);
+    flex: 0 0 auto;
+    font-size: 10px;
+    line-height: 1;
   }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) .case-back > span {
     width: 20px;
@@ -4558,6 +4579,30 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     width: 44px;
     min-width: 44px;
     margin: 0;
+  }
+  .cards-world-link-04,
+  .cards-world-link-04:hover,
+  .cards-world-link-04:focus-visible {
+    position: relative;
+    padding: 24px;
+  }
+  .cards-world-link-04 > span {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    transform: none;
+  }
+  .cards-world-link-04 strong {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 66px;
+    max-width: none;
+  }
+  .cards-world-link-04 > i {
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
   }
   .case-end {
     min-height: 300px;
