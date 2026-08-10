@@ -4672,6 +4672,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 .case-site-header .case-back {
   height: 44px;
   min-height: 44px;
+  margin-right: var(--space-3);
   padding: 0;
   border: 0;
   background: transparent;
