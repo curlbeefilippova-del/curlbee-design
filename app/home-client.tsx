@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
+import { Fragment, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import ThemeToggle from "./theme-toggle";
 import { typographicCopy, typographicText } from "./typography";
 
@@ -334,20 +334,22 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <ThemeToggle language={language} />
           <div className="language-switch" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
-              <a
-                key={item}
-                href={`?lang=${item.toLowerCase()}`}
-                aria-current={language === item ? "true" : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setLanguage(item);
-                  const url = new URL(window.location.href);
-                  url.searchParams.set("lang", item.toLowerCase());
-                  window.history.replaceState(null, "", url);
-                }}
-              >
-                {item}
-              </a>
+              <Fragment key={item}>
+                {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
+                <a
+                  href={`?lang=${item.toLowerCase()}`}
+                  aria-current={language === item ? "true" : undefined}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setLanguage(item);
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("lang", item.toLowerCase());
+                    window.history.replaceState(null, "", url);
+                  }}
+                >
+                  {item}
+                </a>
+              </Fragment>
             ))}
           </div>
         </div>
