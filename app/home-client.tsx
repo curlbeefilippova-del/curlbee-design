@@ -174,6 +174,36 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   }, [language]);
 
   useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const mobileViewport = window.matchMedia("(max-width: 820px), (pointer: coarse)");
+    let orientationTimer = 0;
+
+    const lockHeroHeight = () => {
+      if (!mobileViewport.matches) {
+        hero.style.removeProperty("--hero-mobile-height");
+        return;
+      }
+      hero.style.setProperty("--hero-mobile-height", `${Math.round(window.innerHeight)}px`);
+    };
+
+    const handleOrientationChange = () => {
+      window.clearTimeout(orientationTimer);
+      orientationTimer = window.setTimeout(lockHeroHeight, 280);
+    };
+
+    lockHeroHeight();
+    window.addEventListener("orientationchange", handleOrientationChange);
+
+    return () => {
+      window.clearTimeout(orientationTimer);
+      window.removeEventListener("orientationchange", handleOrientationChange);
+      hero.style.removeProperty("--hero-mobile-height");
+    };
+  }, []);
+
+  useEffect(() => {
     if (window.location.hash !== "#cards") return;
 
     const scrollToCards = () => {
