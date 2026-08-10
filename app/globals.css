@@ -4740,32 +4740,55 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 .case-site-header .case-back::after {
   content: none;
 }
-.case-site-header .case-language {
+.language-switch,
+.case-language {
   position: relative;
-  width: 88px;
-  min-width: 88px;
-  flex: 0 0 88px;
+  isolation: isolate;
+  width: 96px;
+  min-width: 96px;
+  height: 44px;
+  flex: 0 0 96px;
   display: grid;
-  grid-template-columns: 44px 44px;
+  grid-template-columns: 44px 8px 44px;
+  align-items: center;
   gap: 0;
 }
-.case-site-header .case-language a {
+.language-switch::before,
+.case-language::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 4px 0;
+  border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper) 20%, transparent);
+}
+.language-switch a,
+.case-language a {
   width: 44px;
   min-width: 44px;
+  min-height: 44px;
   margin: 0;
+  padding: 0;
+  display: grid;
+  place-items: center;
 }
-.case-site-header .case-language a:first-of-type {
+.language-switch a:first-of-type,
+.case-language a:first-of-type {
   grid-column: 1;
+  justify-items: end;
+}
+.language-switch a:last-of-type,
+.case-language a:last-of-type {
+  grid-column: 3;
   justify-items: start;
 }
-.case-site-header .case-language a:last-of-type {
+.language-switch .language-divider,
+.case-language .language-divider {
+  position: static;
   grid-column: 2;
-  justify-items: start;
-}
-.case-site-header .case-language .language-divider {
-  position: absolute;
-  left: var(--space-3);
-  top: 0;
+  width: 8px;
+  min-width: 8px;
 }
 
 @media (max-width: 820px) {
