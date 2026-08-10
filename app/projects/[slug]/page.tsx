@@ -109,7 +109,13 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <img src="/curlbee-logo.svg" alt="Curlbee" />
         </a>
         <nav aria-label={labels.aria}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#work`}><span aria-hidden="true" />{labels.back}</a>
+          <a className="case-back" href={`/?lang=${langQuery}#work`}>
+            <span className="case-back-visual">
+              <span className="case-back-arrow" aria-hidden="true" />
+              <span className="case-back-full">{labels.back}</span>
+              <span className="case-back-short">{language === "RU" ? "Назад" : "Back"}</span>
+            </span>
+          </a>
           <ThemeToggle language={language} />
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
