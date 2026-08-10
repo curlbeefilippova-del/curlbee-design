@@ -56,6 +56,10 @@ const copy = {
 
 export default function MinimalistCardsClient({ initialLanguage }: { initialLanguage: MinimalistCardsLanguage }) {
   const [language, setLanguage] = useState<MinimalistCardsLanguage>(initialLanguage);
+
+  useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
