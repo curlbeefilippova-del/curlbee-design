@@ -4468,6 +4468,14 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 }
 
 /* Navigation and gallery corrections after the real-device review. */
+.case-back {
+  gap: 8px;
+  padding-inline: 14px;
+}
+.case-back > span {
+  width: 20px;
+  flex-basis: 20px;
+}
 .language-switch,
 .case-language {
   gap: 0;
@@ -4529,6 +4537,13 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 }
 
 @media (max-width: 560px) {
+  .hero {
+    min-height: max(640px, var(--hero-mobile-height, 100svh));
+    overflow-anchor: none;
+  }
+  .header-actions {
+    gap: 8px;
+  }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) {
     height: 74px;
     min-height: 74px;
@@ -4540,7 +4555,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     min-width: 0;
     justify-self: end;
     justify-content: flex-end;
-    gap: 4px;
+    gap: 8px;
   }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) .case-brand {
     width: 38px;
@@ -4548,10 +4563,14 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) .case-back {
     min-width: 76px;
-    max-width: 84px;
-    flex: 0 1 84px;
-    padding-inline: 8px;
-    gap: 7px;
+    max-width: 76px;
+    height: 44px;
+    min-height: 44px;
+    flex: 0 0 76px;
+    justify-content: center;
+    padding: 0 10px;
+    gap: 5px;
+    line-height: 1;
     overflow: hidden;
     white-space: nowrap;
     font-size: 0;
@@ -4563,8 +4582,8 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     line-height: 1;
   }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header, .cards-placeholder-header) .case-back > span {
-    width: 20px;
-    flex-basis: 20px;
+    width: 16px;
+    flex-basis: 16px;
   }
   :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .theme-toggle {
     flex: 0 0 44px;
@@ -4608,4 +4627,36 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     min-height: 300px;
     padding-block: 40px;
   }
+}
+
+@media (min-width: 561px) and (max-width: 820px) {
+  .hero {
+    min-height: max(680px, var(--hero-mobile-height, 100svh));
+    overflow-anchor: none;
+  }
+}
+
+@media (max-width: 820px) and (prefers-reduced-motion: no-preference) {
+  .hero-shape {
+    will-change: transform;
+  }
+  .hero-shape-plum {
+    animation: mobile-drift-plum 14s ease-in-out infinite alternate;
+  }
+  .hero-shape-honey {
+    animation: mobile-drift-honey 12s ease-in-out infinite alternate;
+  }
+  .hero-shape-mint {
+    animation: mobile-drift-mint 13s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes mobile-drift-plum {
+  to { transform: translate3d(-10px, 8px, 0) rotate(2deg); }
+}
+@keyframes mobile-drift-honey {
+  to { transform: translate3d(8px, -6px, 0) rotate(5deg); }
+}
+@keyframes mobile-drift-mint {
+  to { transform: translate3d(7px, -8px, 0) rotate(-9deg); }
 }
