@@ -80,6 +80,10 @@ const copy = {
 
 export default function AyuCardsClient({ initialLanguage }: { initialLanguage: AyuCardsLanguage }) {
   const [language, setLanguage] = useState<AyuCardsLanguage>(initialLanguage);
+
+  useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
