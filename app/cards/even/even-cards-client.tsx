@@ -68,6 +68,10 @@ function getChapterIndex(cardIndex: number) {
 
 export default function EvenCardsClient({ initialLanguage }: { initialLanguage: EvenCardsLanguage }) {
   const [language, setLanguage] = useState<EvenCardsLanguage>(initialLanguage);
+
+  useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
