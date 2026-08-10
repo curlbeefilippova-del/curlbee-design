@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { useCardSwap } from "../use-card-swap";
 import { typographicCopy, typographicText } from "../../typography";
-import { canOpenCardLightbox } from "../responsive";
 
 export type CardsLanguage = "RU" | "EN";
 
@@ -110,20 +109,22 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
-              <a
-                key={item}
-                href={`/cards/velum?lang=${item.toLowerCase()}`}
-                aria-current={language === item ? "true" : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setLanguage(item);
-                  const url = new URL(window.location.href);
-                  url.searchParams.set("lang", item.toLowerCase());
-                  window.history.replaceState(null, "", url);
-                }}
-              >
-                {item}
-              </a>
+              <Fragment key={item}>
+                {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
+                <a
+                  href={`/cards/velum?lang=${item.toLowerCase()}`}
+                  aria-current={language === item ? "true" : undefined}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setLanguage(item);
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("lang", item.toLowerCase());
+                    window.history.replaceState(null, "", url);
+                  }}
+                >
+                  {item}
+                </a>
+              </Fragment>
             ))}
           </div>
         </nav>
@@ -145,9 +146,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
           <button
             className="cards-active"
             type="button"
-            onClick={() => {
-              if (canOpenCardLightbox()) setIsLightboxOpen(true);
-            }}
+            onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
             {previousCard && (
