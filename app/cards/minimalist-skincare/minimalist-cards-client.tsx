@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useCardSwap } from "../use-card-swap";
 import { typographicCopy, typographicText } from "../../typography";
-import { canOpenCardLightbox } from "../responsive";
 
 export type MinimalistCardsLanguage = "RU" | "EN";
 
@@ -127,8 +126,9 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
           <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
-              <a
-                key={item}
+              <Fragment key={item}>
+                {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
+                <a
                 href={`/cards/minimalist-skincare?lang=${item.toLowerCase()}`}
                 aria-current={language === item ? "true" : undefined}
                 onClick={(event) => {
@@ -138,9 +138,10 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
                   url.searchParams.set("lang", item.toLowerCase());
                   window.history.replaceState(null, "", url);
                 }}
-              >
-                {item}
-              </a>
+                >
+                  {item}
+                </a>
+              </Fragment>
             ))}
           </div>
         </nav>
@@ -158,9 +159,7 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <button
             className="minimalist-active"
             type="button"
-            onClick={() => {
-              if (canOpenCardLightbox()) setIsLightboxOpen(true);
-            }}
+            onClick={() => setIsLightboxOpen(true)}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
             {previousCard && (
