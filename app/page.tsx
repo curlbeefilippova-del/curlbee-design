@@ -1,32 +1,17 @@
 import type { Metadata } from "next";
-import HomeClient, { type Language } from "./home-client";
-import { createPageMetadata, seoLanguage, SITE_URL } from "./seo";
+import HomeClient from "./home-client";
+import { createPageMetadata, SITE_URL } from "./seo";
 
-type PageProps = {
-  searchParams?: Promise<{ lang?: string }>;
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Curlbee Design — портфолио Юлии Филипповой",
+  description: "Портфолио Юлии Филипповой: брендинг, веб-дизайн, продуктовые карточки и визуальные системы с характером.",
+  path: "/",
+  language: "RU",
+  image: "/curlbee-mark.png",
+  imageAlt: "Curlbee Design",
+});
 
-export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
-  const params = await searchParams;
-  const language = seoLanguage(params?.lang);
-
-  return createPageMetadata({
-    title: language === "EN"
-      ? "Curlbee Design — Yulia Filippova’s portfolio"
-      : "Curlbee Design — портфолио Юлии Филипповой",
-    description: language === "EN"
-      ? "Independent visual designer working across branding, web design, product cards and character-led visual systems."
-      : "Портфолио Юлии Филипповой: брендинг, веб-дизайн, продуктовые карточки и визуальные системы с характером.",
-    path: "/",
-    language,
-    image: "/curlbee-mark.png",
-    imageAlt: "Curlbee Design",
-  });
-}
-
-export default async function Home({ searchParams }: PageProps) {
-  const params = await searchParams;
-  const initialLanguage: Language = params?.lang?.toLowerCase() === "en" ? "EN" : "RU";
+export default function Home() {
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -60,7 +45,7 @@ export default async function Home({ searchParams }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
       />
-      <HomeClient initialLanguage={initialLanguage} />
+      <HomeClient initialLanguage="RU" />
     </>
   );
 }
