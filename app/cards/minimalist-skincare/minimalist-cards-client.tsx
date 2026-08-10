@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useCardSwap } from "../use-card-swap";
 import { typographicCopy, typographicText } from "../../typography";
+import { canOpenCardLightbox } from "../responsive";
 
 export type MinimalistCardsLanguage = "RU" | "EN";
 
@@ -157,7 +158,9 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
           <button
             className="minimalist-active"
             type="button"
-            onClick={() => setIsLightboxOpen(true)}
+            onClick={() => {
+              if (canOpenCardLightbox()) setIsLightboxOpen(true);
+            }}
             aria-label={`${t.open}: ${card.title[language]}`}
           >
             {previousCard && (
