@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { localizedUrls, SITE_URL } from "./seo";
 
+export const dynamic = "force-static";
+
 const routes = [
   "/",
   "/projects/even",
@@ -34,4 +36,3 @@ export default function sitemap(): MetadataRoute.Sitemap {
     };
   });
 }
-
