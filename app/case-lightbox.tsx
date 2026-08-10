@@ -21,12 +21,26 @@ export default function CaseLightbox({
   eager = false,
 }: CaseLightboxProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLightboxEnabled, setIsLightboxEnabled] = useState(false);
   const imageTriggerRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   const close = useCallback(() => {
     setIsOpen(false);
     window.requestAnimationFrame(() => imageTriggerRef.current?.focus());
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 820px), (pointer: coarse)");
+    const update = () => {
+      const nextEnabled = !media.matches;
+      setIsLightboxEnabled(nextEnabled);
+      if (!nextEnabled) setIsOpen(false);
+    };
+
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
@@ -56,9 +70,12 @@ export default function CaseLightbox({
       <button
         className="case-image-link"
         type="button"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          if (isLightboxEnabled) setIsOpen(true);
+        }}
         ref={imageTriggerRef}
-        aria-haspopup="dialog"
+        disabled={!isLightboxEnabled}
+        aria-haspopup={isLightboxEnabled ? "dialog" : undefined}
         aria-label={openLabel}
       >
         <img
@@ -72,7 +89,7 @@ export default function CaseLightbox({
 
       <figcaption>
         <span>{indexLabel}</span>
-        <button className="case-open-button" type="button" onClick={() => setIsOpen(true)}>
+        <button className="case-open-button" type="button" disabled={!isLightboxEnabled} onClick={() => setIsOpen(true)}>
           {openLabel}<span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
         </button>
       </figcaption>
