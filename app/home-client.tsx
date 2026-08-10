@@ -170,6 +170,10 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const project = projects[activeProject];
 
   useEffect(() => {
+    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
+  }, []);
+
+  useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
   }, [language]);
 
