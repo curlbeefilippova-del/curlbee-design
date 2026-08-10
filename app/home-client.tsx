@@ -174,6 +174,26 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   }, [language]);
 
   useEffect(() => {
+    if (window.location.hash !== "#cards") return;
+
+    const scrollToCards = () => {
+      document.getElementById("cards")?.scrollIntoView({ block: "start" });
+    };
+    let secondFrame = 0;
+    const firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(scrollToCards);
+    });
+    const timers = [120, 480, 1100].map((delay) => window.setTimeout(scrollToCards, delay));
+    document.fonts?.ready.then(scrollToCards).catch(() => undefined);
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame);
+      window.cancelAnimationFrame(secondFrame);
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, []);
+
+  useEffect(() => {
     const companion = companionRef.current;
     if (!companion || window.matchMedia("(pointer: coarse)").matches) return;
 
