@@ -2744,7 +2744,14 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, color-mix(in srgb, var(--ayu-canvas) 28%, transparent), transparent 24% 72%, color-mix(in srgb, var(--ayu-canvas) 52%, transparent));
+  background: linear-gradient(
+    180deg,
+    var(--ayu-canvas) 0 24%,
+    color-mix(in srgb, var(--ayu-canvas) 94%, transparent) 31%,
+    color-mix(in srgb, var(--ayu-canvas) 52%, transparent) 39%,
+    transparent 48% 72%,
+    color-mix(in srgb, var(--ayu-canvas) 52%, transparent)
+  );
 }
 .ayu-lightbox-atmosphere img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 54%; animation: ayu-atmosphere-in 560ms var(--ease-out) both; }
 .ayu-lightbox > img {
@@ -4231,7 +4238,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     box-shadow: 0 28px 72px rgba(45, 84, 70, .08), inset 0 1px 0 rgba(255,255,255,.62);
     transform: rotate(-1.8deg);
   }
-  .minimalist-copy { grid-column: 1; grid-row: 1; align-self: center; }
+  .minimalist-copy { grid-column: 1; grid-row: 1; align-self: start; margin-top: 24px; }
   .minimalist-stage { grid-column: 2; grid-row: 1; }
   .minimalist-controls { grid-column: 3; grid-row: 1; min-width: 0; align-self: center; }
 }
