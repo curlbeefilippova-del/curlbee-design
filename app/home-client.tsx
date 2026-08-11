@@ -573,7 +573,11 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <a className="contact-link telegram-cta" href="https://t.me/CURLBEEFILIPPOVA" target="_blank" rel="noreferrer">
             <span>{t.telegramLabel}</span>
             <strong>@CURLBEEFILIPPOVA</strong>
-            <i className="telegram-cta-arrow" aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></i>
+            <i className="telegram-cta-arrow" aria-hidden="true">
+              <svg className="telegram-cta-arrow-icon" viewBox="0 0 24 24">
+                <path d="M4.5 17.75 6.25 19.5 16.75 9v5h2.5V4.75H10v2.5h5Z" />
+              </svg>
+            </i>
           </a>
         </div>
         <div className="footer-bottom">
