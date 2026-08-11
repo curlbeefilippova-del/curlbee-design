@@ -835,7 +835,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .case-lead h1.is-stacked span { display: block; }
 .case-lead-copy { align-self: end; padding-bottom: 0; }
 .case-lead-copy > p { margin: 0; max-width: 560px; font-size: clamp(17px, 1.4vw, 22px); line-height: 1.52; }
-.case-lead-copy > a { margin-top: 32px; display: inline-flex; align-items: center; gap: 12px; color: var(--case-accent); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+.case-lead-copy > a { width: max-content; margin-top: 32px; display: flex; align-items: center; gap: 12px; color: var(--case-accent); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
 .case-screen-arrow { width: 34px; height: 34px; display: grid; place-items: center; border: 1px solid currentColor; border-radius: 50%; transition: transform 220ms var(--ease-out), background 220ms ease; }
 .case-screen-arrow .ui-arrow { --ui-arrow-size: 13px; --ui-arrow-stroke: 1.15px; }
 .case-lead-copy > a:hover .case-screen-arrow { transform: translateY(4px); background: color-mix(in srgb, var(--case-accent) 10%, transparent); }
@@ -3731,8 +3731,7 @@ footer h2 em { margin-left: 11vw; color: var(--mint); font-family: var(--serif);
   transform: rotate(-5deg);
   transition: color 260ms ease, background 260ms ease, transform 300ms var(--ease-spring);
 }
-.telegram-cta-arrow .ui-arrow { --ui-arrow-size: 17px; --ui-arrow-stroke: 1.35px; }
-.telegram-cta-arrow .ui-arrow-up-right::before { left: -5%; width: 110%; }
+.telegram-cta-arrow-icon { width: 18px; height: 18px; display: block; fill: currentColor; shape-rendering: geometricPrecision; }
 .telegram-cta:hover .telegram-cta-arrow { color: var(--paper); background: var(--terra); transform: translate(8px, -8px) rotate(2deg) scale(1.05); }
 .footer-bottom { margin-top: 24px; display: grid; grid-template-columns: 1fr auto auto; gap: 32px; font-size: 11px; line-height: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
 .telegram-icon-link {
