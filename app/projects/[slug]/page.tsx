@@ -186,7 +186,11 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
           <span className="case-end-blob case-end-blob-honey" />
         </div>
         <p>{project.title} / {project.year}</p>
-        <a href={`/?lang=${langQuery}#work`}>{labels.end}<span className="ui-arrow ui-arrow-up-right" aria-hidden="true" /></a>
+        <a href={`/?lang=${langQuery}#work`}>
+          {labels.end}
+          <span className="case-end-first-arrow" aria-hidden="true">↗</span>
+          <span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
+        </a>
       </section>
       </main>
     </>

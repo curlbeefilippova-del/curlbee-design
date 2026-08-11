@@ -1126,6 +1126,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 }
 .case-end > a .ui-arrow { --ui-arrow-size: 22px; --ui-arrow-stroke: 1.5px; color: var(--case-accent); transition: transform 280ms var(--ease-spring); }
 .case-end > a:hover .ui-arrow { transform: translate(7px, -7px); }
+.case-end-first-arrow { display: none; }
 
 .cards-intro {
   position: relative;
@@ -3842,19 +3843,17 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     gap: clamp(18px, 2vw, 28px);
   }
   .case-end > a .ui-arrow { display: none; }
-  .case-end > a::after {
-    content: "↗";
+  .case-end > a .case-end-first-arrow {
     flex: 0 0 auto;
+    display: inline-block;
     color: var(--case-accent);
     font-family: var(--sans);
-    font-size: 0.5em;
-    line-height: 0.72;
-    font-weight: 420;
-    transform: translateY(-0.06em) rotate(-4deg);
+    font-size: 0.48em;
+    line-height: normal;
     transition: transform 280ms var(--ease-spring);
   }
-  .case-end > a:hover::after {
-    transform: translate(8px, -8px) rotate(1deg);
+  .case-end > a:hover .case-end-first-arrow {
+    transform: translate(10px, -10px);
   }
   .cards-intro {
     min-height: calc(720px - var(--space-6));
