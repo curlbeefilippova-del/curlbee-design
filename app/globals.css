@@ -984,25 +984,28 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   text-transform: uppercase;
 }
 .case-lightbox-close {
-  min-height: 44px;
+  height: 36px;
+  min-height: 36px;
   padding: 0 16px;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   color: var(--paper);
   border: 1px solid rgba(244, 238, 232, 0.24);
   border-radius: 999px;
   background: rgba(244, 238, 232, 0.06);
   font: inherit;
-  letter-spacing: inherit;
+  font-size: 12px;
+  line-height: 1;
+  letter-spacing: 0.08em;
   text-transform: inherit;
   cursor: pointer;
 }
 .case-lightbox-close span {
   position: relative;
-  width: 30px;
+  width: 16px;
   height: 12px;
-  flex: 0 0 30px;
+  flex: 0 0 16px;
   align-self: center;
   color: var(--case-accent);
   font-size: 0;
@@ -1059,7 +1062,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
     --lightbox-space: 24px;
   }
   .case-lightbox-toolbar { padding-inline: 12px; }
-  .case-lightbox-close { padding-inline: 12px; }
+  .case-lightbox-close { padding-inline: 8px; font-size: 10px; }
 }
 
 @media (min-width: 901px) {
@@ -1166,6 +1169,13 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   vector-effect: non-scaling-stroke;
 }
 .case-end > a:hover .case-end-drawn-arrow { transform: translate(8px, -8px); }
+
+@media (min-width: 1181px) {
+  .case-end > a .case-end-drawn-arrow path {
+    stroke-linecap: butt;
+    stroke-linejoin: round;
+  }
+}
 
 .cards-intro {
   position: relative;
@@ -3722,6 +3732,7 @@ footer h2 em { margin-left: 11vw; color: var(--mint); font-family: var(--serif);
   transition: color 260ms ease, background 260ms ease, transform 300ms var(--ease-spring);
 }
 .telegram-cta-arrow .ui-arrow { --ui-arrow-size: 17px; --ui-arrow-stroke: 1.35px; }
+.telegram-cta-arrow .ui-arrow-up-right::before { left: -5%; width: 110%; }
 .telegram-cta:hover .telegram-cta-arrow { color: var(--paper); background: var(--terra); transform: translate(8px, -8px) rotate(2deg) scale(1.05); }
 .footer-bottom { margin-top: 24px; display: grid; grid-template-columns: 1fr auto auto; gap: 32px; font-size: 11px; line-height: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
 .telegram-icon-link {
