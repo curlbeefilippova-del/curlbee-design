@@ -6,6 +6,8 @@ import { typographicCopy, typographicText } from "./typography";
 
 export type Language = "RU" | "EN";
 
+const TELEGRAM_LOGO_PATH = "M23.91 3.79 20.3 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.1.56-.72 0-.6-.27-.84-.95L6.3 13.7.85 12c-1.18-.35-1.19-1.16.26-1.75l21.26-8.2c.97-.43 1.9.24 1.53 1.73Z";
+
 const projects = [
   {
     number: "01",
@@ -584,7 +586,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <span>© 2026 CURLBEE DESIGN</span>
           <a className="telegram-icon-link" href="https://t.me/CURLBEEFILIPPOVA" target="_blank" rel="noreferrer" aria-label={t.telegramLabel}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M21.6 3.15 18.7 20.3c-.22 1.21-.8 1.51-1.62.94l-4.42-3.26-2.13 2.05c-.24.24-.44.44-.9.44l.32-4.5 8.18-7.39c.36-.31-.08-.49-.55-.18L7.47 14.77l-4.35-1.36c-1.19-.37-1.21-1.19.25-1.76L20.4 5.09c.99-.36 1.86.24 1.2 3.06Z" />
+              <path d={TELEGRAM_LOGO_PATH} />
             </svg>
           </a>
           <span>DESIGNED WITH CURIOSITY</span>
