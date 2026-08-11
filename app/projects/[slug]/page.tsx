@@ -126,7 +126,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
       </header>
 
       <section className="case-lead" data-number={project.number} aria-labelledby="case-title">
-        <p>{project.number} / {typographicText(project.kind[language], language)} / {project.year}</p>
+        <p>{project.number} / {typographicText(project.kind[language], language)}{"\u00a0/\u00a0"}{project.year}</p>
         <div className="case-lead-title">
           {project.slug === "the-chops" ? (
             <h1 id="case-title" className="case-chops-heading">
