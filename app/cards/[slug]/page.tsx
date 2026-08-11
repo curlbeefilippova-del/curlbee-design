@@ -12,8 +12,8 @@ type CardsWorldPageProps = {
 const cardWorlds = {
   even: { number: "01", title: "EVEN", image: "/cases/even/01.png", color: "#86667a" },
   crafted: { number: "02", title: "CRAFTED", image: "/cases/crafted/01.png", color: "#59604d" },
-  "minimalist-skincare": { number: "04", title: "MINIMALIST SKINCARE", image: "/cases/minimalist-care/01.png", color: "#9ab9a5" },
-  ayu: { number: "05", title: "AYU", image: "/cases/ayu/01.png", color: "#d5a345" },
+  ayu: { number: "04", title: "AYU", image: "/cases/ayu/01.png", color: "#d5a345" },
+  "minimalist-skincare": { number: "05", title: "MINIMALIST SKINCARE", image: "/cases/minimalist-care/01.png", color: "#9ab9a5" },
 } as const;
 
 function getCardWorld(slug: string) {
