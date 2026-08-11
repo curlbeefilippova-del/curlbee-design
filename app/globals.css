@@ -3846,23 +3846,23 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .case-end > a .case-end-drawn-arrow {
     flex: 0 0 auto;
     display: block;
-    width: clamp(56px, 6vw, 76px);
+    width: clamp(68px, 7vw, 88px);
     height: auto;
     color: var(--case-accent);
     overflow: visible;
-    transform: translateY(-0.02em) rotate(-2deg);
+    transform: translateY(-0.02em);
     transition: transform 280ms var(--ease-spring);
   }
   .case-end > a .case-end-drawn-arrow path {
     fill: none;
     stroke: currentColor;
-    stroke-width: 3.2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
+    stroke-width: 4.4;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
     vector-effect: non-scaling-stroke;
   }
   .case-end > a:hover .case-end-drawn-arrow {
-    transform: translate(8px, -8px) rotate(1deg);
+    transform: translate(8px, -8px);
   }
   .cards-intro {
     min-height: calc(720px - var(--space-6));
