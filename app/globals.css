@@ -4227,7 +4227,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   .minimalist-deck::before {
     left: 31%;
-    top: 19%;
+    top: calc(19% + 32px);
     width: 40%;
     height: 64%;
     border-color: rgba(255,255,255,.3);
