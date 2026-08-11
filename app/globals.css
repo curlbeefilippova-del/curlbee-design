@@ -5316,13 +5316,14 @@ html[data-theme="dark"] .case-page .case-language,
 }
 
 @media (min-width: 1181px) {
-  .cards-copy {
-    align-self: start;
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(128px, 10vw, 160px)));
+  .cards-copy,
+  .cards-stage {
+    align-self: end;
   }
 
-  .cards-stage {
-    transform: translateY(-24px);
+  .cards-copy {
+    padding-bottom: 0;
+    transform: none;
   }
 
   .crafted-copy h1 {
@@ -5361,6 +5362,24 @@ html[data-theme="dark"] .case-page .case-language,
 
 .crafted-specs,
 .ayu-mood-readout {
+  margin-top: 32px;
+}
+
+/* VELUM keeps its approved lower photographic anchor while sharing the same
+   role-based spacing rhythm as the other card worlds. */
+.cards-copy > p {
+  margin: 0 0 24px;
+}
+
+.cards-copy > :is(h1, h2) {
+  margin: 0 0 32px;
+}
+
+.cards-copy > span {
+  margin: 0;
+}
+
+.cards-copy > em {
   margin-top: 32px;
 }
 
