@@ -813,22 +813,24 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 }
 .case-chops-heading > span:last-child { display: block; }
 .case-chops-line {
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  align-items: baseline;
+  grid-template-columns: max-content auto;
+  column-gap: 0.045em;
+  align-items: end;
 }
 .case-chops-line > span { display: block; }
 .case-chops-logo {
   width: clamp(78px, 7vw, 112px);
   height: auto;
   flex: 0 0 auto;
-  justify-self: center;
-  align-self: baseline;
+  justify-self: start;
+  align-self: end;
   opacity: 0.94;
   filter: drop-shadow(0 8px 12px rgba(80, 43, 34, 0.08));
   margin: 0;
-  transform: translate(0.06em, -0.03em) rotate(-2deg);
+  transform: translateY(-0.012em) rotate(-2deg);
   pointer-events: none;
 }
 .case-lead h1.is-stacked { line-height: 0.84; }
