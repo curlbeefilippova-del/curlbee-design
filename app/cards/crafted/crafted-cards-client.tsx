@@ -2,7 +2,6 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import { useCardSwap } from "../use-card-swap";
-import { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type CraftedCardsLanguage = "RU" | "EN";
@@ -59,7 +58,7 @@ const copy = {
 
 export default function CraftedCardsClient({ initialLanguage }: { initialLanguage: CraftedCardsLanguage }) {
   const [language, setLanguage] = useState<CraftedCardsLanguage>(initialLanguage);
-  useLanguageQuerySync(setLanguage);\n
+
   useEffect(() => {
     setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
   }, []);
