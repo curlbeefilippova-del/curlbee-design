@@ -4931,6 +4931,21 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .hero-foot {
     margin-top: 48px;
   }
+  .hero-shape-plum {
+    width: 56vw;
+    right: -23vw;
+    top: 18%;
+  }
+  .hero-shape-honey {
+    width: 27vw;
+    left: 57%;
+    top: 15%;
+  }
+  .hero-shape-mint {
+    width: 32vw;
+    left: -12vw;
+    bottom: 8%;
+  }
   .project-explorer {
     gap: 24px;
   }
@@ -4938,32 +4953,39 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     aspect-ratio: 1.48;
   }
   .cards-world-map {
+    width: 100%;
+    max-width: 560px;
+    justify-self: center;
+    grid-template-columns: repeat(2, minmax(0, 272px));
+    gap: 16px;
     align-items: stretch;
   }
   .cards-world-link,
   .cards-world-link:hover,
   .cards-world-link:focus-visible {
+    position: relative;
     padding: 24px;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto 1fr auto;
+    display: block;
     transform: none;
   }
   .cards-world-link > span {
-    grid-column: 1;
-    grid-row: 1;
-    align-self: start;
+    position: absolute;
+    top: 24px;
+    left: 24px;
     transform: none;
   }
   .cards-world-link strong {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    align-self: center;
-    max-width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 24px;
+    right: 24px;
+    max-width: none;
+    transform: translateY(-50%);
   }
   .cards-world-link > i {
-    grid-column: 1;
-    grid-row: 3;
-    align-self: end;
+    position: absolute;
+    left: 24px;
+    bottom: 24px;
   }
 }
 
