@@ -5120,3 +5120,27 @@ html[data-theme="dark"] .case-page .case-language,
 .even-copy > strong em {
   margin-left: 0;
 }
+
+/* Keep the text frame structural; compensate only the visible sidebearings
+   of the oversized C / E initials. */
+.crafted-copy,
+.even-copy {
+  width: 100%;
+  justify-self: start;
+}
+.crafted-copy h1 { text-indent: -0.025em; }
+.even-copy h1 { text-indent: -0.045em; }
+
+@media (max-width: 820px) {
+  .case-lead > p,
+  .case-lead-title,
+  .case-lead-copy {
+    width: 100%;
+    justify-self: start;
+    text-align: left;
+  }
+  .case-lead h1 {
+    width: calc(100% + 0.025em);
+    margin-left: -0.025em;
+  }
+}
