@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
-import { useCardSwap } from "../use-card-swap";
+import { useCardSwap } from "../use-card-swap";\nimport { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type EvenCardsLanguage = "RU" | "EN";
@@ -68,7 +68,7 @@ function getChapterIndex(cardIndex: number) {
 
 export default function EvenCardsClient({ initialLanguage }: { initialLanguage: EvenCardsLanguage }) {
   const [language, setLanguage] = useState<EvenCardsLanguage>(initialLanguage);
-
+  useLanguageQuerySync(setLanguage);\n
   useEffect(() => {
     setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
   }, []);
