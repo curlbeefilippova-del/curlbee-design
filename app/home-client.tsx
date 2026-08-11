@@ -52,7 +52,7 @@ const projects = [
     slug: "ayu",
     ready: true,
     title: "AYU",
-    kind: { RU: "AI-компаньон и визуальная система", EN: "AI companion and visual system" },
+    kind: { RU: "Эмоциональный компаньон и визуальная система", EN: "Emotional companion and visual system" },
     image: "/cases/ayu/01.png",
     color: "#d5a345",
     ink: "#292526",
