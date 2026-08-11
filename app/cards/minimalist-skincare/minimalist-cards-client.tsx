@@ -168,8 +168,8 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
                 src={previousCard.image}
                 alt=""
                 aria-hidden="true"
-                width={previousCard.number === "06" ? "1848" : "1800"}
-                height={previousCard.number === "06" ? "2448" : "2400"}
+                width="1800"
+                height="2400"
               />
             )}
             <img
@@ -177,8 +177,8 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
               key={card.image}
               src={card.image}
               alt={`MINIMALIST SKINCARE — ${card.title[language]}`}
-              width={card.number === "06" ? "1848" : "1800"}
-              height={card.number === "06" ? "2448" : "2400"}
+              width="1800"
+              height="2400"
               decoding="async"
               fetchPriority={activeCard === 0 ? "high" : "auto"}
             />
@@ -236,8 +236,8 @@ export default function MinimalistCardsClient({ initialLanguage }: { initialLang
             key={card.image}
             src={card.image}
             alt={`MINIMALIST SKINCARE — ${card.title[language]}`}
-            width={card.number === "06" ? "1848" : "1800"}
-            height={card.number === "06" ? "2448" : "2400"}
+            width="1800"
+            height="2400"
           />
           <button className="minimalist-lightbox-step minimalist-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}><span className="ui-arrow ui-arrow-right" aria-hidden="true" /></button>
           <div className="minimalist-lightbox-caption">
