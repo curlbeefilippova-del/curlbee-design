@@ -5290,15 +5290,16 @@ html[data-theme="dark"] .case-page .case-language,
   }
 }
 
-/* Whenever copy and visual share a row, their top edges use the visual card as
-   the single structural axis. */
+/* Whenever copy and visual share a row, the four light product worlds use the
+   visual card as their structural top axis. VELUM keeps its photographic
+   composition and its own optical offsets. */
 @media (min-width: 821px) {
-  :is(.cards-copy, .crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) {
+  :is(.crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) {
     align-self: start;
     transform: none;
   }
 
-  :is(.cards-stage, .crafted-stage, .minimalist-stage, .ayu-stage, .even-stage) {
+  :is(.crafted-stage, .minimalist-stage, .ayu-stage, .even-stage) {
     align-self: start;
   }
 
@@ -5315,6 +5316,15 @@ html[data-theme="dark"] .case-page .case-language,
 }
 
 @media (min-width: 1181px) {
+  .cards-copy {
+    align-self: start;
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(128px, 10vw, 160px)));
+  }
+
+  .cards-stage {
+    transform: translateY(-24px);
+  }
+
   .crafted-copy h1 {
     font-size: clamp(58px, 5.4vw, 88px);
   }
@@ -5329,6 +5339,29 @@ html[data-theme="dark"] .case-page .case-language,
   .cards-active > span {
     bottom: -42px;
   }
+}
+
+/* One role-based 8px rhythm for the four light card worlds. The title remains
+   expressive, while the relationships around it are consistent. */
+:is(.crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) > p {
+  margin: 0 0 24px;
+}
+
+:is(.crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) > h1 {
+  margin: 0 0 32px;
+}
+
+:is(.crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) > strong {
+  margin-top: 0;
+}
+
+:is(.crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) > span {
+  margin: 16px 0 0;
+}
+
+.crafted-specs,
+.ayu-mood-readout {
+  margin-top: 32px;
 }
 
 /* The wide MINIMALIST portal needs more inset at its curved lower-left edge. */
