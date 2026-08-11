@@ -3841,7 +3841,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     width: max-content;
     max-width: 100%;
     justify-content: flex-start;
-    gap: clamp(18px, 2vw, 28px);
+    gap: clamp(24px, 2.4vw, 32px);
   }
   .case-end > a .ui-arrow { display: none; }
   .case-end > a .case-end-drawn-arrow {
