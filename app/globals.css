@@ -5146,3 +5146,10 @@ html[data-theme="dark"] .case-page .case-language,
     margin-left: -0.025em;
   }
 }
+
+@media (max-width: 560px) {
+  .case-lead h1.case-chops-heading {
+    width: max-content;
+    max-width: 100%;
+  }
+}
