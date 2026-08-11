@@ -73,7 +73,7 @@ test("renders Curlbee production metadata", async () => {
   const cardsHtml = await cardsResponse.text();
   assert.match(cardsHtml, /class="cards-world-page"/i);
   assert.match(cardsHtml, /class="cards-chapter cards-project-chapter"/i);
-  assert.match(cardsHtml, /Карточки\s+товара\s+·\s+серия\s+01/i);
+  assert.match(cardsHtml, /Карточки\s+товара\s+·\s+серия\s+03/i);
   assert.match(cardsHtml, /VÉLUM/i);
 
   const evenWorldResponse = await worker.fetch(
