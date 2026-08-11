@@ -7,14 +7,14 @@ import { typographicCopy, typographicText } from "../../typography";
 export type CardsLanguage = "RU" | "EN";
 
 const velumCards = [
-  { number: "01", image: "/cards/velum/01.png", title: { RU: "Главный экран", EN: "Hero card" } },
-  { number: "02", image: "/cards/velum/02.png", title: { RU: "Почему VÉLUM", EN: "Why VÉLUM" } },
-  { number: "03", image: "/cards/velum/03.png", title: { RU: "Формула", EN: "Formula" } },
-  { number: "04", image: "/cards/velum/04.png", title: { RU: "Состав", EN: "Ingredients" } },
-  { number: "05", image: "/cards/velum/05.png", title: { RU: "Способ применения", EN: "How to use" } },
-  { number: "06", image: "/cards/velum/06.png", title: { RU: "Результат", EN: "Result" } },
-  { number: "07", image: "/cards/velum/07.png", title: { RU: "Ценности", EN: "Values" } },
-  { number: "08", image: "/cards/velum/08.png", title: { RU: "Финальный образ", EN: "Final image" } },
+  { number: "01", image: "/cards/velum/01.webp", title: { RU: "Главный экран", EN: "Hero card" } },
+  { number: "02", image: "/cards/velum/02.webp", title: { RU: "Почему VÉLUM", EN: "Why VÉLUM" } },
+  { number: "03", image: "/cards/velum/03.webp", title: { RU: "Формула", EN: "Formula" } },
+  { number: "04", image: "/cards/velum/04.webp", title: { RU: "Состав", EN: "Ingredients" } },
+  { number: "05", image: "/cards/velum/05.webp", title: { RU: "Способ применения", EN: "How to use" } },
+  { number: "06", image: "/cards/velum/06.webp", title: { RU: "Результат", EN: "Result" } },
+  { number: "07", image: "/cards/velum/07.webp", title: { RU: "Ценности", EN: "Values" } },
+  { number: "08", image: "/cards/velum/08.webp", title: { RU: "Финальный образ", EN: "Final image" } },
 ] as const;
 
 const copy = {
@@ -48,10 +48,6 @@ const copy = {
 
 export default function VelumCardsClient({ initialLanguage }: { initialLanguage: CardsLanguage }) {
   const [language, setLanguage] = useState<CardsLanguage>(initialLanguage);
-
-  useEffect(() => {
-    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
-  }, []);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
@@ -164,6 +160,7 @@ export default function VelumCardsClient({ initialLanguage }: { initialLanguage:
               width="1800"
               height="2400"
               decoding="async"
+              fetchPriority={activeCard === 0 ? "high" : "auto"}
             />
             <span>{t.open} <i className="ui-arrow ui-arrow-up-right" aria-hidden="true" /></span>
           </button>
