@@ -816,7 +816,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   width: 100%;
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  align-items: center;
+  align-items: baseline;
 }
 .case-chops-line > span { display: block; }
 .case-chops-logo {
@@ -824,10 +824,10 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   height: auto;
   flex: 0 0 auto;
   justify-self: center;
-  align-self: end;
+  align-self: baseline;
   opacity: 0.94;
   filter: drop-shadow(0 8px 12px rgba(80, 43, 34, 0.08));
-  margin: 0 0 clamp(5px, 0.55vw, 9px);
+  margin: 0;
   transform: translateX(0.06em) rotate(-2deg);
   pointer-events: none;
 }
@@ -3857,10 +3857,6 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   .case-page[data-case="minimalist-skincare"] .case-image-link::after {
     box-shadow: inset 0 0 0 2px #292526;
-  }
-  .case-page[data-case="the-chops"] .case-chops-logo {
-    margin-bottom: 0;
-    transform: translate(0.06em, 14px) rotate(-2deg);
   }
   .case-page { --case-footer-arrow: #f1c15f; }
   .case-end > a {
