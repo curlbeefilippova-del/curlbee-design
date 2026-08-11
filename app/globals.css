@@ -1099,6 +1099,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   color: var(--ink);
   background: var(--canvas);
 }
+.case-page { --case-footer-arrow: #f1c15f; }
 .case-end-blobs { position: absolute; z-index: 0; inset: 0; pointer-events: none; }
 .case-end-blob { position: absolute; display: block; filter: saturate(0.96); will-change: transform; }
 .case-end-blob-plum {
@@ -1134,19 +1135,37 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .case-end > a {
   position: relative;
   z-index: 1;
+  width: max-content;
   max-width: 1100px;
   display: flex;
   align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
+  justify-content: flex-start;
+  gap: clamp(24px, 2.4vw, 32px);
   font-family: var(--serif);
   font-size: clamp(58px, 8vw, 126px);
   line-height: 0.92;
   letter-spacing: -0.06em;
 }
-.case-end > a .ui-arrow { --ui-arrow-size: 22px; --ui-arrow-stroke: 1.5px; color: var(--case-accent); transition: transform 280ms var(--ease-spring); }
-.case-end > a:hover .ui-arrow { transform: translate(7px, -7px); }
-.case-end-drawn-arrow { display: none; }
+.case-end > a .ui-arrow { display: none; }
+.case-end > a .case-end-drawn-arrow {
+  flex: 0 0 auto;
+  display: block;
+  width: clamp(80px, 6.4vw, 104px);
+  height: auto;
+  color: var(--case-footer-arrow);
+  overflow: visible;
+  transform: translateY(-0.02em);
+  transition: transform 280ms var(--ease-spring);
+}
+.case-end > a .case-end-drawn-arrow path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4.4;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  vector-effect: non-scaling-stroke;
+}
+.case-end > a:hover .case-end-drawn-arrow { transform: translate(8px, -8px); }
 
 .cards-intro {
   position: relative;
@@ -4626,6 +4645,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     text-wrap: balance;
   }
   .case-end > a .ui-arrow { --ui-arrow-size: 17px; flex: 0 0 17px; }
+  .case-end > a .case-end-drawn-arrow { width: 64px; }
 
   footer { color: #f4eee8; }
   footer h2 {
@@ -4730,6 +4750,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 
   .case-end { min-height: 320px; padding-inline: var(--page-pad); }
   .case-end > a { font-size: clamp(32px, 9.2vw, 42px); }
+  .case-end > a .case-end-drawn-arrow { width: 48px; }
 
   footer h2 { font-size: clamp(35px, 9.6vw, 43px); }
   .contact-link { min-height: 92px; }
