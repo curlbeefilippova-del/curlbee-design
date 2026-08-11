@@ -215,8 +215,8 @@ export const portfolioCases = {
     year: "2026",
     accent: "#d5a345",
     kind: {
-      RU: "AI-компаньон и визуальная система",
-      EN: "AI companion and visual system",
+      RU: "Эмоциональный компаньон и визуальная система",
+      EN: "Emotional companion and visual system",
     },
     summary: {
       RU: "Концепт эмоционального компаньона, который считывает приближение, отвечает на прикосновение и адаптирует свет под состояние человека.",
