@@ -22,7 +22,7 @@ const copy = {
   RU: {
     back: "К главе карточек",
     navigation: "Навигация по миру VÉLUM",
-    kicker: "Карточки товара · серия 01",
+    kicker: "Карточки товара · серия 03",
     title: "VÉLUM",
     text: "Восемь карточек раскрывают продукт от\u00a0формулы и\u00a0состава до\u00a0ритуала нанесения и\u00a0финального образа.",
     hint: "Наведи или нажми — карточка выйдет на первый план",
@@ -35,7 +35,7 @@ const copy = {
   EN: {
     back: "Back to product cards",
     navigation: "VÉLUM world navigation",
-    kicker: "Product cards · series 01",
+    kicker: "Product cards · series 03",
     title: "VÉLUM",
     text: "Eight cards reveal the product from formula and ingredients to the application ritual and final image.",
     hint: "Hover or tap — the card will move to the foreground",
