@@ -5290,30 +5290,31 @@ html[data-theme="dark"] .case-page .case-language,
   }
 }
 
-/* Desktop card worlds use one visible top axis instead of five unrelated
-   vertical-centering rules. Each correction cancels that world's own deck
-   padding so the kickers land on the same optical line. */
-@media (min-width: 1181px) {
+/* Whenever copy and visual share a row, their top edges use the visual card as
+   the single structural axis. */
+@media (min-width: 821px) {
   :is(.cards-copy, .crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) {
+    align-self: start;
+    transform: none;
+  }
+
+  :is(.cards-stage, .crafted-stage, .minimalist-stage, .ayu-stage, .even-stage) {
     align-self: start;
   }
 
-  .cards-copy {
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(128px, 10vw, 160px)));
-  }
-  .crafted-copy {
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(124px, 9vw, 152px)));
-  }
+  .crafted-copy,
   .minimalist-copy {
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(122px, 9vw, 150px)));
-  }
-  .ayu-copy {
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(112px, 8vw, 132px)));
-  }
-  .even-copy {
-    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(108px, 7.5vw, 124px)));
+    margin-top: 0;
   }
 
+  .ayu-stage,
+  .even-stage {
+    min-height: 0;
+    place-items: start center;
+  }
+}
+
+@media (min-width: 1181px) {
   .crafted-copy h1 {
     font-size: clamp(58px, 5.4vw, 88px);
   }
@@ -5325,11 +5326,28 @@ html[data-theme="dark"] .case-page .case-language,
     height: 80%;
   }
 
-  .cards-stage {
-    transform: translateY(-24px);
-  }
   .cards-active > span {
     bottom: -42px;
+  }
+}
+
+/* The wide MINIMALIST portal needs more inset at its curved lower-left edge. */
+.cards-world-link-04 > i {
+  left: clamp(24px, 3vw, 42px);
+  bottom: clamp(18px, 2vw, 28px);
+}
+
+@media (min-width: 561px) and (max-width: 820px) {
+  .cards-world-link-04 > i {
+    left: 104px;
+    bottom: 64px;
+  }
+}
+
+@media (max-width: 560px) {
+  .cards-world-link-04 > i {
+    left: 40px;
+    bottom: 40px;
   }
 }
 
