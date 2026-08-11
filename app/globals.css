@@ -3812,7 +3812,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 
 @media (min-width: 821px) and (max-width: 1180px) {
   .cards-intro {
-    min-height: max(720px, 100svh);
+    min-height: calc(720px - var(--space-6));
     grid-template-rows: auto auto 1fr;
   }
   .cards-intro h2 {
@@ -3825,20 +3825,20 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .cards-intro-manifesto {
     grid-column: 1 / 6;
     grid-row: 3;
-    margin: 32px 0 8px;
+    margin: 32px 0 16px;
   }
   .cards-world-map {
     grid-column: 5 / 13;
     grid-row: 2 / 4;
-    min-height: 500px;
+    min-height: calc(500px - var(--space-6));
     margin-top: 64px;
   }
   .cards-world-link-01 { left: 16%; top: 15%; }
   .cards-world-link-02 { left: 41%; top: 2%; }
   .cards-world-link-03 { right: 8%; top: 18%; }
-  .cards-world-link-04 { left: 20%; bottom: 15%; }
-  .cards-world-link-04 > i { margin-left: 4px; }
-  .cards-world-link-05 { right: 17%; bottom: 15%; }
+  .cards-world-link-04 { left: 20%; bottom: 16px; }
+  .cards-world-link-04 > i { margin-left: 2px; }
+  .cards-world-link-05 { right: 17%; bottom: 16px; }
 }
 
 @media (max-width: 820px) {
