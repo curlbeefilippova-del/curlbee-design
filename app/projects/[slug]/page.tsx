@@ -188,7 +188,11 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         <p>{project.title} / {project.year}</p>
         <a href={`/?lang=${langQuery}#work`}>
           {labels.end}
-          <span className="case-end-first-arrow" aria-hidden="true">↗</span>
+          <svg className="case-end-drawn-arrow" viewBox="0 0 76 64" aria-hidden="true">
+            <path d="M7 54C18 51 26 47 35 40C46 32 55 22 64 9" />
+            <path d="M45 8C52 7 59 8 66 10" />
+            <path d="M65 9C65 16 62 23 58 29" />
+          </svg>
           <span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
         </a>
       </section>
