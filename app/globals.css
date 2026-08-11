@@ -5106,3 +5106,17 @@ html[data-theme="dark"] .case-page .case-language,
     display: inline;
   }
 }
+
+/* Card worlds share one clean typographic axis at every breakpoint. */
+:is(.cards-copy, .crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) {
+  text-align: left;
+}
+:is(.cards-copy, .crafted-copy, .minimalist-copy, .ayu-copy, .even-copy)
+  > :is(p, h1, h2, strong, span, em, dl) {
+  margin-inline: 0;
+}
+.minimalist-copy h1 em,
+.ayu-copy > strong em,
+.even-copy > strong em {
+  margin-left: 0;
+}
