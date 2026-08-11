@@ -1160,7 +1160,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .case-end > a .case-end-drawn-arrow path {
   fill: none;
   stroke: currentColor;
-  stroke-width: 6.4;
+  stroke-width: 9.5;
   stroke-linecap: square;
   stroke-linejoin: miter;
   vector-effect: non-scaling-stroke;
