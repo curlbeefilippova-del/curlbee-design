@@ -4917,6 +4917,18 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 }
 
 @media (min-width: 561px) and (max-width: 820px) {
+  .work-heading h2 {
+    width: max-content;
+    max-width: 100%;
+  }
+  .work-title-bottom {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .work-title-note {
+    margin: 0;
+  }
   .hero {
     min-height: 0;
     grid-template-rows: auto auto auto;
