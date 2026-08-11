@@ -70,11 +70,11 @@ const projects = [
 ] as const;
 
 const cardsWorlds = [
-  { number: "01", slug: "even", title: "EVEN", color: "#86667a" },
-  { number: "02", slug: "crafted", title: "CRAFTED", color: "#59604d" },
-  { number: "03", slug: "velum", title: "VÉLUM", color: "#b85c49" },
-  { number: "04", slug: "ayu", title: "AYU", color: "#d5a345" },
-  { number: "05", slug: "minimalist-skincare", title: "MINIMALIST SKINCARE", color: "#c8e1d1" },
+  { number: "01", portal: "01", slug: "even", title: "EVEN", color: "#86667a" },
+  { number: "02", portal: "02", slug: "crafted", title: "CRAFTED", color: "#59604d" },
+  { number: "03", portal: "03", slug: "velum", title: "VÉLUM", color: "#b85c49" },
+  { number: "05", portal: "04", slug: "minimalist-skincare", title: "MINIMALIST SKINCARE", color: "#c8e1d1" },
+  { number: "04", portal: "05", slug: "ayu", title: "AYU", color: "#d5a345" },
 ] as const;
 
 const copy = {
@@ -505,8 +505,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <nav className="cards-world-map" aria-label={t.cardsWorldMapAria}>
           {cardsWorlds.map((world) => (
             <a
-              key={world.number}
-              className={`cards-world-link cards-world-link-${world.number}`}
+              key={world.slug}
+              className={`cards-world-link cards-world-link-${world.portal}`}
               href={`/cards/${world.slug}?lang=${language.toLowerCase()}`}
               data-color={world.color}
               aria-label={`${t.cardsWorldOpen}: ${world.title}`}
