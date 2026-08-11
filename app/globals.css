@@ -5289,3 +5289,58 @@ html[data-theme="dark"] .case-page .case-language,
     max-width: 100%;
   }
 }
+
+/* Desktop card worlds use one visible top axis instead of five unrelated
+   vertical-centering rules. Each correction cancels that world's own deck
+   padding so the kickers land on the same optical line. */
+@media (min-width: 1181px) {
+  :is(.cards-copy, .crafted-copy, .minimalist-copy, .ayu-copy, .even-copy) {
+    align-self: start;
+  }
+
+  .cards-copy {
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(128px, 10vw, 160px)));
+  }
+  .crafted-copy {
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(124px, 9vw, 152px)));
+  }
+  .minimalist-copy {
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(122px, 9vw, 150px)));
+  }
+  .ayu-copy {
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(112px, 8vw, 132px)));
+  }
+  .even-copy {
+    transform: translateY(calc(clamp(128px, 8vw, 136px) - clamp(108px, 7.5vw, 124px)));
+  }
+
+  .crafted-copy h1 {
+    font-size: clamp(58px, 5.4vw, 88px);
+  }
+
+  .minimalist-deck::before {
+    left: 33%;
+    top: 13%;
+    width: 34%;
+    height: 80%;
+  }
+
+  .cards-stage {
+    transform: translateY(-24px);
+  }
+  .cards-active > span {
+    bottom: -42px;
+  }
+}
+
+/* Keep the label and its close glyph visually connected while preserving the
+   full 38px hit area of the glyph. */
+:is(
+  .cards-lightbox-close,
+  .crafted-lightbox-close,
+  .minimalist-lightbox-close,
+  .ayu-lightbox-close,
+  .even-lightbox-close
+) {
+  gap: 2px;
+}
