@@ -2,7 +2,8 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
-import { useCardSwap } from "../use-card-swap";\nimport { useLanguageQuerySync } from "../use-language-query";
+import { useCardSwap } from "../use-card-swap";
+import { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type AyuCardsLanguage = "RU" | "EN";
@@ -80,7 +81,8 @@ const copy = {
 
 export default function AyuCardsClient({ initialLanguage }: { initialLanguage: AyuCardsLanguage }) {
   const [language, setLanguage] = useState<AyuCardsLanguage>(initialLanguage);
-  useLanguageQuerySync(setLanguage);\n  const {
+  useLanguageQuerySync(setLanguage);
+  const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
     selectIndex: selectCard,
