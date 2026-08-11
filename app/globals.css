@@ -3836,6 +3836,12 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     margin-bottom: 0;
     transform: translate(0.06em, 14px) rotate(-2deg);
   }
+  .case-page[data-case="even"] { --case-footer-arrow: #ffc0dc; }
+  .case-page[data-case="crafted"] { --case-footer-arrow: #e9f06b; }
+  .case-page[data-case="velum"] { --case-footer-arrow: #ffd166; }
+  .case-page[data-case="minimalist-skincare"] { --case-footer-arrow: #b8f2cb; }
+  .case-page[data-case="ayu"] { --case-footer-arrow: #ffd95e; }
+  .case-page[data-case="the-chops"] { --case-footer-arrow: #ffc6b8; }
   .case-end > a {
     width: max-content;
     max-width: 100%;
@@ -3848,7 +3854,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     display: block;
     width: clamp(68px, 7vw, 88px);
     height: auto;
-    color: var(--case-accent);
+    color: var(--case-footer-arrow, var(--case-accent));
     overflow: visible;
     transform: translateY(-0.02em);
     transition: transform 280ms var(--ease-spring);
