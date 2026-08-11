@@ -4984,8 +4984,11 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   .cards-world-link > i {
     position: absolute;
-    left: 24px;
-    bottom: 24px;
+    left: 48px;
+    bottom: 48px;
+  }
+  .cards-world-link-04 > i {
+    left: 80px;
   }
 }
 
