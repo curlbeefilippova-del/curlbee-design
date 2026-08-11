@@ -2,7 +2,7 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { useCardSwap } from "../use-card-swap";
+import { useCardSwap } from "../use-card-swap";\nimport { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type MinimalistCardsLanguage = "RU" | "EN";
@@ -56,7 +56,7 @@ const copy = {
 
 export default function MinimalistCardsClient({ initialLanguage }: { initialLanguage: MinimalistCardsLanguage }) {
   const [language, setLanguage] = useState<MinimalistCardsLanguage>(initialLanguage);
-  const {
+  useLanguageQuerySync(setLanguage);\n  const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
     selectIndex: selectCard,
