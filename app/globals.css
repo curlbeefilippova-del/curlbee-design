@@ -1300,15 +1300,25 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .cards-world-link-04 > span { transform: translate(18px, 10px); }
 .cards-world-link-04 strong { font-size: clamp(16px, 1.55vw, 25px); max-width: 88%; }
 .cards-world-link-05 { --world-ink: var(--ink); width: clamp(168px, 14vw, 228px); aspect-ratio: 1.06; right: 11%; bottom: 2%; background: linear-gradient(145deg, #edc166, #d09a36); transform: rotate(-6deg); }
-.cards-world-link:hover,
 .cards-world-link:focus-visible {
   border-radius: 48% 52% 42% 58% / 58% 43% 57% 42%;
   box-shadow: 0 31px 62px rgba(47, 34, 53, 0.27);
   transform: translateY(-9px) rotate(0deg) scale(1.035);
 }
-.cards-world-link:hover > i,
 .cards-world-link:focus-visible > i { color: var(--ink); background: var(--canvas); transform: translate(4px, -4px) rotate(4deg); }
 .cards-world-link:focus-visible { outline: 3px solid var(--terra); outline-offset: 7px; }
+@media (hover: hover) and (pointer: fine) {
+  .cards-world-link:hover {
+    border-radius: 48% 52% 42% 58% / 58% 43% 57% 42%;
+    box-shadow: 0 31px 62px rgba(47, 34, 53, 0.27);
+    transform: translateY(-9px) rotate(0deg) scale(1.035);
+  }
+  .cards-world-link:hover > i {
+    color: var(--ink);
+    background: var(--canvas);
+    transform: translate(4px, -4px) rotate(4deg);
+  }
+}
 .cards-portal-transition {
   position: fixed;
   z-index: 1000;
@@ -3983,8 +3993,10 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .cards-world-link-04 { grid-column: 1 / 3; grid-row: 3; aspect-ratio: 2.15; min-height: 154px; transform: rotate(-1deg); }
   .cards-world-link-04 strong { font-size: clamp(18px, 5.5vw, 25px); }
   .cards-world-link-05 { grid-column: 2; grid-row: 2; aspect-ratio: 1.02; transform: rotate(-2deg); }
-  .cards-world-link:hover,
   .cards-world-link:focus-visible { transform: translateY(-5px) rotate(0deg) scale(1.015); }
+  @media (hover: hover) and (pointer: fine) {
+    .cards-world-link:hover { transform: translateY(-5px) rotate(0deg) scale(1.015); }
+  }
   .cards-world-header { min-height: 74px; padding-block: 6px; }
   .cards-world-header .case-brand { width: 38px; height: 54px; }
   .cards-world-header nav { gap: 12px; }
