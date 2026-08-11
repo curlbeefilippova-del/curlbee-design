@@ -4259,6 +4259,49 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .crafted-key-grid button { min-height: 70px; }
 }
 
+@media (min-width: 821px) and (max-width: 1180px) {
+  .crafted-deck {
+    padding-top: clamp(116px, 10vw, 128px);
+    grid-template-columns: minmax(320px, .78fr) minmax(360px, 1fr);
+    grid-template-rows: auto auto;
+    align-items: start;
+    gap: var(--space-3) clamp(32px, 3.6vw, 48px);
+  }
+  .crafted-copy {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+  }
+  .crafted-stage {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: start;
+    width: min(100%, 420px, 48svh);
+    margin-top: var(--space-3);
+  }
+  .crafted-stage-plate {
+    inset: -2.2% -3.2% 2.2% 3.2%;
+    border-radius: 14px;
+    transform: rotate(1.1deg);
+  }
+  .crafted-control-panel {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+  }
+  .crafted-key-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 8px;
+  }
+  .crafted-key-grid button {
+    min-height: 58px;
+    padding: 10px;
+  }
+  .crafted-key-grid button > strong {
+    font-size: 9px;
+  }
+}
+
 @media (max-width: 820px) {
   .crafted-header { min-height: 74px; padding-block: 6px; }
   .crafted-header .case-brand { width: 38px; height: 54px; }
