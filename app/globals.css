@@ -235,6 +235,26 @@ footer { min-width: 0; max-width: 100%; }
 }
 .skip-link:focus { transform: translateY(0); }
 :focus-visible { outline: 3px solid var(--mint); outline-offset: 5px; }
+:is(
+  .cards-lightbox-close,
+  .crafted-lightbox-close,
+  .minimalist-lightbox-close,
+  .ayu-lightbox-close,
+  .even-lightbox-close
+):focus-visible {
+  outline: none;
+}
+:is(
+  .cards-lightbox-close,
+  .crafted-lightbox-close,
+  .minimalist-lightbox-close,
+  .ayu-lightbox-close,
+  .even-lightbox-close
+):focus-visible > span {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
 
 .site-header {
   position: fixed;
@@ -3812,6 +3832,10 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
 }
 
 @media (min-width: 821px) and (max-width: 1180px) {
+  .even-copy,
+  .ayu-copy {
+    transform: translateY(calc(-1 * var(--space-4)));
+  }
   .case-image-link,
   .case-motion-stage {
     position: relative;
