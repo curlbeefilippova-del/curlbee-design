@@ -3837,6 +3837,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .cards-world-link-02 { left: 41%; top: 2%; }
   .cards-world-link-03 { right: 8%; top: 18%; }
   .cards-world-link-04 { left: 20%; bottom: 15%; }
+  .cards-world-link-04 > i { margin-left: 4px; }
   .cards-world-link-05 { right: 17%; bottom: 15%; }
 }
 
