@@ -1,7 +1,8 @@
 "use client";
 
 import { Fragment, useEffect, useRef, useState } from "react";
-import { useCardSwap } from "../use-card-swap";\nimport { useLanguageQuerySync } from "../use-language-query";
+import { useCardSwap } from "../use-card-swap";
+import { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type CardsLanguage = "RU" | "EN";
@@ -48,7 +49,8 @@ const copy = {
 
 export default function VelumCardsClient({ initialLanguage }: { initialLanguage: CardsLanguage }) {
   const [language, setLanguage] = useState<CardsLanguage>(initialLanguage);
-  useLanguageQuerySync(setLanguage);\n  const {
+  useLanguageQuerySync(setLanguage);
+  const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
     selectIndex: selectCard,
