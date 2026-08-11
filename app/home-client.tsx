@@ -73,8 +73,8 @@ const cardsWorlds = [
   { number: "01", slug: "even", title: "EVEN", color: "#86667a" },
   { number: "02", slug: "crafted", title: "CRAFTED", color: "#59604d" },
   { number: "03", slug: "velum", title: "VÉLUM", color: "#b85c49" },
-  { number: "04", slug: "minimalist-skincare", title: "MINIMALIST SKINCARE", color: "#c8e1d1" },
-  { number: "05", slug: "ayu", title: "AYU", color: "#d5a345" },
+  { number: "04", slug: "ayu", title: "AYU", color: "#d5a345" },
+  { number: "05", slug: "minimalist-skincare", title: "MINIMALIST SKINCARE", color: "#c8e1d1" },
 ] as const;
 
 const copy = {
