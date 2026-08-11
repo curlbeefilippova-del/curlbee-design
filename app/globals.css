@@ -1160,7 +1160,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .case-end > a .case-end-drawn-arrow path {
   fill: none;
   stroke: currentColor;
-  stroke-width: 4.4;
+  stroke-width: 6.4;
   stroke-linecap: square;
   stroke-linejoin: miter;
   vector-effect: non-scaling-stroke;
@@ -4646,6 +4646,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   }
   .case-end > a .ui-arrow { --ui-arrow-size: 17px; flex: 0 0 17px; }
   .case-end > a .case-end-drawn-arrow { width: 64px; }
+  .case-end > a .case-end-drawn-arrow path { stroke-width: 4; }
 
   footer { color: #f4eee8; }
   footer h2 {
@@ -4749,8 +4750,9 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
   .about-line-three { font-size: .84em; }
 
   .case-end { min-height: 320px; padding-inline: var(--page-pad); }
-  .case-end > a { font-size: clamp(32px, 9.2vw, 42px); }
-  .case-end > a .case-end-drawn-arrow { width: 48px; }
+  .case-end > a { gap: 8px; font-size: clamp(32px, 9.2vw, 42px); }
+  .case-end > a .case-end-drawn-arrow { width: 32px; }
+  .case-end > a .case-end-drawn-arrow path { stroke-width: 3; }
 
   footer h2 { font-size: clamp(35px, 9.6vw, 43px); }
   .contact-link { min-height: 92px; }
