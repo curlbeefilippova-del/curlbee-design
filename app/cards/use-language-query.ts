@@ -3,6 +3,7 @@
 import { type Dispatch, type SetStateAction, useEffect } from "react";
 
 export function useLanguageQuerySync<Language extends "RU" | "EN">(
+  language: Language,
   setLanguage: Dispatch<SetStateAction<Language>>,
 ) {
   useEffect(() => {
@@ -14,4 +15,8 @@ export function useLanguageQuerySync<Language extends "RU" | "EN">(
       currentLanguage === requestedLanguage ? currentLanguage : requestedLanguage as Language
     ));
   }, [setLanguage]);
+
+  useEffect(() => {
+    document.documentElement.lang = language.toLowerCase();
+  }, [language]);
 }
