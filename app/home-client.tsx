@@ -83,13 +83,17 @@ const copy = {
     heroTwo: "которому хочется",
     heroThree: "ответить",
     intro: "Собираю бренды, продукты и\u00a0презентации — с\u00a0ясной логикой, живой типографикой и\u00a0характером.",
-    status: "Открыта к избранным проектам",
-    play: "Проведи курсором — пчела полетит",
+    play: "Нажми — пчела покажет пике",
+    motion: "Анимация",
+    motionOn: "вкл",
+    motionOff: "выкл",
+    motionEnable: "Включить анимацию",
+    motionDisable: "Отключить анимацию",
     workLabel: "Портфолио · 2026",
     workTitle: "Избранные проекты — у каждого свой характер",
     workTitleMain: ["Избранные", "проекты"],
     workTitleNote: ["У каждого", "свой характер"],
-    workHint: ["Наведи или нажми,", "чтобы сменить сцену"],
+    workHint: ["Наведи — смени сцену,", "нажми — открой кейс"],
     cardsIntroKicker: "Новая глава · карточки товара",
     cardsIntroTitleOne: "Карточки",
     cardsIntroTitleTwo: "товара",
@@ -120,13 +124,17 @@ const copy = {
     heroTwo: "that feels worth",
     heroThree: "answering",
     intro: "I build brands, products and presentations with clear logic, living typography and a distinct point of view.",
-    status: "Available for selected projects",
-    play: "Move your cursor — the bee will fly",
+    play: "Click — the bee will take a dive",
+    motion: "Motion",
+    motionOn: "on",
+    motionOff: "off",
+    motionEnable: "Enable motion",
+    motionDisable: "Disable motion",
     workLabel: "Portfolio · 2026",
     workTitle: "Selected projects — each has its own personality",
     workTitleMain: ["Selected", "projects"],
     workTitleNote: ["Each has", "its own personality"],
-    workHint: ["Hover or tap", "to change the scene"],
+    workHint: ["Hover to preview,", "click to open the case"],
     cardsIntroKicker: "New chapter · product cards",
     cardsIntroTitleOne: "Product",
     cardsIntroTitleTwo: "cards",
@@ -153,19 +161,30 @@ const copy = {
 export default function HomeClient({ initialLanguage }: { initialLanguage: Language }) {
   const [language, setLanguage] = useState<Language>(initialLanguage);
   const [activeProject, setActiveProject] = useState(0);
+  const [motionEnabled, setMotionEnabled] = useState(true);
   const [isCardsPortalActive, setIsCardsPortalActive] = useState(false);
   const [cardsPortalStyle, setCardsPortalStyle] = useState<CSSProperties>({});
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const cardsPortalTimerRef = useRef<number | null>(null);
-  const frameRef = useRef<number | null>(null);
-  const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
+  const beeDemoTimerRef = useRef<number | null>(null);
+  const pointRef = useRef({ lastX: -80, lastY: -80, angle: 0 });
   const t = typographicCopy(copy[language], language);
   const project = projects[activeProject];
 
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
   }, [language]);
+
+  useEffect(() => {
+    const syncFrame = window.requestAnimationFrame(() => {
+      setMotionEnabled(document.documentElement.dataset.motion !== "off");
+    });
+    return () => {
+      window.cancelAnimationFrame(syncFrame);
+      if (beeDemoTimerRef.current !== null) window.clearTimeout(beeDemoTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     const hero = heroRef.current;
@@ -219,55 +238,35 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
   useEffect(() => {
     const companion = companionRef.current;
-    if (!companion || window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
+    if (!companion || !motionEnabled || window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) {
+      if (companion) companion.dataset.visible = "false";
+      return;
+    }
 
-    const paint = () => {
+    const move = (event: PointerEvent) => {
       const point = pointRef.current;
-      const dx = point.x - point.followX;
-      const dy = point.y - point.followY;
-      point.followX += dx * 0.18;
-      point.followY += dy * 0.18;
-
-      const velocityX = point.followX - point.lastX;
-      const velocityY = point.followY - point.lastY;
-      if (Math.hypot(velocityX, velocityY) > 0.08) {
-        point.angle = Math.atan2(velocityY, velocityX) * (180 / Math.PI) + 90;
+      const firstMove = companion.dataset.visible !== "true";
+      const dx = event.clientX - point.lastX;
+      const dy = event.clientY - point.lastY;
+      if (!firstMove && Math.hypot(dx, dy) > 0.5) {
+        point.angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
       }
+
+      companion.style.setProperty("--cursor-x", `${event.clientX}px`);
+      companion.style.setProperty("--cursor-y", `${event.clientY}px`);
+      companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
+      companion.dataset.moving = Math.hypot(dx, dy) > 2 ? "true" : "false";
+      companion.dataset.visible = "true";
+      companion.dataset.hover = (event.target as Element | null)?.closest("a, button") ? "true" : "false";
+      point.lastX = event.clientX;
+      point.lastY = event.clientY;
 
       const hero = heroRef.current;
       const heroBounds = hero?.getBoundingClientRect();
-
-      companion.style.setProperty("--cursor-x", `${point.followX}px`);
-      companion.style.setProperty("--cursor-y", `${point.followY}px`);
-      companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
-      companion.style.setProperty("--bee-speed", `${Math.min(1, Math.hypot(dx, dy) / 110)}`);
-      companion.dataset.moving = Math.hypot(dx, dy) > 2 ? "true" : "false";
-      point.lastX = point.followX;
-      point.lastY = point.followY;
-
       if (hero && heroBounds) {
-        hero.style.setProperty("--mouse-x", `${((point.x - heroBounds.left) / heroBounds.width) * 100}%`);
-        hero.style.setProperty("--mouse-y", `${((point.y - heroBounds.top) / heroBounds.height) * 100}%`);
+        hero.style.setProperty("--mouse-x", `${((event.clientX - heroBounds.left) / heroBounds.width) * 100}%`);
+        hero.style.setProperty("--mouse-y", `${((event.clientY - heroBounds.top) / heroBounds.height) * 100}%`);
       }
-
-      if (Math.hypot(dx, dy) > 0.35) frameRef.current = requestAnimationFrame(paint);
-      else frameRef.current = null;
-    };
-
-    const move = (event: PointerEvent) => {
-      const firstMove = companion.dataset.visible !== "true";
-      pointRef.current.x = event.clientX;
-      pointRef.current.y = event.clientY;
-      if (firstMove) {
-        pointRef.current.followX = event.clientX - 24;
-        pointRef.current.followY = event.clientY + 14;
-        pointRef.current.lastX = pointRef.current.followX;
-        pointRef.current.lastY = pointRef.current.followY;
-      }
-      companion.dataset.visible = "true";
-      companion.dataset.hover = (event.target as Element | null)?.closest("a, button") ? "true" : "false";
-
-      if (frameRef.current === null) frameRef.current = requestAnimationFrame(paint);
     };
 
     const hide = () => { companion.dataset.visible = "false"; };
@@ -276,9 +275,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     return () => {
       window.removeEventListener("pointermove", move);
       document.documentElement.removeEventListener("mouseleave", hide);
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
     };
-  }, []);
+  }, [motionEnabled]);
 
   useEffect(() => {
     const resetCardsPortal = () => {
@@ -302,7 +300,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
   useEffect(() => {
     const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!motionEnabled || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       elements.forEach((element) => { element.dataset.visible = "true"; });
       return;
     }
@@ -318,10 +316,10 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
     elements.forEach((element) => observer.observe(element));
     return () => observer.disconnect();
-  }, []);
+  }, [motionEnabled]);
 
   const enterCardsWorld = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!motionEnabled || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     event.preventDefault();
     if (isCardsPortalActive) return;
     const destination = event.currentTarget.href;
@@ -336,6 +334,35 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     cardsPortalTimerRef.current = window.setTimeout(() => {
       window.location.assign(destination);
     }, 620);
+  };
+
+  const toggleMotion = () => {
+    const next = !motionEnabled;
+    if (!next && beeDemoTimerRef.current !== null) {
+      window.clearTimeout(beeDemoTimerRef.current);
+      beeDemoTimerRef.current = null;
+      if (companionRef.current) {
+        companionRef.current.dataset.demo = "false";
+        companionRef.current.dataset.visible = "false";
+      }
+    }
+    setMotionEnabled(next);
+    document.documentElement.dataset.motion = next ? "on" : "off";
+    window.localStorage.setItem("curlbee-motion", next ? "on" : "off");
+    window.dispatchEvent(new CustomEvent("curlbee-motion-change", { detail: { enabled: next } }));
+  };
+
+  const demonstrateBee = () => {
+    const companion = companionRef.current;
+    if (!companion || !motionEnabled || window.matchMedia("(pointer: coarse)").matches) return;
+    if (beeDemoTimerRef.current !== null) window.clearTimeout(beeDemoTimerRef.current);
+    companion.dataset.demo = "true";
+    companion.dataset.visible = "true";
+    beeDemoTimerRef.current = window.setTimeout(() => {
+      companion.dataset.demo = "false";
+      companion.dataset.visible = "false";
+      beeDemoTimerRef.current = null;
+    }, 1650);
   };
 
   return (
@@ -395,11 +422,22 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <div className="hero-foot">
           <p>{t.intro}</p>
           <div className="hero-actions">
-            <div className="hero-play">
+            <button className="hero-play" type="button" onClick={demonstrateBee} disabled={!motionEnabled}>
               <span className="hero-play-symbol" aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></span>
               {t.play}
-            </div>
-            <div className="availability"><i aria-hidden="true" />{t.status}</div>
+            </button>
+            <button
+              className="motion-toggle"
+              type="button"
+              role="switch"
+              aria-checked={motionEnabled}
+              aria-label={motionEnabled ? t.motionDisable : t.motionEnable}
+              onClick={toggleMotion}
+            >
+              <span className="motion-toggle-track" aria-hidden="true"><i /></span>
+              <span>{t.motion}</span>
+              <strong>{motionEnabled ? t.motionOn : t.motionOff}</strong>
+            </button>
           </div>
         </div>
       </section>
@@ -427,21 +465,18 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         >
           <div className="project-list" role="group" aria-label={t.workTitle} data-reveal>
             {projects.map((item, index) => (
-              <button
-                type="button"
+              <a
+                href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}
                 key={item.number}
                 className={index === activeProject ? "is-active" : ""}
-                aria-pressed={index === activeProject}
+                aria-current={index === activeProject ? "true" : undefined}
                 onPointerEnter={() => setActiveProject(index)}
                 onFocus={() => setActiveProject(index)}
-                onClick={() => {
-                  setActiveProject(index);
-                }}
               >
                 <span>{item.number}</span>
                 <strong>{item.title}</strong>
                 <em>{typographicText(item.kind[language], language)}</em>
-              </button>
+              </a>
             ))}
           </div>
 

@@ -61,7 +61,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <link rel="preload" href="/fonts/literata-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var params=new URLSearchParams(location.search);document.documentElement.lang=params.get("lang")==="en"?"en":"ru";var key="curlbee-theme";var saved=localStorage.getItem(key);var theme=saved==="light"||saved==="dark"?saved:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");document.documentElement.dataset.theme=theme;document.documentElement.style.colorScheme=theme;}catch(e){document.documentElement.lang="ru";document.documentElement.dataset.theme="light";}})();`,
+            __html: `(function(){try{var params=new URLSearchParams(location.search);document.documentElement.lang=params.get("lang")==="en"?"en":"ru";var themeKey="curlbee-theme";var savedTheme=localStorage.getItem(themeKey);var theme=savedTheme==="light"||savedTheme==="dark"?savedTheme:(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");var motionKey="curlbee-motion";var savedMotion=localStorage.getItem(motionKey);var motion=savedMotion==="on"||savedMotion==="off"?savedMotion:(matchMedia("(prefers-reduced-motion: reduce)").matches?"off":"on");document.documentElement.dataset.theme=theme;document.documentElement.dataset.motion=motion;document.documentElement.style.colorScheme=theme;}catch(e){document.documentElement.lang="ru";document.documentElement.dataset.theme="light";document.documentElement.dataset.motion="on";}})();`,
           }}
         />
       </head>
