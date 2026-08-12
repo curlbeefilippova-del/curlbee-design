@@ -5356,6 +5356,9 @@ html[data-theme="dark"] .case-page .case-language,
 }
 
 .cards-world-link .cards-world-link-index {
+  display: block;
+  visibility: visible;
+  opacity: 0.64;
   margin-block: 0 var(--portal-index-gap);
 }
 
@@ -5443,7 +5446,11 @@ html[data-theme="dark"] .case-page .case-language,
   .cards-world-link-01 { --portal-rotation: -2deg; }
   .cards-world-link-02 { --portal-rotation: 2deg; }
   .cards-world-link-03 { --portal-rotation: 2deg; }
-  .cards-world-link-04 { --portal-rotation: -1deg; min-height: 154px; }
+  .cards-world-link-04 {
+    --portal-rotation: -1deg;
+    --portal-content-offset-x: 56px;
+    min-height: 154px;
+  }
   .cards-world-link-05 { --portal-rotation: -2deg; }
 }
 
@@ -5454,7 +5461,16 @@ html[data-theme="dark"] .case-page .case-language,
     --portal-inset: 40px;
     min-height: 136px;
   }
-  .cards-world-link-04 { min-height: 146px; }
+  .cards-world-link-04 {
+    --portal-content-offset-x: 32px;
+    min-height: 146px;
+  }
+}
+
+@media (min-width: 821px) and (max-width: 1180px) {
+  .cards-world-link-04 {
+    --portal-content-offset-x: 32px;
+  }
 }
 
 @media (min-width: 821px) {
