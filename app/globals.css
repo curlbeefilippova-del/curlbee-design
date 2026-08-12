@@ -5288,6 +5288,7 @@ html[data-theme="dark"] .case-page .case-language,
   --portal-rotation: 0deg;
   --portal-radius: 58% 42% 54% 46% / 46% 60% 40% 54%;
   --portal-inset: 48px;
+  --portal-content-offset-x: 0px;
   --portal-index-gap: 16px;
   --portal-control-gap: 24px;
   position: relative;
@@ -5335,7 +5336,7 @@ html[data-theme="dark"] .case-page .case-language,
   z-index: 2;
   top: 50%;
   right: 16px;
-  left: var(--portal-inset);
+  left: calc(var(--portal-inset) + var(--portal-content-offset-x));
   display: flex;
   min-width: 0;
   flex-direction: column;
@@ -5384,6 +5385,9 @@ html[data-theme="dark"] .case-page .case-language,
   --world-ink: var(--ink);
   --portal-fill: linear-gradient(145deg, #deeee4, #b9d7c4);
   --portal-rotation: 3deg;
+  /* The wide ellipse meets the content at a shallower curve than the compact
+     portals, so its whole auto-layout group needs one 8px optical step. */
+  --portal-content-offset-x: 8px;
 }
 .cards-world-link-05 {
   --world-ink: var(--ink);
