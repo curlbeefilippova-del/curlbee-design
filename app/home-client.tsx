@@ -12,7 +12,6 @@ const projects = [
   {
     number: "01",
     slug: "even",
-    ready: true,
     title: "EVEN",
     kind: { RU: "Айдентика бренда одежды", EN: "Fashion brand identity" },
     image: "/cases/even/01.png",
@@ -22,7 +21,6 @@ const projects = [
   {
     number: "02",
     slug: "crafted",
-    ready: true,
     title: "CRAFTED",
     kind: { RU: "Продуктовая история клавиатуры", EN: "Mechanical keyboard story" },
     image: "/cases/crafted/01.png",
@@ -32,7 +30,6 @@ const projects = [
   {
     number: "03",
     slug: "velum",
-    ready: true,
     title: "VÉLUM",
     kind: { RU: "Айдентика премиального масла для волос", EN: "Premium hair oil identity" },
     image: "/cases/velum/01.png",
@@ -42,7 +39,6 @@ const projects = [
   {
     number: "04",
     slug: "minimalist-skincare",
-    ready: true,
     title: "MINIMALIST SKINCARE",
     kind: { RU: "Айдентика бренда косметики", EN: "Skincare brand identity" },
     image: "/cases/minimalist-care/01.png",
@@ -52,7 +48,6 @@ const projects = [
   {
     number: "05",
     slug: "ayu",
-    ready: true,
     title: "AYU",
     kind: { RU: "Визуальная система", EN: "Visual system" },
     image: "/cases/ayu/01.png",
@@ -62,7 +57,6 @@ const projects = [
   {
     number: "06",
     slug: "the-chops",
-    ready: true,
     title: "THE CHOPS",
     kind: { RU: "Юбилейная кампания для бара", EN: "Anniversary bar campaign" },
     image: "/cases/the-chops/01.png",
@@ -96,7 +90,6 @@ const copy = {
     workTitleMain: ["Избранные", "проекты"],
     workTitleNote: ["У каждого", "свой характер"],
     workHint: ["Наведи или нажми,", "чтобы сменить сцену"],
-    caseLabel: "Кейс в портфолио",
     cardsIntroKicker: "Новая глава · карточки товара",
     cardsIntroTitleOne: "Карточки",
     cardsIntroTitleTwo: "товара",
@@ -134,7 +127,6 @@ const copy = {
     workTitleMain: ["Selected", "projects"],
     workTitleNote: ["Each has", "its own personality"],
     workHint: ["Hover or tap", "to change the scene"],
-    caseLabel: "Portfolio case",
     cardsIntroKicker: "New chapter · product cards",
     cardsIntroTitleOne: "Product",
     cardsIntroTitleTwo: "cards",
@@ -170,10 +162,6 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const pointRef = useRef({ x: -80, y: -80, followX: -80, followY: -80, lastX: -80, lastY: -80, angle: 0 });
   const t = typographicCopy(copy[language], language);
   const project = projects[activeProject];
-
-  useEffect(() => {
-    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
-  }, []);
 
   useEffect(() => {
     document.documentElement.lang = language.toLowerCase();
@@ -231,7 +219,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
   useEffect(() => {
     const companion = companionRef.current;
-    if (!companion || window.matchMedia("(pointer: coarse)").matches) return;
+    if (!companion || window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
 
     const paint = () => {
       const point = pointRef.current;
@@ -246,6 +234,9 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         point.angle = Math.atan2(velocityY, velocityX) * (180 / Math.PI) + 90;
       }
 
+      const hero = heroRef.current;
+      const heroBounds = hero?.getBoundingClientRect();
+
       companion.style.setProperty("--cursor-x", `${point.followX}px`);
       companion.style.setProperty("--cursor-y", `${point.followY}px`);
       companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
@@ -253,6 +244,11 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       companion.dataset.moving = Math.hypot(dx, dy) > 2 ? "true" : "false";
       point.lastX = point.followX;
       point.lastY = point.followY;
+
+      if (hero && heroBounds) {
+        hero.style.setProperty("--mouse-x", `${((point.x - heroBounds.left) / heroBounds.width) * 100}%`);
+        hero.style.setProperty("--mouse-y", `${((point.y - heroBounds.top) / heroBounds.height) * 100}%`);
+      }
 
       if (Math.hypot(dx, dy) > 0.35) frameRef.current = requestAnimationFrame(paint);
       else frameRef.current = null;
@@ -270,13 +266,6 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       }
       companion.dataset.visible = "true";
       companion.dataset.hover = (event.target as Element | null)?.closest("a, button") ? "true" : "false";
-
-      const hero = heroRef.current;
-      if (hero) {
-        const rect = hero.getBoundingClientRect();
-        hero.style.setProperty("--mouse-x", `${((event.clientX - rect.left) / rect.width) * 100}%`);
-        hero.style.setProperty("--mouse-y", `${((event.clientY - rect.top) / rect.height) * 100}%`);
-      }
 
       if (frameRef.current === null) frameRef.current = requestAnimationFrame(paint);
     };
@@ -368,7 +357,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         </nav>
         <div className="header-actions">
           <ThemeToggle language={language} />
-          <div className="language-switch" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
+          <div className="language-switch" role="group" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             {(["RU", "EN"] as const).map((item) => (
               <Fragment key={item}>
                 {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
@@ -436,7 +425,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           className="project-explorer"
           style={{ "--project-color": project.color, "--project-ink": project.ink } as CSSProperties}
         >
-          <div className="project-list" aria-label={t.workTitle} data-reveal>
+          <div className="project-list" role="group" aria-label={t.workTitle} data-reveal>
             {projects.map((item, index) => (
               <button
                 type="button"
@@ -463,34 +452,26 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
                 className={index === activeProject ? "is-active" : ""}
                 aria-hidden={index !== activeProject}
               >
-                {item.ready ? (
-                  <a
-                    className="project-case-link"
-                    href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}
-                    aria-label={language === "RU" ? `Открыть кейс ${item.title}` : `Open ${item.title} case`}
-                  >
-                    <img
-                      src={item.image}
-                      alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""}
-                      width="1600"
-                      height="1000"
-                      loading={index === 0 ? "eager" : "lazy"}
-                      decoding="async"
-                    />
-                  </a>
-                ) : (
-                  <img src={item.image} alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""} width="1600" height="1000" loading="lazy" decoding="async" />
-                )}
+                <a
+                  className="project-case-link"
+                  href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}
+                  aria-label={language === "RU" ? `Открыть кейс ${item.title}` : `Open ${item.title} case`}
+                >
+                  <img
+                    src={item.image}
+                    alt={index === activeProject ? `${item.title} — ${item.kind[language]}` : ""}
+                    width="1600"
+                    height="1000"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                  />
+                </a>
                 <figcaption>
                   <span>{item.number}</span>
-                  {item.ready ? (
-                    <a href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}>
-                      {language === "RU" ? "Открыть кейс" : "View case"}
-                      <span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
-                    </a>
-                  ) : (
-                    <span>{t.caseLabel}</span>
-                  )}
+                  <a href={`/projects/${item.slug}?lang=${language.toLowerCase()}`}>
+                    {language === "RU" ? "Открыть кейс" : "View case"}
+                    <span className="ui-arrow ui-arrow-up-right" aria-hidden="true" />
+                  </a>
                 </figcaption>
               </figure>
             ))}
@@ -518,9 +499,13 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
               aria-label={`${t.cardsWorldOpen}: ${world.title}`}
               onClick={enterCardsWorld}
             >
-              <span>{world.number}</span>
-              <strong>{world.title}</strong>
-              <i aria-hidden="true"><span className="ui-arrow ui-arrow-up-right" /></i>
+              <span className="cards-world-link-content">
+                <span className="cards-world-link-index">{world.number}</span>
+                <strong>{world.title}</strong>
+                <span className="cards-world-link-control" aria-hidden="true">
+                  <span className="ui-arrow ui-arrow-up-right" />
+                </span>
+              </span>
             </a>
           ))}
         </nav>
@@ -543,12 +528,12 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
           <span>CURIOUS<br />BY DESIGN</span>
           <div className="about-details">
             <p>{t.aboutText}</p>
-            <div className="tool-signatures" aria-label={language === "RU" ? "Рабочие инструменты: Figma и AI" : "Creative tools: Figma and AI"}>
-              <span className="tool-signature tool-signature-figma">
+            <div className="tool-signatures" role="list" aria-label={language === "RU" ? "Рабочие инструменты: Figma и AI" : "Creative tools: Figma and AI"}>
+              <span className="tool-signature tool-signature-figma" role="listitem">
                 <i className="figma-mark" aria-hidden="true"><b /><b /><b /><b /><b /></i>
                 FIGMA
               </span>
-              <span className="tool-signature tool-signature-ai">
+              <span className="tool-signature tool-signature-ai" role="listitem">
                 <i className="ai-spark" aria-hidden="true" />
                 AI WORKFLOW
               </span>
