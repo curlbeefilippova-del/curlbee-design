@@ -36,8 +36,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/curlbee-logo.svg",
-    shortcut: "/curlbee-logo.svg",
+    icon: { url: "/curlbee-favicon.svg", type: "image/svg+xml" },
+    shortcut: "/curlbee-favicon.svg",
     apple: "/curlbee-mark.png",
   },
   openGraph: {
