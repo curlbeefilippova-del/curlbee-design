@@ -534,7 +534,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
       <header className="site-header">
         <a className="brand" href="#top" aria-label="Curlbee Design — наверх">
-          <img src="/curlbee-logo.svg" alt="Curlbee" />
+          <img className="brand-wordmark brand-wordmark-light" src="/curlbee-wordmark.svg" alt="Curlbee" />
+          <img className="brand-wordmark brand-wordmark-dark" src="/curlbee-wordmark-dark.svg" alt="" aria-hidden="true" />
         </a>
         <nav aria-label={language === "RU" ? "Основная навигация" : "Main navigation"}>
           <a href="#work">{t.navWork}</a>
@@ -740,7 +741,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
         <div className="footer-glow" aria-hidden="true" />
         <div className="footer-top">
           <p>{t.footerKicker}</p>
-          <img src="/curlbee-logo.svg" alt="Curlbee" />
+          <img className="footer-wordmark" src="/curlbee-wordmark-dark.svg" alt="Curlbee" />
         </div>
         <h2>
           <span>{t.footerTitleOne}</span>
