@@ -1,8 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
+import CardsWorldHeader from "../cards-world-header";
 import { useCardSwap } from "../use-card-swap";
+import { useCardsLightbox } from "../use-cards-lightbox";
+import CardsLightboxZoom from "../cards-lightbox-zoom";
+import { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
 export type EvenCardsLanguage = "RU" | "EN";
@@ -68,29 +72,24 @@ function getChapterIndex(cardIndex: number) {
 
 export default function EvenCardsClient({ initialLanguage }: { initialLanguage: EvenCardsLanguage }) {
   const [language, setLanguage] = useState<EvenCardsLanguage>(initialLanguage);
-
-  useEffect(() => {
-    setLanguage(new URLSearchParams(window.location.search).get("lang") === "en" ? "EN" : "RU");
-  }, []);
+  useLanguageQuerySync(language, setLanguage);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
     selectIndex: selectCard,
     selectRelative: selectRelativeCard,
-    queueIndex: queueCard,
-    cancelQueuedIndex: cancelQueuedCard,
   } = useCardSwap(evenCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
-  const lightboxRef = useRef<HTMLDivElement>(null);
-  const lightboxCloseRef = useRef<HTMLButtonElement>(null);
+  const {
+    dialogRef: lightboxRef,
+    closeButtonRef: lightboxCloseRef,
+  } = useCardsLightbox(isLightboxOpen, setIsLightboxOpen, selectRelativeCard);
   const t = typographicCopy(copy[language], language);
   const card = evenCards[activeCard];
   const previousCard = previousCardIndex === null ? null : evenCards[previousCardIndex];
   const chapterIndex = getChapterIndex(activeCard);
   const chapter = chapters[chapterIndex];
-  const langQuery = language.toLowerCase();
-
   const respondToPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") return;
     const stage = stageRef.current;
@@ -114,78 +113,21 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
   };
 
   useEffect(() => {
-    document.documentElement.lang = langQuery;
-  }, [langQuery]);
-
-  useEffect(() => {
     const next = new window.Image();
     next.src = evenCards[(activeCard + 1) % evenCards.length].image;
   }, [activeCard]);
 
-  useEffect(() => {
-    if (!isLightboxOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    const previousFocus = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => lightboxCloseRef.current?.focus());
-
-    const handleKeys = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsLightboxOpen(false);
-      if (event.key === "ArrowLeft") selectRelativeCard(-1);
-      if (event.key === "ArrowRight") selectRelativeCard(1);
-      if (event.key !== "Tab") return;
-
-      const controls = Array.from(lightboxRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
-      const firstControl = controls[0];
-      const lastControl = controls.at(-1);
-      if (event.shiftKey && document.activeElement === firstControl) {
-        event.preventDefault();
-        lastControl?.focus();
-      } else if (!event.shiftKey && document.activeElement === lastControl) {
-        event.preventDefault();
-        firstControl?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeys);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeys);
-      previousFocus?.focus();
-    };
-  }, [isLightboxOpen, selectRelativeCard]);
-
   return (
     <main className={`even-world even-world--${chapter.key}`}>
       <a className="skip-link" href="#even-series">{t.skip}</a>
-      <header className="even-header">
-        <a className="case-brand" href={`/?lang=${langQuery}#cards`} aria-label="Curlbee Design">
-          <img src="/curlbee-logo.svg" alt="Curlbee" />
-        </a>
-        <nav aria-label={t.navigation}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
-          <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
-            {(["RU", "EN"] as const).map((item) => (
-              <Fragment key={item}>
-                {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
-                <a
-                href={`/cards/even?lang=${item.toLowerCase()}`}
-                aria-current={language === item ? "true" : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setLanguage(item);
-                  const url = new URL(window.location.href);
-                  url.searchParams.set("lang", item.toLowerCase());
-                  window.history.replaceState(null, "", url);
-                }}
-                >
-                  {item}
-                </a>
-              </Fragment>
-            ))}
-          </div>
-        </nav>
-      </header>
+      <CardsWorldHeader
+        backLabel={t.back}
+        className="even-header"
+        language={language}
+        navigationLabel={t.navigation}
+        setLanguage={setLanguage}
+        slug="even"
+      />
 
       <section className="even-deck" id="even-series" aria-labelledby="even-title">
         <div className="even-atmosphere" aria-hidden="true">
@@ -249,9 +191,8 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
                         className={index === activeCard ? "is-active" : ""}
                         aria-pressed={index === activeCard}
                         onPointerEnter={(event) => {
-                          if (event.pointerType !== "touch") queueCard(index);
+                          if (event.pointerType !== "touch") selectCard(index);
                         }}
-                        onPointerLeave={cancelQueuedCard}
                         onFocus={() => selectCard(index)}
                         onClick={() => selectCard(index)}
                       >
@@ -283,7 +224,7 @@ export default function EvenCardsClient({ initialLanguage }: { initialLanguage: 
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="even-lightbox-step even-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}><span className="ui-arrow ui-arrow-left" aria-hidden="true" /></button>
-          <img className="card-swap-single" key={card.image} src={card.image} alt={`EVEN — ${card.title[language]}`} width="1800" height="2400" />
+          <CardsLightboxZoom key={card.image} src={card.image} alt={`EVEN — ${card.title[language]}`} language={language} />
           <button className="even-lightbox-step even-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}><span className="ui-arrow ui-arrow-right" aria-hidden="true" /></button>
           <div className="even-lightbox-caption">
             <span>{card.number} / 11</span>
