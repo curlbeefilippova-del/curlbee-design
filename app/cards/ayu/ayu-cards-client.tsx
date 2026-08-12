@@ -1,8 +1,11 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import CardsWorldHeader from "../cards-world-header";
 import { useCardSwap } from "../use-card-swap";
+import { useCardsLightbox } from "../use-cards-lightbox";
+import CardsLightboxZoom from "../cards-lightbox-zoom";
 import { useLanguageQuerySync } from "../use-language-query";
 import { typographicCopy, typographicText } from "../../typography";
 
@@ -81,26 +84,24 @@ const copy = {
 
 export default function AyuCardsClient({ initialLanguage }: { initialLanguage: AyuCardsLanguage }) {
   const [language, setLanguage] = useState<AyuCardsLanguage>(initialLanguage);
-  useLanguageQuerySync(setLanguage);
+  useLanguageQuerySync(language, setLanguage);
   const {
     activeIndex: activeCard,
     previousIndex: previousCardIndex,
     selectIndex: selectCard,
     selectRelative: selectRelativeCard,
-    queueIndex: queueCard,
-    cancelQueuedIndex: cancelQueuedCard,
   } = useCardSwap(ayuCards.length);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const stageRef = useRef<HTMLDivElement>(null);
-  const lightboxRef = useRef<HTMLDivElement>(null);
-  const lightboxCloseRef = useRef<HTMLButtonElement>(null);
+  const {
+    dialogRef: lightboxRef,
+    closeButtonRef: lightboxCloseRef,
+  } = useCardsLightbox(isLightboxOpen, setIsLightboxOpen, selectRelativeCard);
   const t = typographicCopy(copy[language], language);
   const card = ayuCards[activeCard];
   const previousCard = previousCardIndex === null ? null : ayuCards[previousCardIndex];
   const moodIndex = Math.min(moods.length - 1, Math.floor(activeCard / 3));
   const mood = moods[moodIndex];
-  const langQuery = language.toLowerCase();
-
   const respondToPointer = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (event.pointerType === "touch") return;
     const stage = stageRef.current;
@@ -108,8 +109,6 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
     const bounds = stage.getBoundingClientRect();
     const x = Math.min(1, Math.max(0, (event.clientX - bounds.left) / bounds.width));
     const y = Math.min(1, Math.max(0, (event.clientY - bounds.top) / bounds.height));
-    stage.style.setProperty("--ayu-pointer-x", `${x * 100}%`);
-    stage.style.setProperty("--ayu-pointer-y", `${y * 100}%`);
     stage.style.setProperty("--ayu-tilt-x", `${(0.5 - y) * 3.2}deg`);
     stage.style.setProperty("--ayu-tilt-y", `${(x - 0.5) * 3.8}deg`);
   };
@@ -117,15 +116,9 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
   const resetPointerResponse = () => {
     const stage = stageRef.current;
     if (!stage) return;
-    stage.style.setProperty("--ayu-pointer-x", "54%");
-    stage.style.setProperty("--ayu-pointer-y", "48%");
     stage.style.setProperty("--ayu-tilt-x", "0deg");
     stage.style.setProperty("--ayu-tilt-y", "0deg");
   };
-
-  useEffect(() => {
-    document.documentElement.lang = langQuery;
-  }, [langQuery]);
 
   useEffect(() => {
     const nextCard = new window.Image();
@@ -134,70 +127,17 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
     nextMood.src = moods[(moodIndex + 1) % moods.length].image;
   }, [activeCard, moodIndex]);
 
-  useEffect(() => {
-    if (!isLightboxOpen) return;
-    const previousOverflow = document.body.style.overflow;
-    const previousFocus = document.activeElement as HTMLElement | null;
-    document.body.style.overflow = "hidden";
-    window.requestAnimationFrame(() => lightboxCloseRef.current?.focus());
-
-    const handleLightboxKeys = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setIsLightboxOpen(false);
-      if (event.key === "ArrowLeft") selectRelativeCard(-1);
-      if (event.key === "ArrowRight") selectRelativeCard(1);
-      if (event.key !== "Tab") return;
-
-      const controls = Array.from(lightboxRef.current?.querySelectorAll<HTMLButtonElement>("button") ?? []);
-      const firstControl = controls[0];
-      const lastControl = controls.at(-1);
-      if (event.shiftKey && document.activeElement === firstControl) {
-        event.preventDefault();
-        lastControl?.focus();
-      } else if (!event.shiftKey && document.activeElement === lastControl) {
-        event.preventDefault();
-        firstControl?.focus();
-      }
-    };
-
-    window.addEventListener("keydown", handleLightboxKeys);
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleLightboxKeys);
-      previousFocus?.focus();
-    };
-  }, [isLightboxOpen, selectRelativeCard]);
-
   return (
     <main className={`ayu-world ayu-world--${mood.key}`}>
       <a className="skip-link" href="#ayu-series">{t.skip}</a>
-      <header className="ayu-header">
-        <a className="case-brand" href={`/?lang=${langQuery}#cards`} aria-label="Curlbee Design">
-          <img src="/curlbee-logo.svg" alt="Curlbee" />
-        </a>
-        <nav aria-label={t.navigation}>
-          <a className="case-back" data-short={language === "RU" ? "Назад" : "Back"} href={`/?lang=${langQuery}#cards`}><span aria-hidden="true" />{t.back}</a>
-          <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
-            {(["RU", "EN"] as const).map((item) => (
-              <Fragment key={item}>
-                {item === "EN" && <span className="language-divider" aria-hidden="true">/</span>}
-                <a
-                href={`/cards/ayu?lang=${item.toLowerCase()}`}
-                aria-current={language === item ? "true" : undefined}
-                onClick={(event) => {
-                  event.preventDefault();
-                  setLanguage(item);
-                  const url = new URL(window.location.href);
-                  url.searchParams.set("lang", item.toLowerCase());
-                  window.history.replaceState(null, "", url);
-                }}
-                >
-                  {item}
-                </a>
-              </Fragment>
-            ))}
-          </div>
-        </nav>
-      </header>
+      <CardsWorldHeader
+        backLabel={t.back}
+        className="ayu-header"
+        language={language}
+        navigationLabel={t.navigation}
+        setLanguage={setLanguage}
+        slug="ayu"
+      />
 
       <section className="ayu-deck" id="ayu-series" aria-labelledby="ayu-title">
         <div className="ayu-atmosphere" aria-hidden="true">
@@ -266,9 +206,8 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
                 className={cardIndex === activeCard ? "is-active" : ""}
                 aria-pressed={cardIndex === activeCard}
                 onPointerEnter={(event) => {
-                  if (event.pointerType !== "touch") queueCard(cardIndex);
+                  if (event.pointerType !== "touch") selectCard(cardIndex);
                 }}
-                onPointerLeave={cancelQueuedCard}
                 onFocus={() => selectCard(cardIndex)}
                 onClick={() => selectCard(cardIndex)}
               >
@@ -303,7 +242,7 @@ export default function AyuCardsClient({ initialLanguage }: { initialLanguage: A
             <span>{t.close}</span><i aria-hidden="true">×</i>
           </button>
           <button className="ayu-lightbox-step ayu-lightbox-previous" type="button" onClick={() => selectRelativeCard(-1)} aria-label={t.previous}><span className="ui-arrow ui-arrow-left" aria-hidden="true" /></button>
-          <img className="card-swap-single" key={card.image} src={card.image} alt={`AYU — ${card.title[language]}`} width="1800" height="2400" />
+          <CardsLightboxZoom key={card.image} src={card.image} alt={`AYU — ${card.title[language]}`} language={language} />
           <button className="ayu-lightbox-step ayu-lightbox-next" type="button" onClick={() => selectRelativeCard(1)} aria-label={t.next}><span className="ui-arrow ui-arrow-right" aria-hidden="true" /></button>
           <div className="ayu-lightbox-caption">
             <span>{card.number} / 09</span>

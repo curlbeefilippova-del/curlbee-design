@@ -1116,6 +1116,31 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .case-lightbox-zoom[data-zoomed="true"] img { transform: scale(2.15); }
 @keyframes lightbox-in { from { opacity: 0; } to { opacity: 1; } }
 
+.cards-lightbox-zoom {
+  position: relative;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+.cards-lightbox-zoom[data-zoomed="true"] {
+  cursor: zoom-out;
+  touch-action: none;
+}
+.cards-lightbox-zoom img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  transform: scale(1);
+  transform-origin: var(--cards-zoom-origin, 50% 50%);
+  transition: transform 420ms var(--ease-out);
+  will-change: transform;
+}
+.cards-lightbox-zoom[data-zoomed="true"] img { transform: scale(2.15); }
+
 @media (max-width: 600px) {
   .case-lightbox-toolbar { height: 64px; padding-inline: 12px; }
   .case-lightbox-close { padding-inline: 8px; font-size: 10px; }
@@ -1724,14 +1749,14 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   background: rgba(10, 9, 7, 0.97);
   animation: velum-lightbox-in 240ms ease both;
 }
-.cards-lightbox > img {
+.cards-lightbox > .cards-lightbox-zoom {
   grid-column: 2;
   grid-row: 1;
-  width: auto;
-  height: 100%;
+  width: min(100%, calc((100svh - 142px) * .75));
+  height: auto;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
   max-height: calc(100svh - 142px);
-  object-fit: contain;
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
 }
 .cards-lightbox-close {
@@ -2057,14 +2082,14 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   background: rgba(37, 38, 34, 0.98);
   animation: crafted-lightbox-in 220ms ease both;
 }
-.crafted-lightbox > img {
+.crafted-lightbox > .cards-lightbox-zoom {
   grid-column: 2;
   grid-row: 1;
-  width: auto;
-  height: 100%;
+  width: min(100%, calc((100svh - 132px) * .75));
+  height: auto;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
   max-height: calc(100svh - 132px);
-  object-fit: contain;
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.42);
   animation: crafted-card-settle 360ms var(--ease-out) both;
 }
@@ -2431,18 +2456,18 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
     radial-gradient(circle at 50% 42%, rgba(229, 190, 137, .3), transparent 42%),
     linear-gradient(135deg, #806342 0%, #57412d 55%, #2e251d 100%);
 }
-.minimalist-lightbox > img {
+.minimalist-lightbox > .cards-lightbox-zoom {
   grid-column: 2;
   grid-row: 1;
-  width: auto;
-  height: 100%;
+  width: min(100%, calc((100svh - 132px) * .75));
+  height: auto;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
   max-height: calc(100svh - 132px);
-  object-fit: contain;
   box-shadow: 0 32px 80px rgba(42, 72, 60, .27);
   animation: minimalist-card-in 340ms var(--ease-out) both;
 }
-.minimalist-world.is-lifestyle .minimalist-lightbox > img { box-shadow: 0 32px 82px rgba(37, 25, 15, .5); }
+.minimalist-world.is-lifestyle .minimalist-lightbox > .cards-lightbox-zoom { box-shadow: 0 32px 82px rgba(37, 25, 15, .5); }
 .minimalist-lightbox-close {
   position: fixed;
   z-index: 2;
@@ -2829,16 +2854,16 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   );
 }
 .ayu-lightbox-atmosphere img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 54%; animation: ayu-atmosphere-in 560ms var(--ease-out) both; }
-.ayu-lightbox > img {
+.ayu-lightbox > .cards-lightbox-zoom {
   position: relative;
   z-index: 1;
   grid-column: 2;
   grid-row: 1;
-  width: auto;
-  height: 100%;
+  width: min(100%, calc((100svh - 132px) * .75));
+  height: auto;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
   max-height: calc(100svh - 132px);
-  object-fit: contain;
   box-shadow: 0 32px 72px rgba(67, 48, 59, .24), 0 0 42px color-mix(in srgb, var(--ayu-accent) 10%, transparent);
   animation: ayu-card-in 360ms var(--ease-out);
 }
@@ -2965,8 +2990,9 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
     gap: 10px 8px;
   }
   .ayu-lightbox-atmosphere { inset-inline-start: 22%; opacity: .16; }
-  .ayu-lightbox > img {
+  .ayu-lightbox > .cards-lightbox-zoom {
     grid-column: 1 / 4;
+    width: min(100%, calc((100svh - 160px) * .75));
     max-height: calc(100svh - 160px);
     box-shadow: 0 26px 58px rgba(58, 42, 50, .28), 0 0 34px color-mix(in srgb, var(--ayu-accent) 9%, transparent);
   }
@@ -2983,7 +3009,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   .ayu-active img,
   .ayu-lightbox,
   .ayu-lightbox-atmosphere img,
-  .ayu-lightbox > img { animation: none !important; }
+  .ayu-lightbox > .cards-lightbox-zoom { animation: none !important; }
   .ayu-navigation-pulse { transition: none !important; }
   .ayu-active img { transform: none !important; }
 }
@@ -3369,16 +3395,16 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   pointer-events: none;
   background: linear-gradient(118deg, rgba(255,255,255,.18), transparent 38% 72%, rgba(73,54,66,.08));
 }
-.even-lightbox > img {
+.even-lightbox > .cards-lightbox-zoom {
   position: relative;
   z-index: 1;
   grid-column: 2;
   grid-row: 1;
-  width: auto;
-  height: 100%;
+  width: min(100%, calc((100svh - 132px) * .75));
+  height: auto;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
   max-height: calc(100svh - 132px);
-  object-fit: contain;
   box-shadow: 0 32px 76px rgba(48, 34, 41, .29);
   animation: even-card-in 340ms var(--ease-out);
 }
@@ -3563,7 +3589,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
     grid-template-rows: minmax(0, 1fr) 52px auto;
     gap: 10px 8px;
   }
-  .even-lightbox > img { grid-column: 1 / 4; max-height: calc(100svh - 160px); }
+  .even-lightbox > .cards-lightbox-zoom { grid-column: 1 / 4; width: min(100%, calc((100svh - 160px) * .75)); max-height: calc(100svh - 160px); }
   .even-lightbox-step { grid-row: 2; width: 46px; min-height: 46px; }
   .even-lightbox-previous { grid-column: 1; justify-self: end; }
   .even-lightbox-next { grid-column: 3; justify-self: start; }
@@ -3577,7 +3603,7 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   .even-atmosphere-plum,
   .even-active img,
   .even-lightbox,
-  .even-lightbox > img { animation: none !important; transition: none !important; }
+  .even-lightbox > .cards-lightbox-zoom { animation: none !important; transition: none !important; }
   .even-navigation button { transition: none !important; }
   .even-active img { transform: none !important; }
 }
@@ -4160,7 +4186,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     grid-template-rows: minmax(0, 1fr) auto auto;
     gap: 10px;
   }
-  .cards-lightbox > img { grid-column: 1 / 3; grid-row: 1; max-height: calc(100svh - 174px); }
+  .cards-lightbox > .cards-lightbox-zoom { grid-column: 1 / 3; grid-row: 1; width: min(100%, calc((100svh - 174px) * .75)); max-height: calc(100svh - 174px); }
   .cards-lightbox-step { grid-row: 2; width: 44px; height: 44px; }
   .cards-lightbox-previous { grid-column: 1; justify-self: start; }
   .cards-lightbox-next { grid-column: 2; justify-self: end; }
@@ -4464,7 +4490,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     grid-template-rows: minmax(0, 1fr) auto auto;
     gap: 12px;
   }
-  .crafted-lightbox > img { grid-column: 1 / 3; grid-row: 1; max-height: calc(100svh - 174px); }
+  .crafted-lightbox > .cards-lightbox-zoom { grid-column: 1 / 3; grid-row: 1; width: min(100%, calc((100svh - 174px) * .75)); max-height: calc(100svh - 174px); }
   .crafted-lightbox-step { grid-row: 2; width: 44px; height: 44px; }
   .crafted-lightbox-previous { grid-column: 1; justify-self: start; }
   .crafted-lightbox-next { grid-column: 2; justify-self: end; }
@@ -4550,7 +4576,7 @@ html[lang="ru"] footer h2 { letter-spacing: -0.045em; }
     grid-template-rows: minmax(0, 1fr) auto auto;
     gap: 12px;
   }
-  .minimalist-lightbox > img { grid-column: 1 / 3; grid-row: 1; max-height: calc(100svh - 174px); }
+  .minimalist-lightbox > .cards-lightbox-zoom { grid-column: 1 / 3; grid-row: 1; width: min(100%, calc((100svh - 174px) * .75)); max-height: calc(100svh - 174px); }
   .minimalist-lightbox-step { grid-row: 2; width: 44px; height: 44px; }
   .minimalist-lightbox-previous { grid-column: 1; justify-self: start; }
   .minimalist-lightbox-next { grid-column: 2; justify-self: end; }
