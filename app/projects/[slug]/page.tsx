@@ -74,6 +74,8 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         back: "Все проекты",
         open: "Открыть крупно",
         close: "К кейсу",
+        zoomIn: "Увеличить изображение",
+        zoomOut: "Уменьшить изображение",
         replay: "Повторить",
         end: "К другим проектам",
         aria: "Навигация по кейсу",
@@ -82,6 +84,8 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
         back: "All projects",
         open: "View full size",
         close: "Back to case",
+        zoomIn: "Zoom in",
+        zoomOut: "Zoom out",
         replay: "Replay",
         end: "Explore other projects",
         aria: "Case navigation",
@@ -117,7 +121,7 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
             </span>
           </a>
           <ThemeToggle language={language} />
-          <div className="case-language" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
+          <div className="case-language" role="group" aria-label={language === "RU" ? "Выбор языка" : "Language selection"}>
             <a href={`/projects/${project.slug}?lang=ru`} aria-current={language === "RU" ? "true" : undefined}>RU</a>
             <span className="language-divider" aria-hidden="true">/</span>
             <a href={`/projects/${project.slug}?lang=en`} aria-current={language === "EN" ? "true" : undefined}>EN</a>
@@ -170,6 +174,8 @@ export default async function ProjectPage({ params, searchParams }: ProjectPageP
                   alt={slide.alt[language]}
                   openLabel={labels.open}
                   closeLabel={labels.close}
+                  zoomInLabel={labels.zoomIn}
+                  zoomOutLabel={labels.zoomOut}
                   indexLabel={`${String(index + 1).padStart(2, "0")} / ${String(project.slides.length).padStart(2, "0")}`}
                   eager={index === 0}
                 />

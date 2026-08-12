@@ -14,7 +14,7 @@ export default function CaseMotion({ frames, label, replayLabel }: CaseMotionPro
   const [state, setState] = useState<"idle" | "playing" | "finished">("idle");
 
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (document.documentElement.dataset.motion === "off" || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
@@ -44,7 +44,7 @@ export default function CaseMotion({ frames, label, replayLabel }: CaseMotionPro
   };
 
   return (
-    <div className="case-motion" ref={rootRef} data-state={state} aria-label={label}>
+    <div className="case-motion" ref={rootRef} data-state={state}>
       <div className="case-motion-stage" key={cycle} role="img" aria-label={label}>
         {frames.map((src, index) => (
           <img
