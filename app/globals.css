@@ -5279,73 +5279,192 @@ html[data-theme="dark"] .case-page .case-language,
   margin-top: 32px;
 }
 
-/* Desktop keeps its approved independent composition. On compact viewports,
-   title and control become one auto-layout unit below. */
-.cards-world-link-04 strong {
+/* Portal architecture mirrors a Figma component: the organic shape is a
+   decorative layer, while one unrotated auto-layout frame owns every label.
+   Shape transforms can no longer alter the content coordinate system. */
+.cards-world-link,
+.cards-world-link:hover,
+.cards-world-link:focus-visible {
+  --portal-rotation: 0deg;
+  --portal-radius: 58% 42% 54% 46% / 46% 60% 40% 54%;
+  --portal-inset: 48px;
+  --portal-index-gap: 16px;
+  --portal-control-gap: 24px;
+  position: relative;
+  padding: 0;
+  display: block;
+  overflow: visible;
+  color: var(--world-ink);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  container: portal / inline-size;
+  transition: transform 420ms var(--ease-spring);
+}
+
+.cards-world-link::before,
+.cards-world-link::after {
+  content: "";
   position: absolute;
-  left: clamp(22px, 2.1vw, 34px);
-  right: clamp(22px, 2.1vw, 34px);
+  pointer-events: none;
+  border-radius: var(--portal-radius);
+  transform: rotate(var(--portal-rotation));
+  transition:
+    border-radius 420ms var(--ease-spring),
+    box-shadow 320ms ease,
+    transform 420ms var(--ease-spring);
+}
+
+.cards-world-link::before {
+  z-index: 0;
+  inset: 0;
+  background: var(--portal-fill);
+  box-shadow: 0 22px 48px rgba(47, 34, 53, 0.17);
+}
+
+.cards-world-link::after {
+  z-index: 1;
+  inset: 10px;
+  border: 1px solid currentColor;
+  opacity: 0.23;
+}
+
+.cards-world-link-content {
+  position: absolute;
+  z-index: 2;
   top: 50%;
-  bottom: auto;
-  max-width: none;
+  right: 16px;
+  left: var(--portal-inset);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
   transform: translateY(-50%);
 }
 
-.cards-world-link-04 .cards-world-link-control {
-  position: absolute;
-  left: clamp(24px, 3vw, 42px);
-  bottom: clamp(18px, 2vw, 28px);
+.cards-world-link .cards-world-link-index,
+.cards-world-link .cards-world-link-content > strong,
+.cards-world-link .cards-world-link-control {
+  position: static;
+  inset: auto;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  margin-inline: 0;
+  transform: none;
 }
 
-/* One constrained content frame owns the index, title and control. The title
-   stays on the visual centre axis; index and control share the same 24px
-   horizontal indent and fixed vertical rhythm in every compact format. */
-@media (max-width: 1180px) {
-  .cards-world-link {
-    --portal-step: 24px;
-    --portal-index-gap: 16px;
-    --portal-title-anchor: 38px;
-  }
+.cards-world-link .cards-world-link-index {
+  margin-block: 0 var(--portal-index-gap);
+}
 
-  .cards-world-link-content {
-    position: absolute;
-    z-index: 1;
-    top: 50%;
-    right: 8px;
-    bottom: auto;
-    left: var(--portal-step);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0;
-    transform: translateY(calc(-1 * var(--portal-title-anchor)));
-  }
+.cards-world-link .cards-world-link-content > strong {
+  width: auto;
+  max-width: 100%;
+  margin-block: 0;
+}
 
-  .cards-world-link .cards-world-link-index {
-    position: relative;
-    inset: auto;
-    flex: 0 0 auto;
-    margin: 0 0 var(--portal-index-gap) var(--portal-step);
-    transform: none;
-  }
+.cards-world-link .cards-world-link-control {
+  margin-block: var(--portal-control-gap) 0;
+}
 
-  .cards-world-link .cards-world-link-content > strong {
+.cards-world-link-01 {
+  --portal-fill: linear-gradient(145deg, #93748e, #675276);
+  --portal-rotation: -5deg;
+}
+.cards-world-link-02 {
+  --portal-fill: linear-gradient(145deg, #717865, #4d5343);
+  --portal-rotation: 3deg;
+}
+.cards-world-link-03 {
+  --portal-fill: linear-gradient(145deg, #cc705b, #a84e3c);
+  --portal-rotation: 7deg;
+}
+.cards-world-link-04 {
+  --world-ink: var(--ink);
+  --portal-fill: linear-gradient(145deg, #deeee4, #b9d7c4);
+  --portal-rotation: 3deg;
+}
+.cards-world-link-05 {
+  --world-ink: var(--ink);
+  --portal-fill: linear-gradient(145deg, #edc166, #d09a36);
+  --portal-rotation: -6deg;
+}
+
+.cards-world-link:focus-visible {
+  outline: none;
+  transform: translateY(-9px) scale(1.035);
+}
+.cards-world-link:focus-visible::before {
+  --portal-radius: 48% 52% 42% 58% / 58% 43% 57% 42%;
+  box-shadow:
+    0 31px 62px rgba(47, 34, 53, 0.27),
+    0 0 0 3px var(--terra);
+}
+.cards-world-link:focus-visible .cards-world-link-control {
+  color: var(--ink);
+  background: var(--canvas);
+  transform: translate(4px, -4px) rotate(4deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cards-world-link:hover {
+    transform: translateY(-9px) scale(1.035);
+  }
+  .cards-world-link:hover::before,
+  .cards-world-link:hover::after {
+    --portal-radius: 48% 52% 42% 58% / 58% 43% 57% 42%;
+  }
+  .cards-world-link:hover::before {
+    box-shadow: 0 31px 62px rgba(47, 34, 53, 0.27);
+  }
+  .cards-world-link:hover .cards-world-link-control {
+    color: var(--ink);
+    background: var(--canvas);
+    transform: translate(4px, -4px) rotate(4deg);
+  }
+}
+
+@media (max-width: 820px) {
+  .cards-world-link,
+  .cards-world-link:hover,
+  .cards-world-link:focus-visible {
+    --portal-inset: 48px;
     position: relative;
     inset: auto;
     width: 100%;
-    max-width: none;
-    align-self: auto;
+    min-height: 144px;
     transform: none;
   }
+  .cards-world-link-01 { --portal-rotation: -2deg; }
+  .cards-world-link-02 { --portal-rotation: 2deg; }
+  .cards-world-link-03 { --portal-rotation: 2deg; }
+  .cards-world-link-04 { --portal-rotation: -1deg; min-height: 154px; }
+  .cards-world-link-05 { --portal-rotation: -2deg; }
+}
 
-  .cards-world-link .cards-world-link-control {
-    position: relative;
-    inset: auto;
-    flex: 0 0 auto;
-    align-self: auto;
-    margin: var(--portal-step) 0 0 var(--portal-step);
-    transform: none;
+@media (max-width: 560px) {
+  .cards-world-link,
+  .cards-world-link:hover,
+  .cards-world-link:focus-visible {
+    --portal-inset: 40px;
+    min-height: 136px;
   }
+  .cards-world-link-04 { min-height: 146px; }
+}
+
+@media (min-width: 821px) {
+  .cards-world-link,
+  .cards-world-link:hover,
+  .cards-world-link:focus-visible {
+    position: absolute;
+    min-height: 0;
+  }
+  .cards-world-link-01 { width: clamp(154px, 12.5vw, 204px); aspect-ratio: 1.02; }
+  .cards-world-link-02 { width: clamp(176px, 15vw, 244px); aspect-ratio: 1.15; }
+  .cards-world-link-03 { width: clamp(156px, 13vw, 212px); aspect-ratio: 0.98; }
+  .cards-world-link-04 { width: clamp(228px, 19vw, 308px); aspect-ratio: 1.38; }
+  .cards-world-link-05 { width: clamp(168px, 14vw, 228px); aspect-ratio: 1.06; }
 }
 
 /* Keep the label and its close glyph visually connected while preserving the
