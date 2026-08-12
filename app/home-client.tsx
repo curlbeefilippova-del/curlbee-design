@@ -499,8 +499,8 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
               aria-label={`${t.cardsWorldOpen}: ${world.title}`}
               onClick={enterCardsWorld}
             >
-              <span className="cards-world-link-index">{world.number}</span>
               <span className="cards-world-link-content">
+                <span className="cards-world-link-index">{world.number}</span>
                 <strong>{world.title}</strong>
                 <span className="cards-world-link-control" aria-hidden="true">
                   <span className="ui-arrow ui-arrow-up-right" />
