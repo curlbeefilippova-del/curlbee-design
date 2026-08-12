@@ -6,16 +6,6 @@
     "nodejs_compat"
   ],
   "main": "./worker/index.ts",
-  "routes": [
-    {
-      "pattern": "curlbeedesign.com/*",
-      "zone_name": "curlbeedesign.com"
-    },
-    {
-      "pattern": "www.curlbeedesign.com/*",
-      "zone_name": "curlbeedesign.com"
-    }
-  ],
   "assets": {
     "directory": "dist/client",
     "not_found_handling": "none",
