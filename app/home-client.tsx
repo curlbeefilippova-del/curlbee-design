@@ -83,7 +83,7 @@ const copy = {
     heroTwo: "которому хочется",
     heroThree: "ответить",
     intro: "Собираю бренды, продукты и\u00a0презентации — с\u00a0ясной логикой, живой типографикой и\u00a0характером.",
-    play: "Нажми — пчела покажет пике",
+    play: "Нажми — пчела сделает петлю",
     motion: "Анимация",
     motionOn: "вкл",
     motionOff: "выкл",
@@ -124,7 +124,7 @@ const copy = {
     heroTwo: "that feels worth",
     heroThree: "answering",
     intro: "I build brands, products and presentations with clear logic, living typography and a distinct point of view.",
-    play: "Click — the bee will take a dive",
+    play: "Click — the bee will loop and land",
     motion: "Motion",
     motionOn: "on",
     motionOff: "off",
@@ -167,8 +167,18 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
   const companionRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const cardsPortalTimerRef = useRef<number | null>(null);
-  const beeDemoTimerRef = useRef<number | null>(null);
-  const pointRef = useRef({ lastX: -80, lastY: -80, angle: 0 });
+  const beeDemoFrameRef = useRef<number | null>(null);
+  const beeAngleFrameRef = useRef<number | null>(null);
+  const beeIdleTimerRef = useRef<number | null>(null);
+  const pointRef = useRef({
+    x: -80,
+    y: -80,
+    lastX: -80,
+    lastY: -80,
+    angle: 0,
+    targetAngle: 0,
+    isDemo: false,
+  });
   const t = typographicCopy(copy[language], language);
   const project = projects[activeProject];
 
@@ -182,7 +192,9 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     });
     return () => {
       window.cancelAnimationFrame(syncFrame);
-      if (beeDemoTimerRef.current !== null) window.clearTimeout(beeDemoTimerRef.current);
+      if (beeDemoFrameRef.current !== null) window.cancelAnimationFrame(beeDemoFrameRef.current);
+      if (beeAngleFrameRef.current !== null) window.cancelAnimationFrame(beeAngleFrameRef.current);
+      if (beeIdleTimerRef.current !== null) window.clearTimeout(beeIdleTimerRef.current);
     };
   }, []);
 
@@ -243,23 +255,65 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       return;
     }
 
+    let lastAngleFrameTime = performance.now();
+
+    const shortestTurn = (from: number, to: number) => ((to - from + 540) % 360) - 180;
+
+    const smoothAngle = (time: number) => {
+      const point = pointRef.current;
+      const elapsed = Math.min(40, time - lastAngleFrameTime);
+      const turn = shortestTurn(point.angle, point.targetAngle);
+      const blend = 1 - Math.exp(-elapsed / 52);
+      point.angle += turn * blend;
+      companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
+      lastAngleFrameTime = time;
+
+      if (Math.abs(turn) > 0.12 && !point.isDemo) {
+        beeAngleFrameRef.current = window.requestAnimationFrame(smoothAngle);
+      } else {
+        point.angle = point.targetAngle;
+        companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
+        beeAngleFrameRef.current = null;
+      }
+    };
+
+    const startAngleSmoothing = () => {
+      if (beeAngleFrameRef.current !== null) return;
+      lastAngleFrameTime = performance.now();
+      beeAngleFrameRef.current = window.requestAnimationFrame(smoothAngle);
+    };
+
     const move = (event: PointerEvent) => {
       const point = pointRef.current;
       const firstMove = companion.dataset.visible !== "true";
       const dx = event.clientX - point.lastX;
       const dy = event.clientY - point.lastY;
-      if (!firstMove && Math.hypot(dx, dy) > 0.5) {
-        point.angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
-      }
+      const distance = Math.hypot(dx, dy);
 
-      companion.style.setProperty("--cursor-x", `${event.clientX}px`);
-      companion.style.setProperty("--cursor-y", `${event.clientY}px`);
-      companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
-      companion.dataset.moving = Math.hypot(dx, dy) > 2 ? "true" : "false";
-      companion.dataset.visible = "true";
-      companion.dataset.hover = (event.target as Element | null)?.closest("a, button") ? "true" : "false";
       point.lastX = event.clientX;
       point.lastY = event.clientY;
+
+      if (!firstMove && distance > 0.5) {
+        point.targetAngle = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+      }
+
+      if (!point.isDemo) {
+        point.x = event.clientX;
+        point.y = event.clientY;
+        companion.style.setProperty("--cursor-x", `${point.x}px`);
+        companion.style.setProperty("--cursor-y", `${point.y}px`);
+        companion.dataset.moving = distance > 2 ? "true" : "false";
+        companion.dataset.resting = "false";
+        companion.dataset.visible = "true";
+        companion.dataset.hover = (event.target as Element | null)?.closest("a, button") ? "true" : "false";
+        startAngleSmoothing();
+
+        if (beeIdleTimerRef.current !== null) window.clearTimeout(beeIdleTimerRef.current);
+        beeIdleTimerRef.current = window.setTimeout(() => {
+          companion.dataset.moving = "false";
+          beeIdleTimerRef.current = null;
+        }, 90);
+      }
 
       const hero = heroRef.current;
       const heroBounds = hero?.getBoundingClientRect();
@@ -269,12 +323,22 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       }
     };
 
-    const hide = () => { companion.dataset.visible = "false"; };
+    const hide = () => {
+      if (!pointRef.current.isDemo) companion.dataset.visible = "false";
+    };
     window.addEventListener("pointermove", move, { passive: true });
     document.documentElement.addEventListener("mouseleave", hide);
     return () => {
       window.removeEventListener("pointermove", move);
       document.documentElement.removeEventListener("mouseleave", hide);
+      if (beeAngleFrameRef.current !== null) {
+        window.cancelAnimationFrame(beeAngleFrameRef.current);
+        beeAngleFrameRef.current = null;
+      }
+      if (beeIdleTimerRef.current !== null) {
+        window.clearTimeout(beeIdleTimerRef.current);
+        beeIdleTimerRef.current = null;
+      }
     };
   }, [motionEnabled]);
 
@@ -338,9 +402,16 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
 
   const toggleMotion = () => {
     const next = !motionEnabled;
-    if (!next && beeDemoTimerRef.current !== null) {
-      window.clearTimeout(beeDemoTimerRef.current);
-      beeDemoTimerRef.current = null;
+    if (!next) {
+      if (beeDemoFrameRef.current !== null) {
+        window.cancelAnimationFrame(beeDemoFrameRef.current);
+        beeDemoFrameRef.current = null;
+      }
+      if (beeAngleFrameRef.current !== null) {
+        window.cancelAnimationFrame(beeAngleFrameRef.current);
+        beeAngleFrameRef.current = null;
+      }
+      pointRef.current.isDemo = false;
       if (companionRef.current) {
         companionRef.current.dataset.demo = "false";
         companionRef.current.dataset.visible = "false";
@@ -352,17 +423,105 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
     window.dispatchEvent(new CustomEvent("curlbee-motion-change", { detail: { enabled: next } }));
   };
 
-  const demonstrateBee = () => {
+  const demonstrateBee = (event: MouseEvent<HTMLButtonElement>) => {
     const companion = companionRef.current;
-    if (!companion || !motionEnabled || window.matchMedia("(pointer: coarse)").matches) return;
-    if (beeDemoTimerRef.current !== null) window.clearTimeout(beeDemoTimerRef.current);
+    const hero = heroRef.current;
+    const honey = hero?.querySelector<HTMLElement>(".hero-shape-honey");
+    const plum = hero?.querySelector<HTMLElement>(".hero-shape-plum");
+    if (!companion || !hero || !honey || !plum || !motionEnabled || window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)").matches) return;
+
+    if (beeDemoFrameRef.current !== null) window.cancelAnimationFrame(beeDemoFrameRef.current);
+    if (beeAngleFrameRef.current !== null) {
+      window.cancelAnimationFrame(beeAngleFrameRef.current);
+      beeAngleFrameRef.current = null;
+    }
+    if (beeIdleTimerRef.current !== null) {
+      window.clearTimeout(beeIdleTimerRef.current);
+      beeIdleTimerRef.current = null;
+    }
+
+    const point = pointRef.current;
+    const buttonBounds = event.currentTarget.getBoundingClientRect();
+    const honeyBounds = honey.getBoundingClientRect();
+    const plumBounds = plum.getBoundingClientRect();
+    const startX = point.x > -40 ? point.x : buttonBounds.left + buttonBounds.width / 2;
+    const startY = point.y > -40 ? point.y : buttonBounds.top + buttonBounds.height / 2;
+    const honeyX = honeyBounds.left + honeyBounds.width / 2;
+    const honeyY = honeyBounds.top + honeyBounds.height / 2;
+    const honeyRadiusX = honeyBounds.width / 2 + 34;
+    const honeyRadiusY = honeyBounds.height / 2 + 30;
+    const orbitLeftX = honeyX - honeyRadiusX;
+    const orbitRightX = honeyX + honeyRadiusX;
+    const orbitTopY = honeyY - honeyRadiusY;
+    const orbitBottomY = honeyY + honeyRadiusY;
+    const loopRadiusX = Math.max(58, Math.min(88, plumBounds.width * 0.14));
+    const loopRadiusY = loopRadiusX * 0.72;
+    const loopX = Math.min(window.innerWidth - loopRadiusX - 36, plumBounds.left + plumBounds.width * 0.28);
+    const loopY = Math.max(loopRadiusY + 44, plumBounds.top + plumBounds.height * 0.19);
+    const landingX = plumBounds.left + plumBounds.width * 0.24;
+    const landingY = plumBounds.top + plumBounds.height * 0.25;
+    const kappa = 0.5522848;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", [
+      `M ${startX} ${startY}`,
+      `C ${startX} ${startY - 90}, ${orbitLeftX - 84} ${honeyY + 42}, ${orbitLeftX} ${honeyY}`,
+      `C ${orbitLeftX} ${honeyY - kappa * honeyRadiusY}, ${honeyX - kappa * honeyRadiusX} ${orbitTopY}, ${honeyX} ${orbitTopY}`,
+      `C ${honeyX + kappa * honeyRadiusX} ${orbitTopY}, ${orbitRightX} ${honeyY - kappa * honeyRadiusY}, ${orbitRightX} ${honeyY}`,
+      `C ${orbitRightX} ${honeyY + kappa * honeyRadiusY}, ${honeyX + kappa * honeyRadiusX} ${orbitBottomY}, ${honeyX} ${orbitBottomY}`,
+      `C ${honeyX - kappa * honeyRadiusX} ${orbitBottomY}, ${orbitLeftX} ${honeyY + kappa * honeyRadiusY}, ${orbitLeftX} ${honeyY}`,
+      `C ${orbitLeftX + 38} ${honeyY - 76}, ${loopX - loopRadiusX - 42} ${loopY + 28}, ${loopX - loopRadiusX} ${loopY}`,
+      `C ${loopX - loopRadiusX} ${loopY - kappa * loopRadiusY}, ${loopX - kappa * loopRadiusX} ${loopY - loopRadiusY}, ${loopX} ${loopY - loopRadiusY}`,
+      `C ${loopX + kappa * loopRadiusX} ${loopY - loopRadiusY}, ${loopX + loopRadiusX} ${loopY - kappa * loopRadiusY}, ${loopX + loopRadiusX} ${loopY}`,
+      `C ${loopX + loopRadiusX} ${loopY + kappa * loopRadiusY}, ${loopX + kappa * loopRadiusX} ${loopY + loopRadiusY}, ${loopX} ${loopY + loopRadiusY}`,
+      `C ${loopX - kappa * loopRadiusX} ${loopY + loopRadiusY}, ${loopX - loopRadiusX} ${loopY + kappa * loopRadiusY}, ${loopX - loopRadiusX} ${loopY}`,
+      `C ${loopX - 28} ${loopY + 42}, ${landingX - 54} ${landingY - 38}, ${landingX} ${landingY}`,
+    ].join(" "));
+
+    const pathLength = path.getTotalLength();
+    const duration = Math.max(3300, Math.min(4200, pathLength * 3.4));
+    const startedAt = performance.now();
+
+    point.x = startX;
+    point.y = startY;
+    point.isDemo = true;
     companion.dataset.demo = "true";
+    companion.dataset.resting = "false";
+    companion.dataset.hover = "false";
+    companion.dataset.moving = "true";
     companion.dataset.visible = "true";
-    beeDemoTimerRef.current = window.setTimeout(() => {
+
+    const animate = (time: number) => {
+      const progress = Math.min(1, (time - startedAt) / duration);
+      const easedProgress = progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+      const pathPosition = path.getPointAtLength(pathLength * easedProgress);
+      const pathAhead = path.getPointAtLength(Math.min(pathLength, pathLength * easedProgress + 2));
+      const targetAngle = Math.atan2(pathAhead.y - pathPosition.y, pathAhead.x - pathPosition.x) * (180 / Math.PI) + 90;
+      const turn = ((targetAngle - point.angle + 540) % 360) - 180;
+
+      point.x = pathPosition.x;
+      point.y = pathPosition.y;
+      point.targetAngle = targetAngle;
+      point.angle += turn * 0.36;
+      companion.style.setProperty("--cursor-x", `${point.x}px`);
+      companion.style.setProperty("--cursor-y", `${point.y}px`);
+      companion.style.setProperty("--cursor-angle", `${point.angle}deg`);
+
+      if (progress < 1) {
+        beeDemoFrameRef.current = window.requestAnimationFrame(animate);
+        return;
+      }
+
+      point.isDemo = false;
       companion.dataset.demo = "false";
-      companion.dataset.visible = "false";
-      beeDemoTimerRef.current = null;
-    }, 1650);
+      companion.dataset.moving = "false";
+      companion.dataset.resting = "true";
+      beeDemoFrameRef.current = null;
+    };
+
+    beeDemoFrameRef.current = window.requestAnimationFrame(animate);
   };
 
   return (
@@ -370,7 +529,7 @@ export default function HomeClient({ initialLanguage }: { initialLanguage: Langu
       <a className="skip-link" href="#work">{t.navWork}</a>
 
       <div className="cursor-bee" ref={companionRef} data-visible="false" data-hover="false" aria-hidden="true">
-        <img src="/curlbee-cursor-bee.png" alt="" width="256" height="256" />
+        <img src="/curlbee-cursor-bee.png" alt="" width="256" height="206" decoding="async" />
       </div>
 
       <header className="site-header">
