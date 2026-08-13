@@ -1,0 +1,60 @@
+/* Responsive Curlbee identity shared by the homepage and every inner world. */
+.case-brand {
+  width: clamp(118px, 9vw, 136px);
+  height: 44px;
+}
+
+.case-brand img {
+  grid-area: 1 / 1;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.case-brand-wordmark-dark,
+.case-brand-mark { display: none; }
+
+html[data-theme="dark"] .case-site-header .case-brand-wordmark-light,
+.cards-world-header .case-brand-wordmark-light,
+.ayu-world--plum .ayu-header .case-brand-wordmark-light,
+.ayu-world--night .ayu-header .case-brand-wordmark-light { display: none; }
+
+html[data-theme="dark"] .case-site-header .case-brand-wordmark-dark,
+.cards-world-header .case-brand-wordmark-dark,
+.ayu-world--plum .ayu-header .case-brand-wordmark-dark,
+.ayu-world--night .ayu-header .case-brand-wordmark-dark { display: block; }
+
+@media (max-width: 820px) {
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) {
+    grid-template-columns: 104px minmax(0, 1fr);
+  }
+
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .case-brand {
+    width: 104px;
+    height: 34px;
+  }
+}
+
+@media (max-width: 560px) {
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  :is(.case-site-header, .cards-world-header, .crafted-header, .minimalist-header, .ayu-header, .even-header) .case-brand {
+    width: 38px;
+    height: 54px;
+  }
+
+  .case-brand .case-brand-wordmark { display: none; }
+  .case-brand .case-brand-mark-light { display: block; }
+
+  html[data-theme="dark"] .case-site-header .case-brand-mark-light,
+  .cards-world-header .case-brand-mark-light,
+  .ayu-world--plum .ayu-header .case-brand-mark-light,
+  .ayu-world--night .ayu-header .case-brand-mark-light { display: none; }
+
+  html[data-theme="dark"] .case-site-header .case-brand-mark-dark,
+  .cards-world-header .case-brand-mark-dark,
+  .ayu-world--plum .ayu-header .case-brand-mark-dark,
+  .ayu-world--night .ayu-header .case-brand-mark-dark { display: block; }
+}
