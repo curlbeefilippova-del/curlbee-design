@@ -94,7 +94,10 @@ export default function ProjectClient({ project }: { project: PortfolioProject }
         <LanguageSync language={language} />
         <header className="case-site-header">
           <a className="case-brand" href={`/?lang=${langQuery}#work`} aria-label="Curlbee Design">
-            <img src="/curlbee-logo.svg" alt="Curlbee" />
+            <img className="case-brand-wordmark case-brand-wordmark-light" src="/curlbee-wordmark.svg" alt="" aria-hidden="true" />
+            <img className="case-brand-wordmark case-brand-wordmark-dark" src="/curlbee-wordmark-dark.svg" alt="" aria-hidden="true" />
+            <img className="case-brand-mark case-brand-mark-light" src="/curlbee-c-mark.svg" alt="" aria-hidden="true" />
+            <img className="case-brand-mark case-brand-mark-dark" src="/curlbee-favicon.svg" alt="" aria-hidden="true" />
           </a>
           <nav aria-label={labels.aria}>
             <a className="case-back" href={`/?lang=${langQuery}#work`}>
