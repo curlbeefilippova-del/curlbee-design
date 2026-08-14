@@ -3636,41 +3636,25 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
 .about-note { margin: var(--section-edge-space) 0 0 auto; width: min(62%, 760px); display: grid; grid-template-columns: 0.5fr 1fr; gap: 32px; align-items: start; }
 .about-note > span { color: var(--terra); font-family: var(--serif); font-size: 28px; line-height: 1.05; font-style: italic; }
 .about-details > p { margin: 0; max-width: 580px; font-size: var(--type-body); line-height: var(--leading-body); }
-.tool-signatures { margin-top: var(--space-4); display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.tool-signature {
-  position: relative;
-  z-index: 0;
-  isolation: isolate;
+.tool-signatures {
+  margin-top: var(--space-4);
   min-height: 44px;
-  padding: 11px 18px 11px 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 24px;
+}
+.tool-signature {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
+  gap: 9px;
   font-size: 11px;
   line-height: 16px;
   letter-spacing: 0.09em;
 }
-.tool-signature::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0 -3px;
-  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
-  border-radius: 58% 42% 54% 46% / 48% 57% 43% 52%;
-  background: color-mix(in srgb, var(--plum) 10%, transparent);
-  transform: rotate(-1.5deg);
-}
 .tool-signature > i { align-self: center; }
 .tool-signature-figma { color: var(--plum); }
-.tool-signature-ai { color: #8e493b; }
-.tool-signature-ai::before {
-  border-radius: 43% 57% 61% 39% / 54% 44% 56% 46%;
-  background: color-mix(in srgb, var(--terra) 11%, transparent);
-  transform: rotate(1.4deg);
-}
+.tool-signature-ai { gap: 8px; color: #8e493b; }
 .figma-mark { position: relative; width: 16px; height: 24px; flex: 0 0 16px; display: block; }
 .figma-mark b { position: absolute; width: 8px; height: 8px; display: block; background: currentColor; }
 .figma-mark b:nth-child(1) { left: 0; top: 0; border-radius: 5px 0 0 5px; }
@@ -3686,7 +3670,6 @@ html[data-theme="dark"] #top .work-title-note { color: #211d24; }
   background: currentColor;
   clip-path: polygon(50% 0, 60% 39%, 100% 50%, 60% 61%, 50% 100%, 40% 61%, 0 50%, 40% 39%);
 }
-.tool-signature-ai::after { content: ""; width: 5px; height: 5px; margin-left: -8px; align-self: flex-start; border-radius: 50%; background: var(--honey); }
 
 footer {
   position: relative;
